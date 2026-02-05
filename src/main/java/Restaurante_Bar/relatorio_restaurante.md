@@ -1,6 +1,19 @@
 # 📘 Relatório Final  
 ## Sistema de Gestão de Restaurante
 
+UNIVERSIDADE DE SANTIAGO
+ 
+DEPARTAMENTO DE CIÊNCIAS DA SAÚDE, AMBIENTE E TECNOLOGIAS
+
+PROGRAMAÇÃO ORIENTADA A OBJETOS
+TEMA: Programa Bar/Restaurante/Cantina
+
+Discentes:                                             	Docente: Valério Semedo
+Paulo Costa - Nº 7517
+Kévin Guiomar  - Nº 7543
+Claudia Martins - Nº 7751
+
+
 ## 🎯 Objetivos
 
 O objetivo principal deste trabalho foi desenvolver um **sistema de gestão de restaurante em Java**, com interface gráfica, que permita:
