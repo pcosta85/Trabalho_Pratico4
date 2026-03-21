@@ -45,7 +45,7 @@ public class RestauranteSistema {
     // =================== CLIENTES ===================
 
     public boolean adicionarCliente(String nome) {
-        if (nome == null) return false;
+        if (nome == null) return false; //poderia ser elimando esta parte e manter a parte de baixo
 
         String n = nome.trim();
         if (n.isEmpty()) return false;
@@ -71,7 +71,7 @@ public class RestauranteSistema {
         Cliente c = procurarCliente(nomeAtual);
         if (c == null) return false;
 
-        if (novoNome == null || novoNome.trim().isEmpty()) return false;
+        if (novoNome == null || novoNome.trim().isEmpty()) return false; //poderia ser elimando esta parte e manter a parte de baixo
 
         // evitar duplicados
         if (procurarCliente(novoNome) != null) return false;

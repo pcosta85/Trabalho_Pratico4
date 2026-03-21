@@ -1,4 +1,5 @@
 package Restaurante_Bar;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -27,27 +28,27 @@ import javax.swing.table.DefaultTableModel;
 public class RestauranteMain extends JFrame {
 
     private final RestauranteSistema sistema = new RestauranteSistema();
+    private final Usuario usuarioLogado;
 
-    // UI base
     private final JPanel painelPrincipal = new JPanel(new CardLayout());
-    private final JLabel titulo = new JLabel("Bem-vindo ao Restaurante/Bar CENTRAL", SwingConstants.CENTER);
+    private final JLabel titulo = new JLabel("", SwingConstants.CENTER);
 
-    // Componentes comuns (Consulta / Pedidos)
     private JTextField txtNomeConsulta;
     private JTable tabelaPedidos;
     private DefaultTableModel modeloPedidos;
 
-    public RestauranteMain() {
+    public RestauranteMain(Usuario usuarioLogado) {
+        this.usuarioLogado = usuarioLogado;
+
         setTitle("Restaurante/Bar CENTRAL");
         setSize(950, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // ===== Barra lateral =====
         JPanel barraLateral = new JPanel();
         barraLateral.setLayout(new BoxLayout(barraLateral, BoxLayout.Y_AXIS));
         barraLateral.setBackground(new Color(50, 50, 50));
-        barraLateral.setPreferredSize(new Dimension(200, getHeight()));
+        barraLateral.setPreferredSize(new Dimension(220, getHeight()));
 
         JButton btnInicio = criarBotaoMenu("Início");
         JButton btnInserirCliente = criarBotaoMenu("Inserir Cliente");
@@ -58,16 +59,24 @@ public class RestauranteMain extends JFrame {
         JButton btnEliminarCliente = criarBotaoMenu("Eliminar Cliente");
         JButton btnAlterarPedido = criarBotaoMenu("Alterar Pedido");
         JButton btnEliminarPedido = criarBotaoMenu("Eliminar Pedido");
+        JButton btnLogout = criarBotaoMenu("Terminar Sessão");
 
-        for (JButton b : new JButton[]{
-                btnInicio, btnInserirCliente, btnRegistarPedido, btnConsultar,
-                btnGerarFatura, btnAlterarCliente, btnEliminarCliente, btnAlterarPedido, btnEliminarPedido
-        }) {
-            barraLateral.add(Box.createRigidArea(new Dimension(0, 10)));
-            barraLateral.add(b);
+        adicionarBotao(barraLateral, btnInicio);
+        adicionarBotao(barraLateral, btnInserirCliente);
+        adicionarBotao(barraLateral, btnRegistarPedido);
+        adicionarBotao(barraLateral, btnConsultar);
+        adicionarBotao(barraLateral, btnGerarFatura);
+
+        if (isAdmin()) {
+            adicionarBotao(barraLateral, btnAlterarCliente);
+            adicionarBotao(barraLateral, btnEliminarCliente);
+            adicionarBotao(barraLateral, btnAlterarPedido);
+            adicionarBotao(barraLateral, btnEliminarPedido);
         }
 
-        // ===== Páginas (Cards) =====
+        barraLateral.add(Box.createVerticalGlue());
+        adicionarBotao(barraLateral, btnLogout);
+
         painelPrincipal.add(criarPaginaInicio(), "INICIO");
         painelPrincipal.add(criarPaginaInserirCliente(), "INSERIR_CLIENTE");
         painelPrincipal.add(criarPaginaRegistarPedido(), "REGISTAR_PEDIDO");
@@ -78,7 +87,6 @@ public class RestauranteMain extends JFrame {
         painelPrincipal.add(criarPaginaAlterarPedido(), "ALTERAR_PEDIDO");
         painelPrincipal.add(criarPaginaEliminarPedido(), "ELIMINAR_PEDIDO");
 
-        // ===== Ações do menu =====
         btnInicio.addActionListener(e -> mostrar("INICIO"));
         btnInserirCliente.addActionListener(e -> mostrar("INSERIR_CLIENTE"));
         btnRegistarPedido.addActionListener(e -> mostrar("REGISTAR_PEDIDO"));
@@ -89,7 +97,11 @@ public class RestauranteMain extends JFrame {
         btnAlterarPedido.addActionListener(e -> mostrar("ALTERAR_PEDIDO"));
         btnEliminarPedido.addActionListener(e -> mostrar("ELIMINAR_PEDIDO"));
 
-        // ===== Layout final =====
+        btnLogout.addActionListener(e -> {
+            dispose();
+            new LoginFrame().setVisible(true);
+        });
+
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(barraLateral, BorderLayout.WEST);
         getContentPane().add(painelPrincipal, BorderLayout.CENTER);
@@ -97,9 +109,15 @@ public class RestauranteMain extends JFrame {
         mostrar("INICIO");
     }
 
-    // =========================
-    // Helpers de UI
-    // =========================
+    private boolean isAdmin() {
+        return usuarioLogado != null && "ADMIN".equalsIgnoreCase(usuarioLogado.getNivelAcesso());
+    }
+
+    private void adicionarBotao(JPanel painel, JButton botao) {
+        painel.add(Box.createRigidArea(new Dimension(0, 10)));
+        painel.add(botao);
+    }
+
     private JButton criarBotaoMenu(String texto) {
         JButton b = new JButton(texto);
         b.setMaximumSize(new Dimension(999, 35));
@@ -114,14 +132,14 @@ public class RestauranteMain extends JFrame {
 
     private JPanel criarPaginaInicio() {
         JPanel p = new JPanel(new BorderLayout());
+        String nome = usuarioLogado != null ? usuarioLogado.getUsername() : "";
+        String nivel = usuarioLogado != null ? usuarioLogado.getNivelAcesso() : "";
+        titulo.setText("Bem-vindo ao Restaurante/Bar CENTRAL - " + nome + " (" + nivel + ")");
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         p.add(titulo, BorderLayout.CENTER);
         return p;
     }
 
-    // =========================
-    // 1) Inserir Cliente
-    // =========================
     private JPanel criarPaginaInserirCliente() {
         JPanel p = new JPanel(new GridBagLayout());
         GridBagConstraints gc = baseGC();
@@ -145,17 +163,19 @@ public class RestauranteMain extends JFrame {
                 aviso("Preencha o nome.");
                 return;
             }
-            sistema.adicionarCliente(nome);
-            info("Cliente adicionado!");
-            txtNome.setText("");
+
+            boolean ok = sistema.adicionarCliente(nome);
+            if (ok) {
+                info("Cliente adicionado!");
+                txtNome.setText("");
+            } else {
+                aviso("Não foi possível adicionar o cliente.");
+            }
         });
 
         return p;
     }
 
-    // =========================
-    // 2) Registar Pedido
-    // =========================
     private JPanel criarPaginaRegistarPedido() {
         JPanel p = new JPanel(new GridBagLayout());
         GridBagConstraints gc = baseGC();
@@ -198,13 +218,12 @@ public class RestauranteMain extends JFrame {
 
                 if (ok) {
                     info("Pedido registado!");
+                    txtProduto.setText("");
+                    txtPreco.setText("");
+                    txtQtd.setText("");
                 } else {
                     aviso("Erro: cliente não existe.");
                 }
-
-                txtProduto.setText("");
-                txtPreco.setText("");
-                txtQtd.setText("");
 
             } catch (NumberFormatException ex) {
                 erro("Preço/Quantidade inválidos.");
@@ -214,9 +233,6 @@ public class RestauranteMain extends JFrame {
         return p;
     }
 
-    // =========================
-    // 3) Consultar Cliente (tabela)
-    // =========================
     private JPanel criarPaginaConsultarCliente() {
         JPanel p = new JPanel(new BorderLayout());
 
@@ -227,7 +243,7 @@ public class RestauranteMain extends JFrame {
         topo.add(txtNomeConsulta);
         topo.add(btn);
 
-        String[] cols = {"Índice","Produto", "Quantidade", "Preço","Total"};
+        String[] cols = {"Índice", "Produto", "Quantidade", "Preço", "Total"};
         modeloPedidos = new DefaultTableModel(cols, 0);
         tabelaPedidos = new JTable(modeloPedidos);
 
@@ -255,21 +271,18 @@ public class RestauranteMain extends JFrame {
         }
 
         int i = 0;
-            for (Pedido ped : c.getPedidos()) {
-                modeloPedidos.addRow(new Object[]{
-                        i, // ou (i+1) se quiser começar em 1
-                        ped.getProduto().getNome(),
-                        ped.getQuantidade(),
-                        ped.getProduto().getPreco(),
-                        ped.getTotal()
-                });
-                i++;
-            }
+        for (Pedido ped : c.getPedidos()) {
+            modeloPedidos.addRow(new Object[]{
+                    i,
+                    ped.getProduto().getNome(),
+                    ped.getQuantidade(),
+                    ped.getProduto().getPreco(),
+                    ped.getTotal()
+            });
+            i++;
+        }
     }
 
-    // =========================
-    // 4) Gerar Fatura
-    // =========================
     private JPanel criarPaginaGerarFatura() {
         JPanel p = new JPanel(new GridBagLayout());
         GridBagConstraints gc = baseGC();
@@ -306,9 +319,6 @@ public class RestauranteMain extends JFrame {
         return p;
     }
 
-    // =========================
-    // 5) Alterar Cliente
-    // =========================
     private JPanel criarPaginaAlterarCliente() {
         JPanel p = new JPanel(new GridBagLayout());
         GridBagConstraints gc = baseGC();
@@ -327,6 +337,11 @@ public class RestauranteMain extends JFrame {
         gc.gridx = 1; gc.gridy = y; p.add(btn, gc);
 
         btn.addActionListener(e -> {
+            if (!isAdmin()) {
+                aviso("Sem permissão para esta operação.");
+                return;
+            }
+
             boolean ok = sistema.alterarNomeCliente(atual.getText().trim(), novo.getText().trim());
             if (ok) info("Cliente alterado com sucesso!");
             else aviso("Erro: cliente não existe ou nome duplicado.");
@@ -335,9 +350,6 @@ public class RestauranteMain extends JFrame {
         return p;
     }
 
-    // =========================
-    // 6) Eliminar Cliente
-    // =========================
     private JPanel criarPaginaEliminarCliente() {
         JPanel p = new JPanel(new GridBagLayout());
         GridBagConstraints gc = baseGC();
@@ -351,8 +363,16 @@ public class RestauranteMain extends JFrame {
         gc.gridx = 1; gc.gridy = 1; p.add(btn, gc);
 
         btn.addActionListener(e -> {
+            if (!isAdmin()) {
+                aviso("Sem permissão para esta operação.");
+                return;
+            }
+
             String n = nome.getText().trim();
-            if (n.isEmpty()) { aviso("Digite o nome."); return; }
+            if (n.isEmpty()) {
+                aviso("Digite o nome.");
+                return;
+            }
 
             int conf = JOptionPane.showConfirmDialog(this,
                     "Eliminar o cliente \"" + n + "\"?",
@@ -368,9 +388,6 @@ public class RestauranteMain extends JFrame {
         return p;
     }
 
-    // =========================
-    // 7) Alterar Pedido
-    // =========================
     private JPanel criarPaginaAlterarPedido() {
         JPanel p = new JPanel(new GridBagLayout());
         GridBagConstraints gc = baseGC();
@@ -401,6 +418,11 @@ public class RestauranteMain extends JFrame {
         gc.gridx = 1; gc.gridy = y; p.add(btn, gc);
 
         btn.addActionListener(e -> {
+            if (!isAdmin()) {
+                aviso("Sem permissão para esta operação.");
+                return;
+            }
+
             try {
                 String n = nome.getText().trim();
                 int i = Integer.parseInt(idx.getText().trim());
@@ -420,9 +442,6 @@ public class RestauranteMain extends JFrame {
         return p;
     }
 
-    // =========================
-    // 8) Eliminar Pedido
-    // =========================
     private JPanel criarPaginaEliminarPedido() {
         JPanel p = new JPanel(new GridBagLayout());
         GridBagConstraints gc = baseGC();
@@ -440,6 +459,11 @@ public class RestauranteMain extends JFrame {
         gc.gridx = 1; gc.gridy = 2; p.add(btn, gc);
 
         btn.addActionListener(e -> {
+            if (!isAdmin()) {
+                aviso("Sem permissão para esta operação.");
+                return;
+            }
+
             try {
                 String n = nome.getText().trim();
                 int i = Integer.parseInt(idx.getText().trim());
@@ -462,9 +486,6 @@ public class RestauranteMain extends JFrame {
         return p;
     }
 
-    // =========================
-    // Base constraints e mensagens
-    // =========================
     private GridBagConstraints baseGC() {
         GridBagConstraints gc = new GridBagConstraints();
         gc.insets = new Insets(10, 10, 10, 10);
@@ -485,6 +506,6 @@ public class RestauranteMain extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new RestauranteMain().setVisible(true));
+        SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
     }
 }
