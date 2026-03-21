@@ -14,7 +14,7 @@ public class RestauranteSistema {
             return false;
         }
 
-        String sql = "INSERT INTO clientes (nome) VALUES (?)";
+        String sql = "INSERT INTO restaurante.clientes (nome) VALUES (?)";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -30,7 +30,7 @@ public class RestauranteSistema {
     }
 
     public Cliente procurarCliente(String nome) {
-        String sql = "SELECT id, nome FROM clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
+        String sql = "SELECT id, nome FROM restaurante.clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -57,13 +57,16 @@ public class RestauranteSistema {
     }
 
     public boolean registrarPedido(String nomeCliente, Produto produto, int quantidade) {
-        String sqlCliente = "SELECT id FROM clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
-        String sqlProduto = "INSERT INTO produtos (nome, preco) VALUES (?, ?)";
-        String sqlPedido = "INSERT INTO pedidos (cliente_id, produto_id, quantidade) VALUES (?, ?, ?)";
+        String sqlCliente = "SELECT id FROM restaurante.clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
+        String sqlProduto = "INSERT INTO restaurante.produtos (nome, preco) VALUES (?, ?)";
+        String sqlPedido = "INSERT INTO restaurante.pedidos (cliente_id, produto_id, quantidade, total) VALUES (?, ?, ?, ?)";
 
         Connection conn = null;
 
         try {
+            System.out.println("=== ENTROU EM registrarPedido ===");
+            System.out.println("Cliente recebido: [" + nomeCliente + "]");
+
             conn = Conexao.conectar();
             conn.setAutoCommit(false);
 
@@ -74,10 +77,12 @@ public class RestauranteSistema {
 
                 try (ResultSet rsCliente = stmtCliente.executeQuery()) {
                     if (!rsCliente.next()) {
+                        System.out.println("Cliente NÃO encontrado no registrarPedido.");
                         conn.rollback();
                         return false;
                     }
                     clienteId = rsCliente.getInt("id");
+                    System.out.println("Cliente encontrado no registrarPedido. ID = " + clienteId);
                 }
             }
 
@@ -90,21 +95,27 @@ public class RestauranteSistema {
 
                 try (ResultSet rsProduto = stmtProduto.getGeneratedKeys()) {
                     if (!rsProduto.next()) {
+                        System.out.println("Falha ao gerar produto.");
                         conn.rollback();
                         return false;
                     }
                     produtoId = rsProduto.getInt(1);
+                    System.out.println("Produto inserido. ID = " + produtoId);
                 }
             }
 
             try (PreparedStatement stmtPedido = conn.prepareStatement(sqlPedido)) {
+                double total = produto.getPreco() * quantidade;
+
                 stmtPedido.setInt(1, clienteId);
                 stmtPedido.setInt(2, produtoId);
                 stmtPedido.setInt(3, quantidade);
+                stmtPedido.setDouble(4, total);
                 stmtPedido.executeUpdate();
             }
 
             conn.commit();
+            System.out.println("Pedido registado com sucesso.");
             return true;
 
         } catch (Exception e) {
@@ -135,8 +146,8 @@ public class RestauranteSistema {
         List<Pedido> lista = new ArrayList<Pedido>();
 
         String sql = "SELECT p.id AS pedido_id, pr.id AS produto_id, pr.nome, pr.preco, p.quantidade " +
-                     "FROM pedidos p " +
-                     "INNER JOIN produtos pr ON p.produto_id = pr.id " +
+                     "FROM restaurante.pedidos p " +
+                     "INNER JOIN restaurante.produtos pr ON p.produto_id = pr.id " +
                      "WHERE p.cliente_id = ? " +
                      "ORDER BY p.id";
 
@@ -176,7 +187,7 @@ public class RestauranteSistema {
             return false;
         }
 
-        String sql = "UPDATE clientes SET nome = ? WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
+        String sql = "UPDATE restaurante.clientes SET nome = ? WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -193,7 +204,7 @@ public class RestauranteSistema {
     }
 
     public boolean eliminarCliente(String nome) {
-        String sql = "DELETE FROM clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
+        String sql = "DELETE FROM restaurante.clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -212,15 +223,15 @@ public class RestauranteSistema {
             return false;
         }
 
-        String sqlCliente = "SELECT id FROM clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
+        String sqlCliente = "SELECT id FROM restaurante.clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
         String sqlPedidoPorIndice = "SELECT p.id " +
-                                    "FROM pedidos p " +
+                                    "FROM restaurante.pedidos p " +
                                     "WHERE p.cliente_id = ? " +
                                     "ORDER BY p.id " +
                                     "LIMIT ?, 1";
-        String sqlProdutoAtualDoPedido = "SELECT produto_id FROM pedidos WHERE id = ?";
-        String sqlUpdateProduto = "UPDATE produtos SET nome = ?, preco = ? WHERE id = ?";
-        String sqlUpdatePedido = "UPDATE pedidos SET quantidade = ? WHERE id = ?";
+        String sqlProdutoAtualDoPedido = "SELECT produto_id FROM restaurante.pedidos WHERE id = ?";
+        String sqlUpdateProduto = "UPDATE restaurante.produtos SET nome = ?, preco = ? WHERE id = ?";
+        String sqlUpdatePedido = "UPDATE restaurante.pedidos SET quantidade = ? WHERE id = ?";
 
         Connection conn = null;
 
@@ -313,15 +324,15 @@ public class RestauranteSistema {
             return false;
         }
 
-        String sqlCliente = "SELECT id FROM clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
+        String sqlCliente = "SELECT id FROM restaurante.clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
         String sqlPedidoPorIndice = "SELECT p.id " +
-                                    "FROM pedidos p " +
+                                    "FROM restaurante.pedidos p " +
                                     "WHERE p.cliente_id = ? " +
                                     "ORDER BY p.id " +
                                     "LIMIT ?, 1";
-        String sqlProdutoDoPedido = "SELECT produto_id FROM pedidos WHERE id = ?";
-        String sqlDeletePedido = "DELETE FROM pedidos WHERE id = ?";
-        String sqlDeleteProduto = "DELETE FROM produtos WHERE id = ?";
+        String sqlProdutoDoPedido = "SELECT produto_id FROM restaurante.pedidos WHERE id = ?";
+        String sqlDeletePedido = "DELETE FROM restaurante.pedidos WHERE id = ?";
+        String sqlDeleteProduto = "DELETE FROM restaurante.produtos WHERE id = ?";
 
         Connection conn = null;
 
