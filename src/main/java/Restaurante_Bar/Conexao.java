@@ -6,11 +6,11 @@ import java.sql.SQLException;
 
 public class Conexao {
 
-    private static final String HOST = "127.0.0.1";
+    private static final String HOST = "localhost";
     private static final String PORTA = "3306";
     private static final String BANCO = "restaurante";
-    private static final String USER = "root";
-    private static final String PASSWORD = "Pcosta9850053";
+    private static final String USER = "pj";
+    private static final String PASSWORD = "loucoste9850053";
 
     private static final String URL =
             "jdbc:mysql://" + HOST + ":" + PORTA + "/" + BANCO +
