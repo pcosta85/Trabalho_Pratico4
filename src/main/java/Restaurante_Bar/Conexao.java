@@ -21,7 +21,7 @@ public class Conexao {
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Driver JDBC do MySQL não encontrado. Adicione o mysql-connector-j ao projeto.", e);
+            throw new RuntimeException("Driver JDBC do MySQL não encontrado.", e);
         } catch (SQLException e) {
             throw new RuntimeException("Erro na conexão com MySQL: " + e.getMessage(), e);
         }

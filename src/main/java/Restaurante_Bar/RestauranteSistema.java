@@ -1,27 +1,30 @@
 package Restaurante_Bar;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+
 public class RestauranteSistema {
 
-    public boolean adicionarCliente(String nome) {
-        if (nome == null || nome.trim().isEmpty()) {
-            return false;
-        }
+    // ==================== PRODUTOS ====================
 
-        String sql = "INSERT INTO clientes (nome) VALUES (?)";
+    public boolean cadastrarProduto(String nome, double preco) {
+        String sql = "INSERT INTO produtos (nome, preco) VALUES (?, ?)";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nome.trim());
-            stmt.executeUpdate();
-            return true;
+            stmt.setDouble(2, preco);
+            return stmt.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -29,23 +32,76 @@ public class RestauranteSistema {
         }
     }
 
-    public Cliente procurarCliente(String nome) {
-        String sql = "SELECT id, nome FROM clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
+    public boolean atualizarProduto(int id, String nome, double preco) {
+        String sql = "UPDATE produtos SET nome = ?, preco = ? WHERE id = ?";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, nome == null ? "" : nome.trim());
+            stmt.setString(1, nome.trim());
+            stmt.setDouble(2, preco);
+            stmt.setInt(3, id);
+            return stmt.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean eliminarProduto(int id) {
+        String sql = "DELETE FROM produtos WHERE id = ?";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Object[]> listarProdutos() {
+        List<Object[]> lista = new ArrayList<Object[]>();
+        String sql = "SELECT id, nome, preco FROM produtos ORDER BY nome";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                lista.add(new Object[]{
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getDouble("preco")
+                });
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    public Object[] obterProduto(String nome) {
+        String sql = "SELECT id, nome, preco FROM produtos WHERE nome = ? LIMIT 1";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nome);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    Cliente cliente = new Cliente(
-                        rs.getInt("id"),
-                        rs.getString("nome")
-                    );
-
-                    cliente.setPedidos(obterPedidosCliente(cliente));
-                    return cliente;
+                    return new Object[]{
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getDouble("preco")
+                    };
                 }
             }
 
@@ -56,10 +112,11 @@ public class RestauranteSistema {
         return null;
     }
 
-    public boolean registrarPedido(String nomeCliente, Produto produto, int quantidade) {
-        String sqlCliente = "SELECT id FROM clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
-        String sqlProduto = "INSERT INTO produtos (nome, preco) VALUES (?, ?)";
-        String sqlPedido = "INSERT INTO pedidos (cliente_id, produto_id, quantidade, total) VALUES (?, ?, ?, ?)";
+    // ==================== VENDAS ====================
+
+    public boolean finalizarVenda(String usuario, String forma, Double recebido, Double troco, List<Object[]> carrinho) {
+        String sqlVenda = "INSERT INTO venda (data, usuario, forma_pagamento, valor_recebido, troco) VALUES (NOW(), ?, ?, ?, ?)";
+        String sqlCompra = "INSERT INTO compra (produto, quantidade, preco_unitario, total, forma_pagamento, id_venda) VALUES (?, ?, ?, ?, ?, ?)";
 
         Connection conn = null;
 
@@ -67,58 +124,46 @@ public class RestauranteSistema {
             conn = Conexao.conectar();
             conn.setAutoCommit(false);
 
-            int clienteId;
+            int idVenda;
 
-            try (PreparedStatement stmtCliente = conn.prepareStatement(sqlCliente)) {
-                stmtCliente.setString(1, nomeCliente == null ? "" : nomeCliente.trim());
+            try (PreparedStatement stmtVenda = conn.prepareStatement(sqlVenda, Statement.RETURN_GENERATED_KEYS)) {
+                stmtVenda.setString(1, usuario);
+                stmtVenda.setString(2, forma);
+                stmtVenda.setObject(3, recebido);
+                stmtVenda.setObject(4, troco);
+                stmtVenda.executeUpdate();
 
-                try (ResultSet rsCliente = stmtCliente.executeQuery()) {
-                    if (!rsCliente.next()) {
+                try (ResultSet rs = stmtVenda.getGeneratedKeys()) {
+                    if (!rs.next()) {
                         conn.rollback();
                         return false;
                     }
-                    clienteId = rsCliente.getInt("id");
+                    idVenda = rs.getInt(1);
                 }
             }
 
-            int produtoId;
-
-            try (PreparedStatement stmtProduto = conn.prepareStatement(sqlProduto, Statement.RETURN_GENERATED_KEYS)) {
-                stmtProduto.setString(1, produto.getNome().trim());
-                stmtProduto.setDouble(2, produto.getPreco());
-                stmtProduto.executeUpdate();
-
-                try (ResultSet rsProduto = stmtProduto.getGeneratedKeys()) {
-                    if (!rsProduto.next()) {
-                        conn.rollback();
-                        return false;
-                    }
-                    produtoId = rsProduto.getInt(1);
+            for (Object[] item : carrinho) {
+                try (PreparedStatement stmtCompra = conn.prepareStatement(sqlCompra)) {
+                    stmtCompra.setString(1, (String) item[0]);
+                    stmtCompra.setInt(2, (Integer) item[1]);
+                    stmtCompra.setDouble(3, (Double) item[2]);
+                    stmtCompra.setDouble(4, (Double) item[3]);
+                    stmtCompra.setString(5, forma);
+                    stmtCompra.setInt(6, idVenda);
+                    stmtCompra.executeUpdate();
                 }
-            }
-
-            try (PreparedStatement stmtPedido = conn.prepareStatement(sqlPedido)) {
-                double total = produto.getPreco() * quantidade;
-
-                stmtPedido.setInt(1, clienteId);
-                stmtPedido.setInt(2, produtoId);
-                stmtPedido.setInt(3, quantidade);
-                stmtPedido.setDouble(4, total);
-                stmtPedido.executeUpdate();
             }
 
             conn.commit();
+            ReciboVenda.gerar(usuario, forma, recebido, troco, carrinho);
             return true;
 
         } catch (Exception e) {
             try {
-                if (conn != null) {
-                    conn.rollback();
-                }
+                if (conn != null) conn.rollback();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
             e.printStackTrace();
             return false;
 
@@ -134,35 +179,47 @@ public class RestauranteSistema {
         }
     }
 
-    public List<Pedido> obterPedidosCliente(Cliente cliente) {
-        List<Pedido> lista = new ArrayList<Pedido>();
+    public List<Integer> listarAnosVenda() {
+        List<Integer> anos = new ArrayList<Integer>();
+        String sql = "SELECT DISTINCT YEAR(data) AS ano FROM venda ORDER BY ano DESC";
 
-        String sql = "SELECT p.id AS pedido_id, pr.id AS produto_id, pr.nome, pr.preco, p.quantidade " +
-                     "FROM pedidos p " +
-                     "INNER JOIN produtos pr ON p.produto_id = pr.id " +
-                     "WHERE p.cliente_id = ? " +
-                     "ORDER BY p.id";
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                anos.add(rs.getInt("ano"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return anos;
+    }
+
+    public List<Object[]> listarRelatorioVendas(int ano) {
+        List<Object[]> lista = new ArrayList<Object[]>();
+
+        String sql = "SELECT c.produto, c.quantidade, c.preco_unitario, c.total, c.forma_pagamento, DATE(v.data) AS data " +
+                "FROM compra c INNER JOIN venda v ON c.id_venda = v.id_venda " +
+                "WHERE YEAR(v.data) = ? ORDER BY v.data DESC";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, cliente.getId());
+            stmt.setInt(1, ano);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Produto prod = new Produto(
-                        rs.getInt("produto_id"),
-                        rs.getString("nome"),
-                        rs.getDouble("preco")
-                    );
-
-                    Pedido ped = new Pedido(
-                        rs.getInt("pedido_id"),
-                        prod,
-                        rs.getInt("quantidade")
-                    );
-
-                    lista.add(ped);
+                    lista.add(new Object[]{
+                            rs.getString("produto"),
+                            rs.getInt("quantidade"),
+                            rs.getDouble("preco_unitario"),
+                            rs.getDouble("total"),
+                            rs.getString("forma_pagamento"),
+                            rs.getDate("data").toString()
+                    });
                 }
             }
 
@@ -173,113 +230,109 @@ public class RestauranteSistema {
         return lista;
     }
 
-    public boolean alterarNomeCliente(String nomeAtual, String novoNome) {
-        if (nomeAtual == null || nomeAtual.trim().isEmpty() ||
-            novoNome == null || novoNome.trim().isEmpty()) {
-            return false;
-        }
+    public List<Object[]> totalPorFormaPagamento(int ano) {
+        List<Object[]> lista = new ArrayList<Object[]>();
 
-        String sql = "UPDATE clientes SET nome = ? WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
-
-        try (Connection conn = Conexao.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, novoNome.trim());
-            stmt.setString(2, nomeAtual.trim());
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean eliminarCliente(String nome) {
-        String sql = "DELETE FROM clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
+        String sql = "SELECT c.forma_pagamento, SUM(c.total) AS total " +
+                "FROM compra c INNER JOIN venda v ON c.id_venda = v.id_venda " +
+                "WHERE YEAR(v.data) = ? GROUP BY c.forma_pagamento ORDER BY total DESC";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, nome == null ? "" : nome.trim());
-            return stmt.executeUpdate() > 0;
+            stmt.setInt(1, ano);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Object[]{
+                            rs.getString("forma_pagamento"),
+                            rs.getDouble("total")
+                    });
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
+
+        return lista;
     }
 
-    public boolean alterarPedido(String nomeCliente, int indice, String novoProduto, double novoPreco, int novaQuantidade) {
-        if (indice < 0) {
-            return false;
+    public List<Object[]> totalPorProduto(int ano) {
+        List<Object[]> lista = new ArrayList<Object[]>();
+
+        String sql = "SELECT c.produto, SUM(c.total) AS total " +
+                "FROM compra c INNER JOIN venda v ON c.id_venda = v.id_venda " +
+                "WHERE YEAR(v.data) = ? GROUP BY c.produto ORDER BY total DESC";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, ano);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Object[]{
+                            rs.getString("produto"),
+                            rs.getDouble("total")
+                    });
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        String sqlCliente = "SELECT id FROM clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
-        String sqlPedidoPorIndice = "SELECT p.id FROM pedidos p WHERE p.cliente_id = ? ORDER BY p.id LIMIT ?, 1";
-        String sqlProdutoAtualDoPedido = "SELECT produto_id FROM pedidos WHERE id = ?";
-        String sqlUpdateProduto = "UPDATE produtos SET nome = ?, preco = ? WHERE id = ?";
-        String sqlUpdatePedido = "UPDATE pedidos SET quantidade = ?, total = ? WHERE id = ?";
+        return lista;
+    }
 
+    public List<Object[]> listarComprasPorData(String data) {
+        List<Object[]> lista = new ArrayList<Object[]>();
+
+        String sql = "SELECT v.id_venda, DATE(v.data) AS data, c.produto, c.quantidade, c.total, v.forma_pagamento " +
+                "FROM venda v INNER JOIN compra c ON v.id_venda = c.id_venda " +
+                "WHERE DATE(v.data) = ? ORDER BY v.id_venda DESC";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, data);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Object[]{
+                            rs.getInt("id_venda"),
+                            rs.getString("data"),
+                            rs.getString("produto"),
+                            rs.getInt("quantidade"),
+                            rs.getDouble("total"),
+                            rs.getString("forma_pagamento")
+                    });
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    public boolean eliminarVenda(int idVenda) {
         Connection conn = null;
 
         try {
             conn = Conexao.conectar();
             conn.setAutoCommit(false);
 
-            int clienteId;
-            try (PreparedStatement stmtCliente = conn.prepareStatement(sqlCliente)) {
-                stmtCliente.setString(1, nomeCliente == null ? "" : nomeCliente.trim());
-
-                try (ResultSet rs = stmtCliente.executeQuery()) {
-                    if (!rs.next()) {
-                        conn.rollback();
-                        return false;
-                    }
-                    clienteId = rs.getInt("id");
-                }
+            try (PreparedStatement stmt1 = conn.prepareStatement("DELETE FROM compra WHERE id_venda = ?")) {
+                stmt1.setInt(1, idVenda);
+                stmt1.executeUpdate();
             }
 
-            int pedidoId;
-            try (PreparedStatement stmtPedido = conn.prepareStatement(sqlPedidoPorIndice)) {
-                stmtPedido.setInt(1, clienteId);
-                stmtPedido.setInt(2, indice);
-
-                try (ResultSet rs = stmtPedido.executeQuery()) {
-                    if (!rs.next()) {
-                        conn.rollback();
-                        return false;
-                    }
-                    pedidoId = rs.getInt("id");
-                }
-            }
-
-            int produtoId;
-            try (PreparedStatement stmtProdAtual = conn.prepareStatement(sqlProdutoAtualDoPedido)) {
-                stmtProdAtual.setInt(1, pedidoId);
-
-                try (ResultSet rs = stmtProdAtual.executeQuery()) {
-                    if (!rs.next()) {
-                        conn.rollback();
-                        return false;
-                    }
-                    produtoId = rs.getInt("produto_id");
-                }
-            }
-
-            try (PreparedStatement stmtUpdateProd = conn.prepareStatement(sqlUpdateProduto)) {
-                stmtUpdateProd.setString(1, novoProduto.trim());
-                stmtUpdateProd.setDouble(2, novoPreco);
-                stmtUpdateProd.setInt(3, produtoId);
-                stmtUpdateProd.executeUpdate();
-            }
-
-            try (PreparedStatement stmtUpdatePed = conn.prepareStatement(sqlUpdatePedido)) {
-                double novoTotal = novoPreco * novaQuantidade;
-                stmtUpdatePed.setInt(1, novaQuantidade);
-                stmtUpdatePed.setDouble(2, novoTotal);
-                stmtUpdatePed.setInt(3, pedidoId);
-                stmtUpdatePed.executeUpdate();
+            try (PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM venda WHERE id_venda = ?")) {
+                stmt2.setInt(1, idVenda);
+                stmt2.executeUpdate();
             }
 
             conn.commit();
@@ -287,13 +340,10 @@ public class RestauranteSistema {
 
         } catch (Exception e) {
             try {
-                if (conn != null) {
-                    conn.rollback();
-                }
+                if (conn != null) conn.rollback();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
             e.printStackTrace();
             return false;
 
@@ -309,145 +359,92 @@ public class RestauranteSistema {
         }
     }
 
-    public boolean eliminarPedido(String nomeCliente, int indice) {
-        if (indice < 0) {
+    // ==================== UTILIZADORES ====================
+
+    public boolean alterarSenha(String username, String senhaAtual, String novaSenha) {
+        String sqlSelect = "SELECT password FROM usuarios WHERE username = ?";
+        String sqlUpdate = "UPDATE usuarios SET password = ? WHERE username = ?";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmtSelect = conn.prepareStatement(sqlSelect)) {
+
+            stmtSelect.setString(1, username);
+
+            try (ResultSet rs = stmtSelect.executeQuery()) {
+                if (!rs.next()) return false;
+
+                String senhaGuardada = rs.getString("password");
+                if (!senhaGuardada.equals(senhaAtual)) return false;
+            }
+
+            try (PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate)) {
+                stmtUpdate.setString(1, novaSenha);
+                stmtUpdate.setString(2, username);
+                return stmtUpdate.executeUpdate() > 0;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
+    }
 
-        String sqlCliente = "SELECT id FROM clientes WHERE TRIM(LOWER(nome)) = TRIM(LOWER(?))";
-        String sqlPedidoPorIndice = "SELECT p.id FROM pedidos p WHERE p.cliente_id = ? ORDER BY p.id LIMIT ?, 1";
-        String sqlProdutoDoPedido = "SELECT produto_id FROM pedidos WHERE id = ?";
-        String sqlDeletePedido = "DELETE FROM pedidos WHERE id = ?";
-        String sqlDeleteProduto = "DELETE FROM produtos WHERE id = ?";
+    // ==================== EXPORTAÇÃO ====================
 
-        Connection conn = null;
+    public boolean exportarRelatorioCSV(String caminho, int ano) {
+        try (PrintWriter writer = new PrintWriter(caminho, "UTF-8")) {
+            writer.println("Produto;Quantidade;Preço Unitário;Total;Forma Pagamento;Data");
 
-        try {
-            conn = Conexao.conectar();
-            conn.setAutoCommit(false);
-
-            int clienteId;
-            try (PreparedStatement stmtCliente = conn.prepareStatement(sqlCliente)) {
-                stmtCliente.setString(1, nomeCliente == null ? "" : nomeCliente.trim());
-
-                try (ResultSet rs = stmtCliente.executeQuery()) {
-                    if (!rs.next()) {
-                        conn.rollback();
-                        return false;
-                    }
-                    clienteId = rs.getInt("id");
-                }
+            List<Object[]> lista = listarRelatorioVendas(ano);
+            for (Object[] row : lista) {
+                writer.println(
+                        row[0] + ";" + row[1] + ";" + row[2] + ";" +
+                        row[3] + ";" + row[4] + ";" + row[5]
+                );
             }
 
-            int pedidoId;
-            try (PreparedStatement stmtPedido = conn.prepareStatement(sqlPedidoPorIndice)) {
-                stmtPedido.setInt(1, clienteId);
-                stmtPedido.setInt(2, indice);
-
-                try (ResultSet rs = stmtPedido.executeQuery()) {
-                    if (!rs.next()) {
-                        conn.rollback();
-                        return false;
-                    }
-                    pedidoId = rs.getInt("id");
-                }
-            }
-
-            int produtoId;
-            try (PreparedStatement stmtProduto = conn.prepareStatement(sqlProdutoDoPedido)) {
-                stmtProduto.setInt(1, pedidoId);
-
-                try (ResultSet rs = stmtProduto.executeQuery()) {
-                    if (!rs.next()) {
-                        conn.rollback();
-                        return false;
-                    }
-                    produtoId = rs.getInt("produto_id");
-                }
-            }
-
-            try (PreparedStatement stmtDeletePedido = conn.prepareStatement(sqlDeletePedido)) {
-                stmtDeletePedido.setInt(1, pedidoId);
-                stmtDeletePedido.executeUpdate();
-            }
-
-            try (PreparedStatement stmtDeleteProduto = conn.prepareStatement(sqlDeleteProduto)) {
-                stmtDeleteProduto.setInt(1, produtoId);
-                stmtDeleteProduto.executeUpdate();
-            }
-
-            conn.commit();
             return true;
 
         } catch (Exception e) {
-            try {
-                if (conn != null) {
-                    conn.rollback();
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean exportarRelatorioExcel(String caminho, int ano) {
+        try (Workbook wb = new XSSFWorkbook()) {
+            Sheet sheet = wb.createSheet("Relatorio");
+
+            Row header = sheet.createRow(0);
+            header.createCell(0).setCellValue("Produto");
+            header.createCell(1).setCellValue("Quantidade");
+            header.createCell(2).setCellValue("Preço Unitário");
+            header.createCell(3).setCellValue("Total");
+            header.createCell(4).setCellValue("Forma Pagamento");
+            header.createCell(5).setCellValue("Data");
+
+            List<Object[]> lista = listarRelatorioVendas(ano);
+            int rowNum = 1;
+
+            for (Object[] rowData : lista) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(rowData[0].toString());
+                row.createCell(1).setCellValue(Integer.parseInt(rowData[1].toString()));
+                row.createCell(2).setCellValue(Double.parseDouble(rowData[2].toString()));
+                row.createCell(3).setCellValue(Double.parseDouble(rowData[3].toString()));
+                row.createCell(4).setCellValue(rowData[4].toString());
+                row.createCell(5).setCellValue(rowData[5].toString());
             }
 
-            e.printStackTrace();
-            return false;
-
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.setAutoCommit(true);
-                    conn.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            for (int i = 0; i < 6; i++) {
+                sheet.autoSizeColumn(i);
             }
-        }
-    }
 
-    public boolean criarUsuario(String username, String password, String nivel) {
-        String sql = "INSERT INTO usuarios (username, password, nivel) VALUES (?, ?, ?)";
+            try (FileOutputStream out = new FileOutputStream(caminho)) {
+                wb.write(out);
+            }
 
-        try (Connection conn = Conexao.conectar();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            stmt.setString(3, nivel.toUpperCase());
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean atualizarUsuario(int id, String username, String password, String nivel) {
-        String sql = "UPDATE usuarios SET username = ?, password = ?, nivel = ? WHERE id = ?";
-
-        try (Connection conn = Conexao.conectar();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            stmt.setString(3, nivel.toUpperCase());
-            stmt.setInt(4, id);
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean eliminarUsuario(int id) {
-        String sql = "DELETE FROM usuarios WHERE id = ?";
-
-        try (Connection conn = Conexao.conectar();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            return stmt.executeUpdate() > 0;
+            return true;
 
         } catch (Exception e) {
             e.printStackTrace();

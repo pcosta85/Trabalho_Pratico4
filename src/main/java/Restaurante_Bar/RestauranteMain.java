@@ -1,696 +1,491 @@
 package Restaurante_Bar;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestauranteMain extends JFrame {
 
-    private final RestauranteSistema sistema = new RestauranteSistema();
     private final Usuario usuarioLogado;
-
+    private final RestauranteSistema sistema = new RestauranteSistema();
     private final JPanel painelPrincipal = new JPanel(new CardLayout());
-    private final JLabel titulo = new JLabel("", SwingConstants.CENTER);
-
-    private JTextField txtNomeConsulta;
-    private JTable tabelaPedidos;
-    private DefaultTableModel modeloPedidos;
 
     public RestauranteMain(Usuario usuarioLogado) {
         this.usuarioLogado = usuarioLogado;
 
-        setTitle("Restaurante/Bar CENTRAL");
-        setSize(950, 550);
+        setTitle("Sistema Restaurante / Bar");
+        setSize(1100, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel barraLateral = new JPanel();
-        barraLateral.setLayout(new BoxLayout(barraLateral, BoxLayout.Y_AXIS));
-        barraLateral.setBackground(new Color(50, 50, 50));
-        barraLateral.setPreferredSize(new Dimension(220, getHeight()));
+        JPanel menu = new JPanel();
+        menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
+        menu.setPreferredSize(new Dimension(220, getHeight()));
 
-        JButton btnInicio = criarBotaoMenu("Início");
-        JButton btnInserirCliente = criarBotaoMenu("Inserir Cliente");
-        JButton btnRegistarPedido = criarBotaoMenu("Registar Pedido");
-        JButton btnConsultar = criarBotaoMenu("Consultar Cliente");
-        JButton btnGerarFatura = criarBotaoMenu("Gerar Fatura");
-        JButton btnAlterarCliente = criarBotaoMenu("Alterar Cliente");
-        JButton btnEliminarCliente = criarBotaoMenu("Eliminar Cliente");
-        JButton btnAlterarPedido = criarBotaoMenu("Alterar Pedido");
-        JButton btnEliminarPedido = criarBotaoMenu("Eliminar Pedido");
-        JButton btnGerirUsuarios = criarBotaoMenu("Gerir Utilizadores");
-        JButton btnLogout = criarBotaoMenu("Terminar Sessão");
+        JButton btnInicio = new JButton("Início");
+        JButton btnLoja = new JButton("Loja / Caixa");
+        JButton btnProdutos = new JButton("Produtos");
+        JButton btnRelatorios = new JButton("Relatórios");
+        JButton btnComprasDia = new JButton("Compras do Dia");
+        JButton btnDefinicoes = new JButton("Definições");
+        JButton btnLogout = new JButton("Terminar Sessão");
+        JButton btnSair = new JButton("Sair");
 
-        adicionarBotao(barraLateral, btnInicio);
-        adicionarBotao(barraLateral, btnInserirCliente);
-        adicionarBotao(barraLateral, btnRegistarPedido);
-        adicionarBotao(barraLateral, btnConsultar);
-        adicionarBotao(barraLateral, btnGerarFatura);
+        menu.add(btnInicio);
+        menu.add(btnLoja);
 
-        if (podeAlterarOuEliminarCliente()) {
-            adicionarBotao(barraLateral, btnAlterarCliente);
-            adicionarBotao(barraLateral, btnEliminarCliente);
+        if (isAdmin() || isGestor()) {
+            menu.add(btnProdutos);
+            menu.add(btnRelatorios);
         }
 
-        if (podeAlterarOuEliminarPedido()) {
-            adicionarBotao(barraLateral, btnAlterarPedido);
-            adicionarBotao(barraLateral, btnEliminarPedido);
-        }
-
-        if (podeGerirUtilizadores()) {
-            adicionarBotao(barraLateral, btnGerirUsuarios);
-        }
-
-        barraLateral.add(Box.createVerticalGlue());
-        adicionarBotao(barraLateral, btnLogout);
+        menu.add(btnComprasDia);
+        menu.add(btnDefinicoes);
+        menu.add(Box.createVerticalGlue());
+        menu.add(btnLogout);
+        menu.add(btnSair);
 
         painelPrincipal.add(criarPaginaInicio(), "INICIO");
-        painelPrincipal.add(criarPaginaInserirCliente(), "INSERIR_CLIENTE");
-        painelPrincipal.add(criarPaginaRegistarPedido(), "REGISTAR_PEDIDO");
-        painelPrincipal.add(criarPaginaConsultarCliente(), "CONSULTAR");
-        painelPrincipal.add(criarPaginaGerarFatura(), "GERAR_FATURA");
-        painelPrincipal.add(criarPaginaAlterarCliente(), "ALTERAR_CLIENTE");
-        painelPrincipal.add(criarPaginaEliminarCliente(), "ELIMINAR_CLIENTE");
-        painelPrincipal.add(criarPaginaAlterarPedido(), "ALTERAR_PEDIDO");
-        painelPrincipal.add(criarPaginaEliminarPedido(), "ELIMINAR_PEDIDO");
-        painelPrincipal.add(criarPaginaGerirUsuarios(), "GERIR_USUARIOS");
+        painelPrincipal.add(criarPaginaLoja(), "LOJA");
+        painelPrincipal.add(criarPaginaProdutos(), "PRODUTOS");
+        painelPrincipal.add(criarPaginaRelatorios(), "RELATORIOS");
+        painelPrincipal.add(criarPaginaComprasDia(), "COMPRAS_DIA");
+        painelPrincipal.add(criarPaginaDefinicoes(), "DEFINICOES");
 
         btnInicio.addActionListener(e -> mostrar("INICIO"));
-        btnInserirCliente.addActionListener(e -> mostrar("INSERIR_CLIENTE"));
-        btnRegistarPedido.addActionListener(e -> mostrar("REGISTAR_PEDIDO"));
-        btnConsultar.addActionListener(e -> mostrar("CONSULTAR"));
-        btnGerarFatura.addActionListener(e -> mostrar("GERAR_FATURA"));
-        btnAlterarCliente.addActionListener(e -> mostrar("ALTERAR_CLIENTE"));
-        btnEliminarCliente.addActionListener(e -> mostrar("ELIMINAR_CLIENTE"));
-        btnAlterarPedido.addActionListener(e -> mostrar("ALTERAR_PEDIDO"));
-        btnEliminarPedido.addActionListener(e -> mostrar("ELIMINAR_PEDIDO"));
-        btnGerirUsuarios.addActionListener(e -> mostrar("GERIR_USUARIOS"));
+        btnLoja.addActionListener(e -> mostrar("LOJA"));
+        btnProdutos.addActionListener(e -> mostrar("PRODUTOS"));
+        btnRelatorios.addActionListener(e -> mostrar("RELATORIOS"));
+        btnComprasDia.addActionListener(e -> mostrar("COMPRAS_DIA"));
+        btnDefinicoes.addActionListener(e -> mostrar("DEFINICOES"));
 
         btnLogout.addActionListener(e -> {
-            dispose();
-            new LoginFrame().setVisible(true);
+            int op = JOptionPane.showConfirmDialog(this, "Deseja terminar a sessão atual?",
+                    "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (op == JOptionPane.YES_OPTION) {
+                dispose();
+                new LoginFrame().setVisible(true);
+            }
         });
 
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(barraLateral, BorderLayout.WEST);
-        getContentPane().add(painelPrincipal, BorderLayout.CENTER);
+        btnSair.addActionListener(e -> {
+            int op = JOptionPane.showConfirmDialog(this, "Deseja sair do sistema?",
+                    "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (op == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
+        });
+
+        add(menu, BorderLayout.WEST);
+        add(painelPrincipal, BorderLayout.CENTER);
 
         mostrar("INICIO");
     }
 
     private boolean isAdmin() {
-        return usuarioLogado != null && "ADMIN".equalsIgnoreCase(usuarioLogado.getNivelAcesso());
+        return "ADMIN".equalsIgnoreCase(usuarioLogado.getNivelAcesso());
     }
 
     private boolean isGestor() {
-        return usuarioLogado != null && "GESTOR".equalsIgnoreCase(usuarioLogado.getNivelAcesso());
-    }
-
-    private boolean isAtendente() {
-        return usuarioLogado != null && "ATENDENTE".equalsIgnoreCase(usuarioLogado.getNivelAcesso());
-    }
-
-    private boolean podeGerirUtilizadores() {
-        return isAdmin();
-    }
-
-    private boolean podeAlterarOuEliminarCliente() {
-        return isAdmin() || isGestor();
-    }
-
-    private boolean podeAlterarOuEliminarPedido() {
-        return isAdmin() || isGestor();
-    }
-
-    private void adicionarBotao(JPanel painel, JButton botao) {
-        painel.add(Box.createRigidArea(new Dimension(0, 10)));
-        painel.add(botao);
-    }
-
-    private JButton criarBotaoMenu(String texto) {
-        JButton b = new JButton(texto);
-        b.setMaximumSize(new Dimension(999, 35));
-        b.setAlignmentX(Component.CENTER_ALIGNMENT);
-        return b;
+        return "GESTOR".equalsIgnoreCase(usuarioLogado.getNivelAcesso());
     }
 
     private void mostrar(String card) {
-        CardLayout cl = (CardLayout) painelPrincipal.getLayout();
-        cl.show(painelPrincipal, card);
+        ((CardLayout) painelPrincipal.getLayout()).show(painelPrincipal, card);
     }
 
     private JPanel criarPaginaInicio() {
         JPanel p = new JPanel(new BorderLayout());
-        String nome = usuarioLogado != null ? usuarioLogado.getUsername() : "";
-        String nivel = usuarioLogado != null ? usuarioLogado.getNivelAcesso() : "";
-        titulo.setText("Bem-vindo ao Restaurante/Bar CENTRAL - " + nome + " (" + nivel + ")");
-        titulo.setFont(new Font("Arial", Font.BOLD, 22));
-        p.add(titulo, BorderLayout.CENTER);
+        JLabel lbl = new JLabel(
+                "Bem-vindo " + usuarioLogado.getUsername() + " - Perfil: " + usuarioLogado.getNivelAcesso(),
+                SwingConstants.CENTER
+        );
+        lbl.setFont(new Font("Arial", Font.BOLD, 22));
+        p.add(lbl, BorderLayout.CENTER);
         return p;
     }
 
-    private JPanel criarPaginaInserirCliente() {
-        JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints gc = baseGC();
-
-        JLabel lbl = new JLabel("Nome do Cliente:");
-        JTextField txtNome = new JTextField(20);
-        JButton btn = new JButton("Inserir");
-
-        gc.gridx = 0;
-        gc.gridy = 0;
-        p.add(lbl, gc);
-
-        gc.gridx = 1;
-        p.add(txtNome, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 1;
-        p.add(btn, gc);
-
-        btn.addActionListener(e -> {
-            String nome = txtNome.getText().trim();
-
-            if (nome.isEmpty()) {
-                aviso("Preencha o nome.");
-                return;
-            }
-
-            boolean ok = sistema.adicionarCliente(nome);
-            if (ok) {
-                info("Cliente adicionado!");
-                txtNome.setText("");
-            } else {
-                aviso("Não foi possível adicionar o cliente.");
-            }
-        });
-
-        return p;
-    }
-
-    private JPanel criarPaginaRegistarPedido() {
-        JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints gc = baseGC();
-
-        JTextField txtNome = new JTextField(18);
-        JTextField txtProduto = new JTextField(18);
-        JTextField txtPreco = new JTextField(10);
-        JTextField txtQtd = new JTextField(10);
-        JButton btn = new JButton("Registar");
-
-        int y = 0;
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Cliente:"), gc);
-        gc.gridx = 1; p.add(txtNome, gc); y++;
-
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Produto:"), gc);
-        gc.gridx = 1; p.add(txtProduto, gc); y++;
-
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Preço:"), gc);
-        gc.gridx = 1; p.add(txtPreco, gc); y++;
-
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Quantidade:"), gc);
-        gc.gridx = 1; p.add(txtQtd, gc); y++;
-
-        gc.gridx = 1; gc.gridy = y; p.add(btn, gc);
-
-        btn.addActionListener(e -> {
-            String nome = txtNome.getText().trim();
-            String prod = txtProduto.getText().trim();
-
-            if (nome.isEmpty() || prod.isEmpty() ||
-                txtPreco.getText().trim().isEmpty() ||
-                txtQtd.getText().trim().isEmpty()) {
-                aviso("Preencha todos os campos.");
-                return;
-            }
-
-            try {
-                double preco = Double.parseDouble(txtPreco.getText().trim());
-                int qtd = Integer.parseInt(txtQtd.getText().trim());
-
-                boolean ok = sistema.registrarPedido(nome, new Produto(prod, preco), qtd);
-
-                if (ok) {
-                    info("Pedido registado!");
-                    txtProduto.setText("");
-                    txtPreco.setText("");
-                    txtQtd.setText("");
-                } else {
-                    aviso("Erro: cliente não existe.");
-                }
-
-            } catch (NumberFormatException ex) {
-                erro("Preço ou quantidade inválidos.");
-            }
-        });
-
-        return p;
-    }
-
-    private JPanel criarPaginaConsultarCliente() {
+    private JPanel criarPaginaLoja() {
         JPanel p = new JPanel(new BorderLayout());
 
         JPanel topo = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        topo.add(new JLabel("Nome do Cliente:"));
-        txtNomeConsulta = new JTextField(18);
-        JButton btn = new JButton("Consultar");
-        topo.add(txtNomeConsulta);
-        topo.add(btn);
+        JComboBox<String> cbProduto = new JComboBox<>();
+        JTextField txtQtd = new JTextField(5);
+        JButton btnAdicionar = new JButton("Adicionar");
 
-        String[] cols = {"Índice", "ID Pedido", "Produto", "Quantidade", "Preço", "Total"};
-        modeloPedidos = new DefaultTableModel(cols, 0);
-        tabelaPedidos = new JTable(modeloPedidos);
-
-        p.add(topo, BorderLayout.NORTH);
-        p.add(new JScrollPane(tabelaPedidos), BorderLayout.CENTER);
-
-        btn.addActionListener(e -> atualizarTabelaPedidos());
-
-        return p;
-    }
-
-    private void atualizarTabelaPedidos() {
-        String nome = txtNomeConsulta.getText().trim();
-        modeloPedidos.setRowCount(0);
-
-        if (nome.isEmpty()) {
-            aviso("Digite o nome do cliente.");
-            return;
+        for (Object[] prod : sistema.listarProdutos()) {
+            cbProduto.addItem(prod[1].toString());
         }
 
-        Cliente c = sistema.procurarCliente(nome);
-        if (c == null) {
-            aviso("Cliente não existe.");
-            return;
-        }
+        topo.add(new JLabel("Produto:"));
+        topo.add(cbProduto);
+        topo.add(new JLabel("Qtd:"));
+        topo.add(txtQtd);
+        topo.add(btnAdicionar);
 
-        List<Pedido> pedidos = sistema.obterPedidosCliente(c);
+        DefaultTableModel modelo = new DefaultTableModel(
+                new String[]{"Produto", "Qtd", "Preço", "Total"}, 0
+        );
+        JTable tabela = new JTable(modelo);
 
-        int i = 0;
-        for (Pedido ped : pedidos) {
-            modeloPedidos.addRow(new Object[]{
-                i,
-                ped.getId(),
-                ped.getProduto().getNome(),
-                ped.getQuantidade(),
-                ped.getProduto().getPreco(),
-                ped.getTotal()
-            });
-            i++;
-        }
-    }
+        List<Object[]> carrinho = new ArrayList<>();
 
-    private JPanel criarPaginaGerarFatura() {
-        JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints gc = baseGC();
+        JPanel rodape = new JPanel();
+        JComboBox<String> cbPagamento = new JComboBox<>(new String[]{"Dinheiro", "Cartão", "PIX"});
+        JTextField txtRecebido = new JTextField(10);
+        JLabel lblTotal = new JLabel("Total: 0.00");
+        JLabel lblTroco = new JLabel("Troco: 0.00");
+        JButton btnFinalizar = new JButton("Finalizar Compra");
 
-        JTextField txtNome = new JTextField(20);
-        JButton btn = new JButton("Gerar Fatura");
+        rodape.add(cbPagamento);
+        rodape.add(new JLabel("Recebido:"));
+        rodape.add(txtRecebido);
+        rodape.add(lblTotal);
+        rodape.add(lblTroco);
+        rodape.add(btnFinalizar);
 
-        gc.gridx = 0;
-        gc.gridy = 0;
-        p.add(new JLabel("Nome do Cliente:"), gc);
-
-        gc.gridx = 1;
-        p.add(txtNome, gc);
-
-        gc.gridx = 1;
-        gc.gridy = 1;
-        p.add(btn, gc);
-
-        btn.addActionListener(e -> {
-            String nome = txtNome.getText().trim();
-
-            if (nome.isEmpty()) {
-                aviso("Digite o nome.");
-                return;
-            }
-
-            Cliente c = sistema.procurarCliente(nome);
-            if (c == null) {
-                aviso("Cliente não existe.");
-                return;
-            }
-
-            List<Pedido> pedidos = sistema.obterPedidosCliente(c);
-            FaturaRestaurante.gerar(c, pedidos);
-            info("Fatura gerada!");
-        });
-
-        return p;
-    }
-
-    private JPanel criarPaginaAlterarCliente() {
-        JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints gc = baseGC();
-
-        JTextField atual = new JTextField(18);
-        JTextField novo = new JTextField(18);
-        JButton btn = new JButton("Alterar");
-
-        int y = 0;
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Nome atual:"), gc);
-        gc.gridx = 1; p.add(atual, gc); y++;
-
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Novo nome:"), gc);
-        gc.gridx = 1; p.add(novo, gc); y++;
-
-        gc.gridx = 1; gc.gridy = y; p.add(btn, gc);
-
-        btn.addActionListener(e -> {
-            if (!podeAlterarOuEliminarCliente()) {
-                aviso("Sem permissão para esta operação.");
-                return;
-            }
-
-            boolean ok = sistema.alterarNomeCliente(atual.getText().trim(), novo.getText().trim());
-            if (ok) {
-                info("Cliente alterado com sucesso!");
-            } else {
-                aviso("Erro: cliente não existe ou nome duplicado.");
-            }
-        });
-
-        return p;
-    }
-
-    private JPanel criarPaginaEliminarCliente() {
-        JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints gc = baseGC();
-
-        JTextField nome = new JTextField(20);
-        JButton btn = new JButton("Eliminar");
-
-        gc.gridx = 0; gc.gridy = 0; p.add(new JLabel("Nome do cliente:"), gc);
-        gc.gridx = 1; p.add(nome, gc);
-
-        gc.gridx = 1; gc.gridy = 1; p.add(btn, gc);
-
-        btn.addActionListener(e -> {
-            if (!podeAlterarOuEliminarCliente()) {
-                aviso("Sem permissão para esta operação.");
-                return;
-            }
-
-            String n = nome.getText().trim();
-            if (n.isEmpty()) {
-                aviso("Digite o nome.");
-                return;
-            }
-
-            int conf = JOptionPane.showConfirmDialog(this,
-                    "Eliminar o cliente \"" + n + "\"?",
-                    "Confirmar",
-                    JOptionPane.YES_NO_OPTION);
-
-            if (conf != JOptionPane.YES_OPTION) {
-                return;
-            }
-
-            boolean ok = sistema.eliminarCliente(n);
-            if (ok) {
-                info("Cliente eliminado!");
-            } else {
-                aviso("Cliente não encontrado.");
-            }
-        });
-
-        return p;
-    }
-
-    private JPanel criarPaginaAlterarPedido() {
-        JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints gc = baseGC();
-
-        JTextField nome = new JTextField(18);
-        JTextField idx = new JTextField(6);
-        JTextField prod = new JTextField(18);
-        JTextField preco = new JTextField(10);
-        JTextField qtd = new JTextField(10);
-        JButton btn = new JButton("Alterar Pedido");
-
-        int y = 0;
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Cliente:"), gc);
-        gc.gridx = 1; p.add(nome, gc); y++;
-
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Índice do pedido:"), gc);
-        gc.gridx = 1; p.add(idx, gc); y++;
-
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Novo produto:"), gc);
-        gc.gridx = 1; p.add(prod, gc); y++;
-
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Novo preço:"), gc);
-        gc.gridx = 1; p.add(preco, gc); y++;
-
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Nova quantidade:"), gc);
-        gc.gridx = 1; p.add(qtd, gc); y++;
-
-        gc.gridx = 1; gc.gridy = y; p.add(btn, gc);
-
-        btn.addActionListener(e -> {
-            if (!podeAlterarOuEliminarPedido()) {
-                aviso("Sem permissão para esta operação.");
-                return;
-            }
-
+        btnAdicionar.addActionListener(e -> {
             try {
-                String n = nome.getText().trim();
-                int i = Integer.parseInt(idx.getText().trim());
-                String pr = prod.getText().trim();
-                double pc = Double.parseDouble(preco.getText().trim());
-                int q = Integer.parseInt(qtd.getText().trim());
-
-                boolean ok = sistema.alterarPedido(n, i, pr, pc, q);
-                if (ok) {
-                    info("Pedido alterado!");
-                } else {
-                    aviso("Erro ao alterar pedido.");
-                }
-
-            } catch (NumberFormatException ex) {
-                erro("Índice, preço ou quantidade inválidos.");
-            }
-        });
-
-        return p;
-    }
-
-    private JPanel criarPaginaEliminarPedido() {
-        JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints gc = baseGC();
-
-        JTextField nome = new JTextField(18);
-        JTextField idx = new JTextField(6);
-        JButton btn = new JButton("Eliminar Pedido");
-
-        gc.gridx = 0; gc.gridy = 0; p.add(new JLabel("Cliente:"), gc);
-        gc.gridx = 1; p.add(nome, gc);
-
-        gc.gridx = 0; gc.gridy = 1; p.add(new JLabel("Índice do pedido:"), gc);
-        gc.gridx = 1; p.add(idx, gc);
-
-        gc.gridx = 1; gc.gridy = 2; p.add(btn, gc);
-
-        btn.addActionListener(e -> {
-            if (!podeAlterarOuEliminarPedido()) {
-                aviso("Sem permissão para esta operação.");
-                return;
-            }
-
-            try {
-                String n = nome.getText().trim();
-                int i = Integer.parseInt(idx.getText().trim());
-
-                int conf = JOptionPane.showConfirmDialog(this,
-                        "Eliminar o pedido índice " + i + " do cliente \"" + n + "\"?",
-                        "Confirmar",
-                        JOptionPane.YES_NO_OPTION);
-
-                if (conf != JOptionPane.YES_OPTION) {
+                Object[] prod = sistema.obterProduto((String) cbProduto.getSelectedItem());
+                if (prod == null) {
+                    JOptionPane.showMessageDialog(this, "Produto não encontrado.");
                     return;
                 }
 
-                boolean ok = sistema.eliminarPedido(n, i);
-                if (ok) {
-                    info("Pedido eliminado!");
-                } else {
-                    aviso("Erro ao eliminar pedido.");
-                }
+                int qtd = Integer.parseInt(txtQtd.getText().trim());
+                double preco = (double) prod[2];
+                double total = preco * qtd;
 
-            } catch (NumberFormatException ex) {
-                erro("Índice inválido.");
+                carrinho.add(new Object[]{prod[1], qtd, preco, total});
+                modelo.addRow(new Object[]{prod[1], qtd, preco, total});
+
+                double soma = 0;
+                for (Object[] item : carrinho) soma += (double) item[3];
+                lblTotal.setText("Total: " + String.format("%.2f", soma));
+                txtQtd.setText("");
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Quantidade inválida.");
             }
         });
 
+        btnFinalizar.addActionListener(e -> {
+            if (carrinho.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Carrinho vazio.");
+                return;
+            }
+
+            try {
+                double total = 0;
+                for (Object[] item : carrinho) total += (double) item[3];
+
+                String forma = cbPagamento.getSelectedItem().toString();
+                Double recebido = null;
+                Double troco = null;
+
+                if ("Dinheiro".equalsIgnoreCase(forma)) {
+                    recebido = Double.parseDouble(txtRecebido.getText().trim());
+                    troco = recebido - total;
+
+                    if (troco < 0) {
+                        JOptionPane.showMessageDialog(this, "Valor insuficiente.");
+                        return;
+                    }
+
+                    lblTroco.setText("Troco: " + String.format("%.2f", troco));
+                }
+
+                boolean ok = sistema.finalizarVenda(
+                        usuarioLogado.getUsername(),
+                        forma,
+                        recebido,
+                        troco,
+                        carrinho
+                );
+
+                if (ok) {
+                    JOptionPane.showMessageDialog(this, "Venda concluída com sucesso.");
+                    carrinho.clear();
+                    modelo.setRowCount(0);
+                    lblTotal.setText("Total: 0.00");
+                    lblTroco.setText("Troco: 0.00");
+                    txtRecebido.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Erro ao finalizar venda.");
+                }
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro no valor recebido.");
+            }
+        });
+
+        p.add(topo, BorderLayout.NORTH);
+        p.add(new JScrollPane(tabela), BorderLayout.CENTER);
+        p.add(rodape, BorderLayout.SOUTH);
         return p;
     }
 
-    private JPanel criarPaginaGerirUsuarios() {
-        JPanel p = new JPanel(new GridBagLayout());
-        GridBagConstraints gc = baseGC();
+    private JPanel criarPaginaProdutos() {
+        JPanel p = new JPanel(new BorderLayout());
 
-        JTextField txtId = new JTextField(6);
-        JTextField txtUsername = new JTextField(18);
-        JTextField txtPassword = new JTextField(18);
+        JPanel topo = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JTextField txtId = new JTextField(5);
+        JTextField txtNome = new JTextField(15);
+        JTextField txtPreco = new JTextField(10);
 
-        javax.swing.JComboBox<String> cbNivel = new javax.swing.JComboBox<>(
-                new String[]{"ADMIN", "GESTOR", "ATENDENTE"}
-        );
-        cbNivel.setSelectedIndex(0);
+        JButton btnCadastrar = new JButton("Cadastrar");
+        JButton btnAtualizar = new JButton("Atualizar");
+        JButton btnEliminar = new JButton("Eliminar");
+        JButton btnRecarregar = new JButton("Recarregar");
 
-        JButton btnCriar = new JButton("Criar Utilizador");
-        JButton btnAtualizar = new JButton("Atualizar Utilizador");
-        JButton btnEliminar = new JButton("Eliminar Utilizador");
+        topo.add(new JLabel("ID:"));
+        topo.add(txtId);
+        topo.add(new JLabel("Nome:"));
+        topo.add(txtNome);
+        topo.add(new JLabel("Preço:"));
+        topo.add(txtPreco);
+        topo.add(btnCadastrar);
+        topo.add(btnAtualizar);
+        topo.add(btnEliminar);
+        topo.add(btnRecarregar);
 
-        int y = 0;
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("ID:"), gc);
-        gc.gridx = 1; p.add(txtId, gc); y++;
-
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Username:"), gc);
-        gc.gridx = 1; p.add(txtUsername, gc); y++;
-
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Password:"), gc);
-        gc.gridx = 1; p.add(txtPassword, gc); y++;
-
-        gc.gridx = 0; gc.gridy = y; p.add(new JLabel("Nível de Acesso:"), gc);
-        gc.gridx = 1; p.add(cbNivel, gc); y++;
-
-        gc.gridx = 1; gc.gridy = y; p.add(btnCriar, gc); y++;
-        gc.gridx = 1; gc.gridy = y; p.add(btnAtualizar, gc); y++;
-        gc.gridx = 1; gc.gridy = y; p.add(btnEliminar, gc);
-
-        btnCriar.addActionListener(e -> {
-            if (!podeGerirUtilizadores()) {
-                aviso("Sem permissão para esta operação.");
-                return;
+        DefaultTableModel modelo = new DefaultTableModel(new String[]{"ID", "Produto", "Preço"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
             }
+        };
 
-            String username = txtUsername.getText().trim();
-            String password = txtPassword.getText().trim();
-            String nivel = cbNivel.getSelectedItem().toString();
+        JTable tabela = new JTable(modelo);
+        carregarTabelaProdutos(modelo);
 
-            if (username.isEmpty() || password.isEmpty()) {
-                aviso("Preencha username e password.");
-                return;
+        tabela.getSelectionModel().addListSelectionListener(e -> {
+            int linha = tabela.getSelectedRow();
+            if (linha >= 0) {
+                txtId.setText(modelo.getValueAt(linha, 0).toString());
+                txtNome.setText(modelo.getValueAt(linha, 1).toString());
+                txtPreco.setText(modelo.getValueAt(linha, 2).toString());
             }
+        });
 
-            boolean ok = sistema.criarUsuario(username, password, nivel);
-
-            if (ok) {
-                info("Utilizador criado com sucesso!");
-                txtUsername.setText("");
-                txtPassword.setText("");
-                cbNivel.setSelectedIndex(0);
-            } else {
-                aviso("Não foi possível criar o utilizador.");
+        btnCadastrar.addActionListener(e -> {
+            try {
+                boolean ok = sistema.cadastrarProduto(txtNome.getText().trim(),
+                        Double.parseDouble(txtPreco.getText().trim()));
+                if (ok) {
+                    carregarTabelaProdutos(modelo);
+                    txtId.setText("");
+                    txtNome.setText("");
+                    txtPreco.setText("");
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Dados inválidos.");
             }
         });
 
         btnAtualizar.addActionListener(e -> {
-            if (!podeGerirUtilizadores()) {
-                aviso("Sem permissão para esta operação.");
-                return;
-            }
-
             try {
-                int id = Integer.parseInt(txtId.getText().trim());
-                String username = txtUsername.getText().trim();
-                String password = txtPassword.getText().trim();
-                String nivel = cbNivel.getSelectedItem().toString();
-
-                if (username.isEmpty() || password.isEmpty()) {
-                    aviso("Preencha username e password.");
-                    return;
-                }
-
-                boolean ok = sistema.atualizarUsuario(id, username, password, nivel);
-
-                if (ok) {
-                    info("Utilizador atualizado com sucesso!");
-                } else {
-                    aviso("Não foi possível atualizar o utilizador.");
-                }
-
-            } catch (NumberFormatException ex) {
-                erro("ID inválido.");
+                boolean ok = sistema.atualizarProduto(
+                        Integer.parseInt(txtId.getText().trim()),
+                        txtNome.getText().trim(),
+                        Double.parseDouble(txtPreco.getText().trim())
+                );
+                if (ok) carregarTabelaProdutos(modelo);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Dados inválidos.");
             }
         });
 
         btnEliminar.addActionListener(e -> {
-            if (!podeGerirUtilizadores()) {
-                aviso("Sem permissão para esta operação.");
-                return;
-            }
-
             try {
-                int id = Integer.parseInt(txtId.getText().trim());
-
-                boolean ok = sistema.eliminarUsuario(id);
-
+                boolean ok = sistema.eliminarProduto(Integer.parseInt(txtId.getText().trim()));
                 if (ok) {
-                    info("Utilizador eliminado com sucesso!");
+                    carregarTabelaProdutos(modelo);
                     txtId.setText("");
-                    txtUsername.setText("");
-                    txtPassword.setText("");
-                    cbNivel.setSelectedIndex(0);
-                } else {
-                    aviso("Não foi possível eliminar o utilizador.");
+                    txtNome.setText("");
+                    txtPreco.setText("");
                 }
-
-            } catch (NumberFormatException ex) {
-                erro("ID inválido.");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "ID inválido.");
             }
         });
 
+        btnRecarregar.addActionListener(e -> carregarTabelaProdutos(modelo));
+
+        p.add(topo, BorderLayout.NORTH);
+        p.add(new JScrollPane(tabela), BorderLayout.CENTER);
         return p;
     }
 
-    private GridBagConstraints baseGC() {
+    private void carregarTabelaProdutos(DefaultTableModel modelo) {
+        modelo.setRowCount(0);
+        for (Object[] p : sistema.listarProdutos()) {
+            modelo.addRow(p);
+        }
+    }
+
+    private JPanel criarPaginaRelatorios() {
+        JPanel p = new JPanel(new BorderLayout());
+
+        JPanel topo = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JComboBox<Integer> cbAno = new JComboBox<>();
+        JButton btnGerar = new JButton("Gerar");
+        JButton btnCSV = new JButton("Exportar CSV");
+        JButton btnExcel = new JButton("Exportar Excel");
+
+        for (Integer ano : sistema.listarAnosVenda()) {
+            cbAno.addItem(ano);
+        }
+
+        topo.add(new JLabel("Ano:"));
+        topo.add(cbAno);
+        topo.add(btnGerar);
+        topo.add(btnCSV);
+        topo.add(btnExcel);
+
+        DefaultTableModel modelo = new DefaultTableModel(
+                new String[]{"Produto", "Qtd", "Preço Unit.", "Total", "Forma Pagamento", "Data"}, 0
+        );
+        JTable tabela = new JTable(modelo);
+
+        JTextArea resumo = new JTextArea();
+        resumo.setEditable(false);
+
+        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+                new JScrollPane(tabela),
+                new JScrollPane(resumo));
+        split.setResizeWeight(0.7);
+
+        btnGerar.addActionListener(e -> {
+            Integer ano = (Integer) cbAno.getSelectedItem();
+            if (ano == null) return;
+
+            modelo.setRowCount(0);
+            for (Object[] row : sistema.listarRelatorioVendas(ano)) {
+                modelo.addRow(row);
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("=== Total por Forma de Pagamento ===\n");
+            for (Object[] row : sistema.totalPorFormaPagamento(ano)) {
+                sb.append(row[0]).append(": ").append(row[1]).append("\n");
+            }
+
+            sb.append("\n=== Total por Produto ===\n");
+            for (Object[] row : sistema.totalPorProduto(ano)) {
+                sb.append(row[0]).append(": ").append(row[1]).append("\n");
+            }
+
+            resumo.setText(sb.toString());
+        });
+
+        btnCSV.addActionListener(e -> {
+            Integer ano = (Integer) cbAno.getSelectedItem();
+            if (ano == null) return;
+
+            JFileChooser chooser = new JFileChooser();
+            if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                boolean ok = sistema.exportarRelatorioCSV(chooser.getSelectedFile().getAbsolutePath(), ano);
+                JOptionPane.showMessageDialog(this, ok ? "CSV exportado." : "Erro ao exportar CSV.");
+            }
+        });
+
+        btnExcel.addActionListener(e -> {
+            Integer ano = (Integer) cbAno.getSelectedItem();
+            if (ano == null) return;
+
+            JFileChooser chooser = new JFileChooser();
+            if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                boolean ok = sistema.exportarRelatorioExcel(chooser.getSelectedFile().getAbsolutePath(), ano);
+                JOptionPane.showMessageDialog(this, ok ? "Excel exportado." : "Erro ao exportar Excel.");
+            }
+        });
+
+        p.add(topo, BorderLayout.NORTH);
+        p.add(split, BorderLayout.CENTER);
+        return p;
+    }
+
+    private JPanel criarPaginaComprasDia() {
+        JPanel p = new JPanel(new BorderLayout());
+
+        JPanel topo = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JTextField txtData = new JTextField(10);
+        JButton btnFiltrar = new JButton("Filtrar");
+        JButton btnEliminar = new JButton("Eliminar Venda");
+
+        topo.add(new JLabel("Data (AAAA-MM-DD):"));
+        topo.add(txtData);
+        topo.add(btnFiltrar);
+        topo.add(btnEliminar);
+
+        DefaultTableModel modelo = new DefaultTableModel(
+                new String[]{"ID Venda", "Data", "Produto", "Qtd", "Total", "Forma"}, 0
+        );
+        JTable tabela = new JTable(modelo);
+
+        btnFiltrar.addActionListener(e -> {
+            modelo.setRowCount(0);
+            for (Object[] row : sistema.listarComprasPorData(txtData.getText().trim())) {
+                modelo.addRow(row);
+            }
+        });
+
+        btnEliminar.addActionListener(e -> {
+            int linha = tabela.getSelectedRow();
+            if (linha < 0) {
+                JOptionPane.showMessageDialog(this, "Selecione uma venda.");
+                return;
+            }
+
+            int idVenda = Integer.parseInt(modelo.getValueAt(linha, 0).toString());
+            boolean ok = sistema.eliminarVenda(idVenda);
+            JOptionPane.showMessageDialog(this, ok ? "Venda eliminada." : "Erro ao eliminar venda.");
+        });
+
+        p.add(topo, BorderLayout.NORTH);
+        p.add(new JScrollPane(tabela), BorderLayout.CENTER);
+        return p;
+    }
+
+    private JPanel criarPaginaDefinicoes() {
+        JPanel p = new JPanel(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
         gc.insets = new Insets(10, 10, 10, 10);
         gc.anchor = GridBagConstraints.WEST;
-        return gc;
-    }
 
-    private void info(String msg) {
-        JOptionPane.showMessageDialog(this, msg, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-    }
+        JTextField txtAtual = new JTextField(15);
+        JTextField txtNova = new JTextField(15);
+        JTextField txtConfirmar = new JTextField(15);
+        JButton btnAlterar = new JButton("Alterar Senha");
 
-    private void aviso(String msg) {
-        JOptionPane.showMessageDialog(this, msg, "Aviso", JOptionPane.WARNING_MESSAGE);
-    }
+        gc.gridx = 0; gc.gridy = 0; p.add(new JLabel("Senha Atual:"), gc);
+        gc.gridx = 1; p.add(txtAtual, gc);
 
-    private void erro(String msg) {
-        JOptionPane.showMessageDialog(this, msg, "Erro", JOptionPane.ERROR_MESSAGE);
-    }
+        gc.gridx = 0; gc.gridy = 1; p.add(new JLabel("Nova Senha:"), gc);
+        gc.gridx = 1; p.add(txtNova, gc);
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new LoginFrame().setVisible(true);
+        gc.gridx = 0; gc.gridy = 2; p.add(new JLabel("Confirmar Nova Senha:"), gc);
+        gc.gridx = 1; p.add(txtConfirmar, gc);
+
+        gc.gridx = 1; gc.gridy = 3; p.add(btnAlterar, gc);
+
+        btnAlterar.addActionListener(e -> {
+            String atual = txtAtual.getText().trim();
+            String nova = txtNova.getText().trim();
+            String confirmar = txtConfirmar.getText().trim();
+
+            if (!nova.equals(confirmar)) {
+                JOptionPane.showMessageDialog(this, "A confirmação não coincide.");
+                return;
             }
+
+            boolean ok = sistema.alterarSenha(usuarioLogado.getUsername(), atual, nova);
+            JOptionPane.showMessageDialog(this, ok ? "Senha alterada com sucesso." : "Erro ao alterar senha.");
         });
+
+        return p;
     }
 }
