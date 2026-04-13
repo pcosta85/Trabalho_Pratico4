@@ -23,29 +23,65 @@ public class RestauranteMain extends JFrame {
         JPanel menu = new JPanel();
         menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
         menu.setPreferredSize(new Dimension(220, getHeight()));
+        menu.setBackground(new Color(30, 30, 30));
 
-        JButton btnInicio = new JButton("Início");
-        JButton btnLoja = new JButton("Loja / Caixa");
-        JButton btnProdutos = new JButton("Produtos");
-        JButton btnRelatorios = new JButton("Relatórios");
-        JButton btnComprasDia = new JButton("Compras do Dia");
-        JButton btnDefinicoes = new JButton("Definições");
-        JButton btnLogout = new JButton("Terminar Sessão");
-        JButton btnSair = new JButton("Sair");
+        JLabel lblUser = new JLabel(
+                "<html><center>" + usuarioLogado.getUsername() +
+                "<br/>" + usuarioLogado.getNivelAcesso() + "</center></html>",
+                SwingConstants.CENTER
+        );
+        lblUser.setForeground(Color.WHITE);
+        lblUser.setFont(new Font("Arial", Font.BOLD, 14));
+        lblUser.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        menu.add(Box.createVerticalStrut(20));
+        menu.add(lblUser);
+        menu.add(Box.createVerticalStrut(20));
+
+        JButton btnInicio = criarBotaoMenu("Início");
+        JButton btnLoja = criarBotaoMenu("Loja / Caixa");
+        JButton btnProdutos = criarBotaoMenu("Produtos");
+        JButton btnRelatorios = criarBotaoMenu("Relatórios");
+        JButton btnComprasDia = criarBotaoMenu("Compras do Dia");
+        JButton btnDefinicoes = criarBotaoMenu("Definições");
+        JButton btnUsuarios = criarBotaoMenu("Utilizadores");
+        JButton btnLogout = criarBotaoMenu("Terminar Sessão");
+        JButton btnSair = criarBotaoMenu("Sair");
 
         menu.add(btnInicio);
+        menu.add(Box.createVerticalStrut(10));
+
         menu.add(btnLoja);
+        menu.add(Box.createVerticalStrut(10));
 
         if (isAdmin() || isGestor()) {
             menu.add(btnProdutos);
+            menu.add(Box.createVerticalStrut(10));
+
             menu.add(btnRelatorios);
+            menu.add(Box.createVerticalStrut(10));
+        }
+
+        if (isAdmin()) {
+            menu.add(btnUsuarios);
+            menu.add(Box.createVerticalStrut(10));
         }
 
         menu.add(btnComprasDia);
-        menu.add(btnDefinicoes);
+        menu.add(Box.createVerticalStrut(10));
+
+        // ADMIN não vê Definições
+        if (!isAdmin()) {
+            menu.add(btnDefinicoes);
+            menu.add(Box.createVerticalStrut(10));
+        }
+
         menu.add(Box.createVerticalGlue());
+
         menu.add(btnLogout);
+        menu.add(Box.createVerticalStrut(10));
         menu.add(btnSair);
+        menu.add(Box.createVerticalStrut(10));
 
         painelPrincipal.add(criarPaginaInicio(), "INICIO");
         painelPrincipal.add(criarPaginaLoja(), "LOJA");
@@ -53,17 +89,26 @@ public class RestauranteMain extends JFrame {
         painelPrincipal.add(criarPaginaRelatorios(), "RELATORIOS");
         painelPrincipal.add(criarPaginaComprasDia(), "COMPRAS_DIA");
         painelPrincipal.add(criarPaginaDefinicoes(), "DEFINICOES");
+        painelPrincipal.add(criarPaginaUsuarios(), "USUARIOS");
 
         btnInicio.addActionListener(e -> mostrar("INICIO"));
         btnLoja.addActionListener(e -> mostrar("LOJA"));
         btnProdutos.addActionListener(e -> mostrar("PRODUTOS"));
         btnRelatorios.addActionListener(e -> mostrar("RELATORIOS"));
         btnComprasDia.addActionListener(e -> mostrar("COMPRAS_DIA"));
-        btnDefinicoes.addActionListener(e -> mostrar("DEFINICOES"));
+        btnUsuarios.addActionListener(e -> mostrar("USUARIOS"));
+
+        if (!isAdmin()) {
+            btnDefinicoes.addActionListener(e -> mostrar("DEFINICOES"));
+        }
 
         btnLogout.addActionListener(e -> {
-            int op = JOptionPane.showConfirmDialog(this, "Deseja terminar a sessão atual?",
-                    "Confirmar", JOptionPane.YES_NO_OPTION);
+            int op = JOptionPane.showConfirmDialog(
+                    this,
+                    "Deseja terminar a sessão atual?",
+                    "Confirmar",
+                    JOptionPane.YES_NO_OPTION
+            );
             if (op == JOptionPane.YES_OPTION) {
                 dispose();
                 new LoginFrame().setVisible(true);
@@ -71,8 +116,12 @@ public class RestauranteMain extends JFrame {
         });
 
         btnSair.addActionListener(e -> {
-            int op = JOptionPane.showConfirmDialog(this, "Deseja sair do sistema?",
-                    "Confirmar", JOptionPane.YES_NO_OPTION);
+            int op = JOptionPane.showConfirmDialog(
+                    this,
+                    "Deseja sair do sistema?",
+                    "Confirmar",
+                    JOptionPane.YES_NO_OPTION
+            );
             if (op == JOptionPane.YES_OPTION) {
                 System.exit(0);
             }
@@ -84,6 +133,28 @@ public class RestauranteMain extends JFrame {
         mostrar("INICIO");
     }
 
+    private JButton criarBotaoMenu(String texto) {
+        JButton btn = new JButton(texto);
+        btn.setMaximumSize(new Dimension(200, 40));
+        btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btn.setFocusPainted(false);
+        btn.setBackground(new Color(50, 50, 50));
+        btn.setForeground(Color.WHITE);
+        btn.setFont(new Font("Arial", Font.BOLD, 13));
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(70, 70, 70));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(new Color(50, 50, 50));
+            }
+        });
+
+        return btn;
+    }
+
     private boolean isAdmin() {
         return "ADMIN".equalsIgnoreCase(usuarioLogado.getNivelAcesso());
     }
@@ -92,17 +163,19 @@ public class RestauranteMain extends JFrame {
         return "GESTOR".equalsIgnoreCase(usuarioLogado.getNivelAcesso());
     }
 
-    private void mostrar(String card) {
-        ((CardLayout) painelPrincipal.getLayout()).show(painelPrincipal, card);
+    private void mostrar(String nome) {
+        ((CardLayout) painelPrincipal.getLayout()).show(painelPrincipal, nome);
     }
 
     private JPanel criarPaginaInicio() {
         JPanel p = new JPanel(new BorderLayout());
+
         JLabel lbl = new JLabel(
                 "Bem-vindo " + usuarioLogado.getUsername() + " - Perfil: " + usuarioLogado.getNivelAcesso(),
                 SwingConstants.CENTER
         );
         lbl.setFont(new Font("Arial", Font.BOLD, 22));
+
         p.add(lbl, BorderLayout.CENTER);
         return p;
     }
@@ -113,7 +186,11 @@ public class RestauranteMain extends JFrame {
         JPanel topo = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JComboBox<String> cbProduto = new JComboBox<>();
         JTextField txtQtd = new JTextField(5);
+        JComboBox<String> cbPagamento = new JComboBox<>(new String[]{"Dinheiro", "Cartão", "PIX"});
+        JTextField txtRecebido = new JTextField(8);
+
         JButton btnAdicionar = new JButton("Adicionar");
+        JButton btnFinalizar = new JButton("Finalizar");
 
         for (Object[] prod : sistema.listarProdutos()) {
             cbProduto.addItem(prod[1].toString());
@@ -129,16 +206,13 @@ public class RestauranteMain extends JFrame {
                 new String[]{"Produto", "Qtd", "Preço", "Total"}, 0
         );
         JTable tabela = new JTable(modelo);
-
         List<Object[]> carrinho = new ArrayList<>();
 
-        JPanel rodape = new JPanel();
-        JComboBox<String> cbPagamento = new JComboBox<>(new String[]{"Dinheiro", "Cartão", "PIX"});
-        JTextField txtRecebido = new JTextField(10);
         JLabel lblTotal = new JLabel("Total: 0.00");
         JLabel lblTroco = new JLabel("Troco: 0.00");
-        JButton btnFinalizar = new JButton("Finalizar Compra");
 
+        JPanel rodape = new JPanel();
+        rodape.add(new JLabel("Pagamento:"));
         rodape.add(cbPagamento);
         rodape.add(new JLabel("Recebido:"));
         rodape.add(txtRecebido);
@@ -158,11 +232,13 @@ public class RestauranteMain extends JFrame {
                 double preco = (double) prod[2];
                 double total = preco * qtd;
 
-                carrinho.add(new Object[]{prod[1], qtd, preco, total});
-                modelo.addRow(new Object[]{prod[1], qtd, preco, total});
+                carrinho.add(new Object[]{prod[1], qtd, prod[2], total});
+                modelo.addRow(new Object[]{prod[1], qtd, prod[2], total});
 
                 double soma = 0;
-                for (Object[] item : carrinho) soma += (double) item[3];
+                for (Object[] item : carrinho) {
+                    soma += (double) item[3];
+                }
                 lblTotal.setText("Total: " + String.format("%.2f", soma));
                 txtQtd.setText("");
 
@@ -178,8 +254,10 @@ public class RestauranteMain extends JFrame {
             }
 
             try {
-                double total = 0;
-                for (Object[] item : carrinho) total += (double) item[3];
+                double totalGeral = 0;
+                for (Object[] item : carrinho) {
+                    totalGeral += (double) item[3];
+                }
 
                 String forma = cbPagamento.getSelectedItem().toString();
                 Double recebido = null;
@@ -187,7 +265,7 @@ public class RestauranteMain extends JFrame {
 
                 if ("Dinheiro".equalsIgnoreCase(forma)) {
                     recebido = Double.parseDouble(txtRecebido.getText().trim());
-                    troco = recebido - total;
+                    troco = recebido - totalGeral;
 
                     if (troco < 0) {
                         JOptionPane.showMessageDialog(this, "Valor insuficiente.");
@@ -206,7 +284,7 @@ public class RestauranteMain extends JFrame {
                 );
 
                 if (ok) {
-                    JOptionPane.showMessageDialog(this, "Venda concluída com sucesso.");
+                    JOptionPane.showMessageDialog(this, "Venda feita com sucesso.");
                     carrinho.clear();
                     modelo.setRowCount(0);
                     lblTotal.setText("Total: 0.00");
@@ -272,8 +350,10 @@ public class RestauranteMain extends JFrame {
 
         btnCadastrar.addActionListener(e -> {
             try {
-                boolean ok = sistema.cadastrarProduto(txtNome.getText().trim(),
-                        Double.parseDouble(txtPreco.getText().trim()));
+                boolean ok = sistema.cadastrarProduto(
+                        txtNome.getText().trim(),
+                        Double.parseDouble(txtPreco.getText().trim())
+                );
                 if (ok) {
                     carregarTabelaProdutos(modelo);
                     txtId.setText("");
@@ -292,7 +372,9 @@ public class RestauranteMain extends JFrame {
                         txtNome.getText().trim(),
                         Double.parseDouble(txtPreco.getText().trim())
                 );
-                if (ok) carregarTabelaProdutos(modelo);
+                if (ok) {
+                    carregarTabelaProdutos(modelo);
+                }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Dados inválidos.");
             }
@@ -353,14 +435,19 @@ public class RestauranteMain extends JFrame {
         JTextArea resumo = new JTextArea();
         resumo.setEditable(false);
 
-        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+        JSplitPane split = new JSplitPane(
+                JSplitPane.VERTICAL_SPLIT,
                 new JScrollPane(tabela),
-                new JScrollPane(resumo));
+                new JScrollPane(resumo)
+        );
         split.setResizeWeight(0.7);
 
         btnGerar.addActionListener(e -> {
             Integer ano = (Integer) cbAno.getSelectedItem();
-            if (ano == null) return;
+            if (ano == null) {
+                JOptionPane.showMessageDialog(this, "Nenhum ano encontrado.");
+                return;
+            }
 
             modelo.setRowCount(0);
             for (Object[] row : sistema.listarRelatorioVendas(ano)) {
@@ -370,12 +457,12 @@ public class RestauranteMain extends JFrame {
             StringBuilder sb = new StringBuilder();
             sb.append("=== Total por Forma de Pagamento ===\n");
             for (Object[] row : sistema.totalPorFormaPagamento(ano)) {
-                sb.append(row[0]).append(": ").append(row[1]).append("\n");
+                sb.append(row[0]).append(": ").append(String.format("%.2f", (Double) row[1])).append("\n");
             }
 
             sb.append("\n=== Total por Produto ===\n");
             for (Object[] row : sistema.totalPorProduto(ano)) {
-                sb.append(row[0]).append(": ").append(row[1]).append("\n");
+                sb.append(row[0]).append(": ").append(String.format("%.2f", (Double) row[1])).append("\n");
             }
 
             resumo.setText(sb.toString());
@@ -383,22 +470,34 @@ public class RestauranteMain extends JFrame {
 
         btnCSV.addActionListener(e -> {
             Integer ano = (Integer) cbAno.getSelectedItem();
-            if (ano == null) return;
+            if (ano == null) {
+                JOptionPane.showMessageDialog(this, "Nenhum ano selecionado.");
+                return;
+            }
 
             JFileChooser chooser = new JFileChooser();
             if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                boolean ok = sistema.exportarRelatorioCSV(chooser.getSelectedFile().getAbsolutePath(), ano);
+                boolean ok = sistema.exportarRelatorioCSV(
+                        chooser.getSelectedFile().getAbsolutePath(),
+                        ano
+                );
                 JOptionPane.showMessageDialog(this, ok ? "CSV exportado." : "Erro ao exportar CSV.");
             }
         });
 
         btnExcel.addActionListener(e -> {
             Integer ano = (Integer) cbAno.getSelectedItem();
-            if (ano == null) return;
+            if (ano == null) {
+                JOptionPane.showMessageDialog(this, "Nenhum ano selecionado.");
+                return;
+            }
 
             JFileChooser chooser = new JFileChooser();
             if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                boolean ok = sistema.exportarRelatorioExcel(chooser.getSelectedFile().getAbsolutePath(), ano);
+                boolean ok = sistema.exportarRelatorioExcel(
+                        chooser.getSelectedFile().getAbsolutePath(),
+                        ano
+                );
                 JOptionPane.showMessageDialog(this, ok ? "Excel exportado." : "Erro ao exportar Excel.");
             }
         });
@@ -441,6 +540,18 @@ public class RestauranteMain extends JFrame {
             }
 
             int idVenda = Integer.parseInt(modelo.getValueAt(linha, 0).toString());
+
+            int op = JOptionPane.showConfirmDialog(
+                    this,
+                    "Deseja eliminar a venda selecionada?",
+                    "Confirmar",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (op != JOptionPane.YES_OPTION) {
+                return;
+            }
+
             boolean ok = sistema.eliminarVenda(idVenda);
             JOptionPane.showMessageDialog(this, ok ? "Venda eliminada." : "Erro ao eliminar venda.");
         });
@@ -487,5 +598,153 @@ public class RestauranteMain extends JFrame {
         });
 
         return p;
+    }
+
+    private JPanel criarPaginaUsuarios() {
+        JPanel p = new JPanel(new BorderLayout());
+
+        JPanel topo = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        JTextField txtId = new JTextField(5);
+        JTextField txtUsername = new JTextField(12);
+        JPasswordField txtPassword = new JPasswordField(12);
+        JComboBox<String> cbNivel = new JComboBox<>(new String[]{"ADMIN", "GESTOR", "ATENDENTE"});
+
+        JButton btnCriar = new JButton("Criar");
+        JButton btnAtualizar = new JButton("Atualizar");
+        JButton btnEliminar = new JButton("Eliminar");
+        JButton btnRecarregar = new JButton("Recarregar");
+
+        topo.add(new JLabel("ID:"));
+        topo.add(txtId);
+        topo.add(new JLabel("Username:"));
+        topo.add(txtUsername);
+        topo.add(new JLabel("Password:"));
+        topo.add(txtPassword);
+        topo.add(new JLabel("Nível:"));
+        topo.add(cbNivel);
+        topo.add(btnCriar);
+        topo.add(btnAtualizar);
+        topo.add(btnEliminar);
+        topo.add(btnRecarregar);
+
+        DefaultTableModel modelo = new DefaultTableModel(
+                new String[]{"ID", "Username", "Password", "Nível"}, 0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        JTable tabela = new JTable(modelo);
+        carregarTabelaUsuarios(modelo);
+
+        tabela.getSelectionModel().addListSelectionListener(e -> {
+            int linha = tabela.getSelectedRow();
+            if (linha >= 0) {
+                txtId.setText(modelo.getValueAt(linha, 0).toString());
+                txtUsername.setText(modelo.getValueAt(linha, 1).toString());
+                txtPassword.setText(modelo.getValueAt(linha, 2).toString());
+                cbNivel.setSelectedItem(modelo.getValueAt(linha, 3).toString());
+            }
+        });
+
+        btnCriar.addActionListener(e -> {
+            String username = txtUsername.getText().trim();
+            String password = new String(txtPassword.getPassword()).trim();
+            String nivel = cbNivel.getSelectedItem().toString();
+
+            if (username.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Preencha username e password.");
+                return;
+            }
+
+            boolean ok = sistema.criarUsuario(username, password, nivel);
+
+            if (ok) {
+                JOptionPane.showMessageDialog(this, "Utilizador criado com sucesso.");
+                txtId.setText("");
+                txtUsername.setText("");
+                txtPassword.setText("");
+                cbNivel.setSelectedIndex(0);
+                carregarTabelaUsuarios(modelo);
+            } else {
+                JOptionPane.showMessageDialog(this, "Não foi possível criar o utilizador.");
+            }
+        });
+
+        btnAtualizar.addActionListener(e -> {
+            try {
+                int id = Integer.parseInt(txtId.getText().trim());
+                String username = txtUsername.getText().trim();
+                String password = new String(txtPassword.getPassword()).trim();
+                String nivel = cbNivel.getSelectedItem().toString();
+
+                if (username.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Preencha username e password.");
+                    return;
+                }
+
+                boolean ok = sistema.atualizarUsuario(id, username, password, nivel);
+
+                if (ok) {
+                    JOptionPane.showMessageDialog(this, "Utilizador atualizado com sucesso.");
+                    carregarTabelaUsuarios(modelo);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Não foi possível atualizar o utilizador.");
+                }
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "ID inválido.");
+            }
+        });
+
+        btnEliminar.addActionListener(e -> {
+            try {
+                int id = Integer.parseInt(txtId.getText().trim());
+
+                int op = JOptionPane.showConfirmDialog(
+                        this,
+                        "Deseja eliminar o utilizador selecionado?",
+                        "Confirmar",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (op != JOptionPane.YES_OPTION) {
+                    return;
+                }
+
+                boolean ok = sistema.eliminarUsuario(id);
+
+                if (ok) {
+                    JOptionPane.showMessageDialog(this, "Utilizador eliminado com sucesso.");
+                    txtId.setText("");
+                    txtUsername.setText("");
+                    txtPassword.setText("");
+                    cbNivel.setSelectedIndex(0);
+                    carregarTabelaUsuarios(modelo);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Não foi possível eliminar o utilizador.");
+                }
+
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "ID inválido.");
+            }
+        });
+
+        btnRecarregar.addActionListener(e -> carregarTabelaUsuarios(modelo));
+
+        p.add(topo, BorderLayout.NORTH);
+        p.add(new JScrollPane(tabela), BorderLayout.CENTER);
+        return p;
+    }
+
+    private void carregarTabelaUsuarios(DefaultTableModel modelo) {
+        modelo.setRowCount(0);
+        List<Object[]> lista = sistema.listarUsuarios();
+        for (Object[] u : lista) {
+            modelo.addRow(u);
+        }
     }
 }

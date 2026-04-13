@@ -2,7 +2,10 @@ package Restaurante_Bar;
 
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +13,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 
 public class RestauranteSistema {
 
@@ -160,7 +162,9 @@ public class RestauranteSistema {
 
         } catch (Exception e) {
             try {
-                if (conn != null) conn.rollback();
+                if (conn != null) {
+                    conn.rollback();
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -178,6 +182,8 @@ public class RestauranteSistema {
             }
         }
     }
+
+    // ==================== RELATÓRIOS ====================
 
     public List<Integer> listarAnosVenda() {
         List<Integer> anos = new ArrayList<Integer>();
@@ -286,6 +292,8 @@ public class RestauranteSistema {
         return lista;
     }
 
+    // ==================== COMPRAS DO DIA ====================
+
     public List<Object[]> listarComprasPorData(String data) {
         List<Object[]> lista = new ArrayList<Object[]>();
 
@@ -340,7 +348,9 @@ public class RestauranteSistema {
 
         } catch (Exception e) {
             try {
-                if (conn != null) conn.rollback();
+                if (conn != null) {
+                    conn.rollback();
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -359,7 +369,7 @@ public class RestauranteSistema {
         }
     }
 
-    // ==================== UTILIZADORES ====================
+    // ==================== DEFINIÇÕES / SENHA ====================
 
     public boolean alterarSenha(String username, String senhaAtual, String novaSenha) {
         String sqlSelect = "SELECT password FROM usuarios WHERE username = ?";
@@ -371,10 +381,14 @@ public class RestauranteSistema {
             stmtSelect.setString(1, username);
 
             try (ResultSet rs = stmtSelect.executeQuery()) {
-                if (!rs.next()) return false;
+                if (!rs.next()) {
+                    return false;
+                }
 
                 String senhaGuardada = rs.getString("password");
-                if (!senhaGuardada.equals(senhaAtual)) return false;
+                if (!senhaGuardada.equals(senhaAtual)) {
+                    return false;
+                }
             }
 
             try (PreparedStatement stmtUpdate = conn.prepareStatement(sqlUpdate)) {
@@ -382,6 +396,84 @@ public class RestauranteSistema {
                 stmtUpdate.setString(2, username);
                 return stmtUpdate.executeUpdate() > 0;
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // ==================== UTILIZADORES ====================
+
+    public List<Object[]> listarUsuarios() {
+        List<Object[]> lista = new ArrayList<Object[]>();
+        String sql = "SELECT id, username, password, nivel FROM usuarios ORDER BY username";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                lista.add(new Object[]{
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("nivel")
+                });
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+    public boolean criarUsuario(String username, String password, String nivel) {
+        String sql = "INSERT INTO usuarios (username, password, nivel) VALUES (?, ?, ?)";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, username.trim());
+            stmt.setString(2, password.trim());
+            stmt.setString(3, nivel.trim().toUpperCase());
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean atualizarUsuario(int id, String username, String password, String nivel) {
+        String sql = "UPDATE usuarios SET username = ?, password = ?, nivel = ? WHERE id = ?";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, username.trim());
+            stmt.setString(2, password.trim());
+            stmt.setString(3, nivel.trim().toUpperCase());
+            stmt.setInt(4, id);
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean eliminarUsuario(int id) {
+        String sql = "DELETE FROM usuarios WHERE id = ?";
+
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -398,8 +490,12 @@ public class RestauranteSistema {
             List<Object[]> lista = listarRelatorioVendas(ano);
             for (Object[] row : lista) {
                 writer.println(
-                        row[0] + ";" + row[1] + ";" + row[2] + ";" +
-                        row[3] + ";" + row[4] + ";" + row[5]
+                        row[0] + ";" +
+                        row[1] + ";" +
+                        row[2] + ";" +
+                        row[3] + ";" +
+                        row[4] + ";" +
+                        row[5]
                 );
             }
 
