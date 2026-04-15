@@ -1,0 +1,14 @@
+# Java
+*.class
+
+# Maven
+target/
+
+# Compilação manual
+bin/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
