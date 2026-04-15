@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class Conexao {
 
-    private static final String HOST = "localhost";
+    private static final String HOST = "192.168.38.30";
     private static final String PORTA = "3306";
     private static final String BANCO = "restaurante";
     private static final String USER = "pj";
