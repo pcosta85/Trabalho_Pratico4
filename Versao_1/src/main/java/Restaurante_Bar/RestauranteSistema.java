@@ -157,7 +157,13 @@ public class RestauranteSistema {
             }
 
             conn.commit();
-            ReciboVenda.gerar(usuario, forma, recebido, troco, carrinho);
+            String caminhoRecibo = ReciboVenda.gerar(usuario, forma, recebido, troco, carrinho);
+
+            if (caminhoRecibo != null) {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    new VisualizadorPDF(caminhoRecibo).setVisible(true);
+                });
+            }
             return true;
 
         } catch (Exception e) {

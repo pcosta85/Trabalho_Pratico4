@@ -17,7 +17,7 @@ public class ReciboVenda {
 
     private static final String PASTA_RECIBOS = "recibos";
 
-    public static void gerar(String usuario, String formaPagamento, Double recebido, Double troco, List<Object[]> carrinho) {
+    public static String gerar(String usuario, String formaPagamento, Double recebido, Double troco, List<Object[]> carrinho) {
         try {
             File pasta = new File(PASTA_RECIBOS);
             if (!pasta.exists()) {
@@ -77,18 +77,22 @@ public class ReciboVenda {
             if (recebido != null) {
                 document.add(new Paragraph("Recebido: " + df.format(recebido), normal));
             }
+
             if (troco != null) {
                 document.add(new Paragraph("Troco: " + df.format(troco), normal));
             }
 
             document.add(new Paragraph(" "));
             document.add(new Paragraph("Obrigado pela preferência!", normal));
+
             document.close();
 
             System.out.println("Recibo gerado em: " + caminho);
+            return caminho;
 
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 }
