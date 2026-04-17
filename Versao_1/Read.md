@@ -1,8 +1,8 @@
-# Relatório do Sistema Restaurante/Bar<br>
-### Curso: Engenharia Informática <br>
-### Instituição: Universidade de Santiago<br>
-### Unidade Curricular: Programação Orientada a Objetos<br>
-### Tema: Sistema de Gestão de Restaurante/Bar<br>
+# Relatório do Sistema Restaurante/Bar
+### Curso: Engenharia Informática
+### Instituição: Universidade de Santiago
+### Unidade Curricular: Programação Orientada a Objetos
+### Tema: Sistema de Gestão de Restaurante/Bar
 
 
 <br>
@@ -26,7 +26,7 @@
 
    Desenvolver um sistema completo de gestão com interface gráfica e base de dados.
  
-   Objetivos Específicos
+   **Objetivos Específicos**
 
    - Implementar autenticação de utilizadores
    - Aplicar operações CRUD
@@ -143,103 +143,6 @@ public String getNivelAcesso()
   - Controle de acesso
   - Interface gráfica (menu dinâmico)
 
-<br>
-
-## 6. Conexão com Base de Dados
-
-### Características:
-- Ligação via JDBC
-- Uso do driver MySQL
-- Configuração dinâmica de host, porta e base de dados
-
-### Conexão com Base de Dados
-A classe `Conexao` é responsável por estabelecer a ligação entre a aplicação Java e a base de dados **MySQL**, utilizando a tecnologia **JDBC**.
-```bash
-</>Java
-package Restaurante_Bar;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
-public class Conexao {
-
-    private static final String HOST = "192.168.38.30";
-    private static final String PORTA = "3306";
-    private static final String BANCO = "restaurante";
-    private static final String USER = "pj";
-    private static final String PASSWORD = "loucoste9850053";
-
-    private static final String URL =
-            "jdbc:mysql://" + HOST + ":" + PORTA + "/" + BANCO +
-            "?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=UTF-8";
-
-    public static Connection conectar() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Driver JDBC do MySQL não encontrado.", e);
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro na conexão com MySQL: " + e.getMessage(), e);
-        }
-    }
-}
-```
-### Configuração da Conexão
-```bash
-</>Java
-private static final String HOST = "Localhost";
-private static final String PORTA = "3306";
-private static final String BANCO = "restaurante";
-```
-- Define o endereço do servidor MySQL
-- Porta padrão do MySQL: 3306
-- Nome da base de dados utilizada
-
-### Credenciais de Acesso
-```bash
-</>Java
-private static final String USER = "pj";
-private static final String PASSWORD = "loucoste9850053";
-```
-- Utilizador da base de dados
-- Palavra-passe de autenticação
-
-### URL de Conexão
-```bash
-</>Java
-jdbc:mysql://HOST:PORTA/BANCO
-```
-**Parâmetros adicionais:**
-- useSSL=false - desativa SSL
-- serverTimezone=UTC - evita erros de fuso horário
-- allowPublicKeyRetrieval=true - permite autenticação segura
-- characterEncoding=UTF-8 - suporte a caracteres especiais
-
-### Método de Conexão
-```bash
-</>Java
-public static Connection conectar()
-```
-**Função:**
-- Carrega o driver JDBC
-- Estabelece ligação com o MySQL
-- Retorna um objeto Connection
-
-### Tratamento de Erros
-```bash
-</>Java
-catch (ClassNotFoundException e)
-catch (SQLException e)
-```
-- Garante que erros são capturados
-- Lança exceções com mensagens claras
-
-<br>
-
-## 7. Gestão de Utilizadores
-
 ### Funcionalidades:
 - Criar utilizador
 - Atualizar utilizador
@@ -257,7 +160,6 @@ catch (SQLException e)
 </>Java
 public boolean criarUsuario(String username, String password, String nivel)
 ```
-### Explicação
 - Permite criar novos utilizadores
 - Define nível de acesso
 
@@ -273,8 +175,6 @@ if (nivel.equals("ADMIN")) {
 - Define permissões no sistema
 - Controla funcionalidades disponíveis
 
-
-<br>
 
 **SQL** - Comando para criação de tabela no MYSQL Worckbench de Utilizadores e Niveis de Acesso
 
@@ -388,11 +288,103 @@ throw new RuntimeException("Erro ao autenticar utilizador: " + e.getMessage(), e
 ```
 - Captura erros de conexão ou SQL
 - Lança exceção com mensagem clara
+  
+<br>
 
+## 6. Conexão com Base de Dados
+
+### Características:
+- Ligação via JDBC
+- Uso do driver MySQL
+- Configuração dinâmica de host, porta e base de dados
+
+### Conexão com Base de Dados
+A classe `Conexao` é responsável por estabelecer a ligação entre a aplicação Java e a base de dados **MySQL**, utilizando a tecnologia **JDBC**.
+```bash
+</>Java
+package Restaurante_Bar;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class Conexao {
+
+    private static final String HOST = "192.168.38.30";
+    private static final String PORTA = "3306";
+    private static final String BANCO = "restaurante";
+    private static final String USER = "pj";
+    private static final String PASSWORD = "loucoste9850053";
+
+    private static final String URL =
+            "jdbc:mysql://" + HOST + ":" + PORTA + "/" + BANCO +
+            "?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=UTF-8";
+
+    public static Connection conectar() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Driver JDBC do MySQL não encontrado.", e);
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro na conexão com MySQL: " + e.getMessage(), e);
+        }
+    }
+}
+```
+### Configuração da Conexão
+```bash
+</>Java
+private static final String HOST = "Localhost";
+private static final String PORTA = "3306";
+private static final String BANCO = "restaurante";
+```
+- Define o endereço do servidor MySQL
+- Porta padrão do MySQL: 3306
+- Nome da base de dados utilizada
+
+### Credenciais de Acesso
+```bash
+</>Java
+private static final String USER = "pj";
+private static final String PASSWORD = "loucoste9850053";
+```
+- Utilizador da base de dados
+- Palavra-passe de autenticação
+
+### URL de Conexão
+```bash
+</>Java
+jdbc:mysql://HOST:PORTA/BANCO
+```
+**Parâmetros adicionais:**
+- useSSL=false - desativa SSL
+- serverTimezone=UTC - evita erros de fuso horário
+- allowPublicKeyRetrieval=true - permite autenticação segura
+- characterEncoding=UTF-8 - suporte a caracteres especiais
+
+### Método de Conexão
+```bash
+</>Java
+public static Connection conectar()
+```
+**Função:**
+- Carrega o driver JDBC
+- Estabelece ligação com o MySQL
+- Retorna um objeto Connection
+
+### Tratamento de Erros
+```bash
+</>Java
+catch (ClassNotFoundException e)
+catch (SQLException e)
+```
+- Garante que erros são capturados
+- Lança exceções com mensagens claras
 
 <br>
 
-## 8. Gestão de Produtos (CRUD)
+## 7. Gestão de Produtos (CRUD)
 
 ### CRUD 
 É um acrónimo para Create, Read, Update e Delete, que representam as quatro operações fundamentais realizadas sobre dados num sistema informático. Essas operações permitem criar novos registos, consultar informações existentes, atualizar dados e eliminar registos quando necessário.
@@ -417,7 +409,7 @@ Eliminar ou remover um registo.
 
 <br>
 
-## 9. Gestão de Vendas
+## 8. Gestão de Vendas
 
 ### Funcionalidades:
 - Registo de venda
@@ -427,7 +419,7 @@ Eliminar ou remover um registo.
 
 <br>
 
-## 10. Geração de Recibos (PDF)
+## 9. Geração de Recibos (PDF)
 
 ### Características:
 - Geração automática de PDF
@@ -445,7 +437,7 @@ String caminhoRecibo = ReciboVenda.gerar(usuario, forma, recebido, troco, carrin
 
 <br>
 
-## 11. Pré-visualização de Recibos
+## 10. Pré-visualização de Recibos
 
 - Visualização do PDF dentro do sistema
 - Uso da biblioteca **`PDFBox`**
@@ -464,7 +456,7 @@ BufferedImage imagem = renderer.renderImageWithDPI(0, 150);
 
 <br>
 
-## 12. Relatórios
+## 11. Relatórios
 
 Consulta de vendas
 ```bash
@@ -511,7 +503,7 @@ Sheet sheet = wb.createSheet("Relatorio");
 
 <br>
 
-## 13. Interface Gráfica
+## 12. Interface Gráfica
 
 ### Características:
 - Menu lateral dinâmico
@@ -609,7 +601,7 @@ JScrollPane scroll = new JScrollPane(tabela);
 
 <br>
 
-## 14. Implementação do CRUD
+## 13. Implementação do CRUD
 
 |Entidade	  |Operações                     |
 |-------------|------------------------------|
@@ -667,7 +659,7 @@ public List<Object[]> listarProdutos() {
 
 <br>
 
-## 15. Estruturas de Dados Utilizadas
+## 14. Estruturas de Dados Utilizadas
 
 - `List<Object[]>` - armazenamento dinâmico de dados
 - `ArrayList` - manipulação de coleções
@@ -683,9 +675,9 @@ List<Object[]> lista = new ArrayList<>();
 
 <br>
 
-## 16. Estruturas de Dados Utilizadas
+## 15. Contribuição dos Elementos
 
-|Membro	s       |  Contribuição                      |
+|Membro	      |  Contribuição                       |
 |--------------|------------------------------------|
 |Desenvolvedor |Implementação completa do sistema   |
 |	           |Integração com MySQL                |
@@ -694,7 +686,7 @@ List<Object[]> lista = new ArrayList<>();
 
 <br>
 
-## 17. Tecnologias Utilizadas
+## 16. Tecnologias Utilizadas
 
 - Java (JDK 8+)
 - Swing (GUI)
@@ -707,7 +699,7 @@ List<Object[]> lista = new ArrayList<>();
 
 <br>
 
-## 18. Resultados Obtidos
+## 17. Resultados Obtidos
 
 - Sistema funcional completo
 - Interface amigável
@@ -717,7 +709,7 @@ List<Object[]> lista = new ArrayList<>();
 
 <br>  
 
-## 19. Melhorias Futuras
+## 18. Melhorias Futuras
 
 - Implementar criptografia de senha
 - Dashboard com gráficos
@@ -725,6 +717,6 @@ List<Object[]> lista = new ArrayList<>();
 
 <br>
 
-## 20. Conclusão
+## 19. Conclusão
 
 O sistema desenvolvido cumpre os objetivos propostos, apresentando uma solução funcional e eficiente para gestão de restaurante/bar. A aplicação demonstra domínio de conceitos fundamentais de programação orientada a objetos, integração com bases de dados e desenvolvimento de interfaces gráficas.
