@@ -451,11 +451,173 @@ Eliminar ou remover um registo.
 
 ## 8. Gestão de Vendas
 
+A gestão de vendas é uma das funcionalidades centrais do sistema, pois permite registar as transações realizadas no restaurante/bar, associando produtos, quantidades, valores e forma de pagamento. Esta funcionalidade garante maior controlo sobre as operações comerciais e facilita a emissão de recibos e relatórios.
+
 ### Funcionalidades
-- Registo de venda
-- Associação de produtos
-- Cálculo automático do total
-- Suporte a múltiplas formas de pagamento
+- Registo de vendas no sistema
+- Associação de vários produtos a uma venda
+- Cálculo automático do total da compra
+- Registo da forma de pagamento
+- Cálculo do valor recebido e do troco
+- Armazenamento das vendas na base de dados
+- Integração com geração de recibos e relatórios
+
+### Estrutura da venda no sistema
+
+No processo de venda, o utilizador seleciona os produtos pretendidos, define as respetivas quantidades e adiciona esses itens ao carrinho. Em seguida, o sistema calcula automaticamente o valor total da compra, permite escolher a forma de pagamento e, por fim, regista a venda na base de dados.
+
+### Exemplo de lista de itens no carrinho
+
+```Java
+List<Object[]> carrinho = new ArrayList<>();
+```
+
+### Explicação
+
+A estrutura `List<Object[]>` pode ser utilizada para armazenar temporariamente os produtos adicionados ao carrinho. Cada posição da lista representa um item da venda, contendo, por exemplo:
+
+- Nome do produto
+- Quantidade
+- Preço unitário
+- Subtotal
+
+### Explicação
+
+Neste caso, cada item da venda é guardado num vetor de objetos (`Object[]`), sendo posteriormente adicionado à lista do carrinho. Isso permite manter todos os produtos da venda organizados até ao momento da gravação no banco de dados.
+
+### Cálculo do subtotal de um item
+
+```Java
+double subtotal = quantidade * precoUnitario;
+```
+
+### Explicação
+
+O subtotal corresponde ao valor parcial de cada item da venda, sendo calculado pela multiplicação entre a quantidade do produto e o seu preço unitário.
+
+### Cálculo do total da venda
+
+```Java
+double total = 0.0;
+
+for (Object[] item : carrinho) {
+    total += (double) item[3];
+}
+```
+
+### Explicação
+
+O valor total da venda é obtido através da soma dos subtotais de todos os itens presentes no carrinho.
+
+### Registo da forma de pagamento
+
+O sistema pode suportar diferentes formas de pagamento, como:
+- Dinheiro
+- Cartão
+- Transferência
+- Pagamento misto
+
+### Exemplo de variável para forma de pagamento
+
+```Java
+String formaPagamento = "Dinheiro";
+```
+
+### Cálculo do troco
+
+```Java
+double recebido = 5000.0;
+double troco = recebido - total;
+```
+
+### Explicação
+
+Quando o pagamento é feito em dinheiro, o sistema pode calcular automaticamente o troco com base no valor recebido pelo cliente.
+
+### Exemplo de inserção da venda na base de dados
+
+```Java
+public int registarVenda(double total, String formaPagamento) {
+    String sql = "INSERT INTO venda (total, forma_pagamento) VALUES (?, ?)";
+
+    try (Connection conn = Conexao.conectar();
+         PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+        stmt.setDouble(1, total);
+        stmt.setString(2, formaPagamento);
+        stmt.executeUpdate();
+
+        ResultSet rs = stmt.getGeneratedKeys();
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+
+    } catch (Exception e) {
+        throw new RuntimeException("Erro ao registar venda: " + e.getMessage(), e);
+    }
+
+    return -1;
+}
+```
+
+### Explicação
+
+Este método é responsável por registar a `venda` na tabela venda. Após a inserção, o sistema obtém o identificador gerado automaticamente `(id_venda)`, que será utilizado para associar os produtos vendidos a essa transação.
+
+### Exemplo de registo dos itens da venda
+
+```Java
+public void registarItensVenda(int idVenda, List<Object[]> carrinho) {
+    String sql = "INSERT INTO compra (id_venda, produto, quantidade, preco, total) VALUES (?, ?, ?, ?, ?)";
+
+    try (Connection conn = Conexao.conectar();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        for (Object[] item : carrinho) {
+            stmt.setInt(1, idVenda);
+            stmt.setString(2, item[0].toString());
+            stmt.setInt(3, Integer.parseInt(item[1].toString()));
+            stmt.setDouble(4, Double.parseDouble(item[2].toString()));
+            stmt.setDouble(5, Double.parseDouble(item[3].toString()));
+            stmt.executeUpdate();
+        }
+
+    } catch (Exception e) {
+        throw new RuntimeException("Erro ao registar itens da venda: " + e.getMessage(), e);
+    }
+}
+```
+
+### Explicação
+
+Depois de registar a venda principal, cada produto vendido é guardado na tabela compra, ficando associado ao identificador da venda. Isso permite saber exatamente quais produtos fizeram parte de cada transação.
+
+### Fluxo do processo de venda
+
+1. O utilizador seleciona os produtos.
+2. O sistema adiciona os produtos ao carrinho.
+3. O total da venda é calculado automaticamente.
+4. O utilizador escolhe a forma de pagamento.
+5. O sistema regista a venda na tabela venda.
+6. O sistema regista os itens vendidos na tabela compra.
+7. É gerado o recibo em PDF.
+8. Os dados ficam disponíveis para relatórios posteriores.
+
+### Exemplo de processamento completo da venda
+
+```Java
+double total = calcularTotalCarrinho(carrinho);
+int idVenda = registarVenda(total, formaPagamento);
+
+if (idVenda != -1) {
+    registarItensVenda(idVenda, carrinho);
+}
+```
+
+### Explicação
+
+Este trecho representa o fluxo principal da venda: primeiro calcula-se o total, depois regista-se a venda e, por fim, são registados os itens associados.
+
 ---
 
 ## 9. Geração de Recibos em PDF
