@@ -2,7 +2,7 @@
 
 ### Curso: Engenharia Informática
 ### Instituição: Universidade de Santiago
-### Unidade Curricular: Programação Orientada a Objetos
+### Unidade Curricular: CONCEPÇÃO E ANÁLISE DE ALGORITMOS
 ### Tema: Sistema de Gestão de Restaurante/Bar
 
 ---
