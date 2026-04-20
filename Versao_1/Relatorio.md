@@ -553,6 +553,116 @@ Permite criar ficheiros no formato `.xlsx`, utilizando a biblioteca Apache POI.
 
 ---
 
+## 12. Interface Gráfica
+
+### Características
+
+- Menu lateral dinâmico
+- Layout com CardLayout
+- Interface adaptada ao nível de utilizador
+- Sistema responsivo
+
+### Código da janela principal
+
+```Java
+setTitle("Sistema Restaurante/Bar");
+setSize(1000, 700);
+setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+setLocationRelativeTo(null);
+```
+
+### Explicação
+
+- `setTitle` — define o título da janela
+- `setSize` — define as dimensões da interface
+- `setLocationRelativeTo(null)` — centraliza a janela no ecrã
+
+### Layout com `CardLayout`
+
+```Java
+CardLayout cardLayout = new CardLayout();
+JPanel painelConteudo = new JPanel(cardLayout);
+```
+
+### Explicação
+
+- `CardLayout` permite alternar entre várias telas
+- Cada funcionalidade do sistema é apresentada como um “card”
+- Facilita a navegação sem necessidade de abrir novas janelas
+
+### Menu lateral
+
+```Java
+JPanel menu = new JPanel();
+menu.setLayout(new GridLayout(0, 1));
+
+JButton btnProdutos = new JButton("Produtos");
+JButton btnVendas = new JButton("Vendas");
+
+menu.add(btnProdutos);
+menu.add(btnVendas);
+```
+
+### Explicação
+
+- O menu é organizado verticalmente
+- Cada botão representa uma funcionalidade
+- GridLayout organiza os elementos automaticamente
+
+### Troca de telas
+
+```Java
+btnProdutos.addActionListener(e -> cardLayout.show(painelConteudo, "produtos"));
+btnVendas.addActionListener(e -> cardLayout.show(painelConteudo, "vendas"));
+```
+
+### Explicação
+
+- Cada botão altera o conteúdo exibido
+- `cardLayout.show(...)` muda a tela ativa
+- Permite navegação dinâmica dentro da aplicação
+
+### Formulários
+
+```Java
+JTextField txtNome = new JTextField();
+JTextField txtPreco = new JTextField();
+JButton btnSalvar = new JButton("Salvar");
+```
+
+### Explicação
+
+- Representam campos de entrada de dados
+- Permitem inserir produtos e utilizadores
+- São associados a ações através de botões
+
+### Integração com o sistema
+
+### Exemplo de ação
+
+```Java
+btnSalvar.addActionListener(e -> {
+    sistema.cadastrarProduto(txtNome.getText(), Double.parseDouble(txtPreco.getText()));
+});
+```
+
+### Explicação
+
+- Liga a interface gráfica à lógica do sistema
+- Chama métodos da classe RestauranteSistema
+- Executa operações sobre a base de dados
+
+### Scroll com `JScrollPane`
+
+```Java
+JScrollPane scroll = new JScrollPane(tabela);
+```
+
+### Explicação
+
+- Permite rolar conteúdos extensos
+- É essencial para tabelas e visualização de PDFs
+
 
 
 
