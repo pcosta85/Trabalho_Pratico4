@@ -438,6 +438,12 @@ public class RestauranteMain extends JFrame {
 
         JPanel topo = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JComboBox<Integer> cbAno = new JComboBox<>();
+        JComboBox<String> cbMes = new JComboBox<>(new String[]{
+                "Janeiro", "Fevereiro", "Março", "Abril",
+                "Maio", "Junho", "Julho", "Agosto",
+                "Setembro", "Outubro", "Novembro", "Dezembro"
+        });
+
         JButton btnGerar = new JButton("Gerar");
         JButton btnCSV = new JButton("Exportar CSV");
         JButton btnExcel = new JButton("Exportar Excel");
@@ -448,6 +454,8 @@ public class RestauranteMain extends JFrame {
 
         topo.add(new JLabel("Ano:"));
         topo.add(cbAno);
+        topo.add(new JLabel("Mês:"));
+        topo.add(cbMes);
         topo.add(btnGerar);
         topo.add(btnCSV);
         topo.add(btnExcel);
@@ -469,24 +477,28 @@ public class RestauranteMain extends JFrame {
 
         btnGerar.addActionListener(e -> {
             Integer ano = (Integer) cbAno.getSelectedItem();
+            int mes = cbMes.getSelectedIndex() + 1;
+
             if (ano == null) {
                 JOptionPane.showMessageDialog(this, "Nenhum ano encontrado.");
                 return;
             }
 
             modelo.setRowCount(0);
-            for (Object[] row : sistema.listarRelatorioVendas(ano)) {
+            for (Object[] row : sistema.listarRelatorioVendas(ano, mes)) {
                 modelo.addRow(row);
             }
 
             StringBuilder sb = new StringBuilder();
+            sb.append("=== Relatório de ").append(cbMes.getSelectedItem()).append(" / ").append(ano).append(" ===\n\n");
+
             sb.append("=== Total por Forma de Pagamento ===\n");
-            for (Object[] row : sistema.totalPorFormaPagamento(ano)) {
+            for (Object[] row : sistema.totalPorFormaPagamento(ano, mes)) {
                 sb.append(row[0]).append(": ").append(String.format("%.2f", (Double) row[1])).append("\n");
             }
 
             sb.append("\n=== Total por Produto ===\n");
-            for (Object[] row : sistema.totalPorProduto(ano)) {
+            for (Object[] row : sistema.totalPorProduto(ano, mes)) {
                 sb.append(row[0]).append(": ").append(String.format("%.2f", (Double) row[1])).append("\n");
             }
 
@@ -495,6 +507,8 @@ public class RestauranteMain extends JFrame {
 
         btnCSV.addActionListener(e -> {
             Integer ano = (Integer) cbAno.getSelectedItem();
+            int mes = cbMes.getSelectedIndex() + 1;
+
             if (ano == null) {
                 JOptionPane.showMessageDialog(this, "Nenhum ano selecionado.");
                 return;
@@ -504,7 +518,8 @@ public class RestauranteMain extends JFrame {
             if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                 boolean ok = sistema.exportarRelatorioCSV(
                         chooser.getSelectedFile().getAbsolutePath(),
-                        ano
+                        ano,
+                        mes
                 );
                 JOptionPane.showMessageDialog(this, ok ? "CSV exportado." : "Erro ao exportar CSV.");
             }
@@ -512,6 +527,8 @@ public class RestauranteMain extends JFrame {
 
         btnExcel.addActionListener(e -> {
             Integer ano = (Integer) cbAno.getSelectedItem();
+            int mes = cbMes.getSelectedIndex() + 1;
+
             if (ano == null) {
                 JOptionPane.showMessageDialog(this, "Nenhum ano selecionado.");
                 return;
@@ -521,7 +538,8 @@ public class RestauranteMain extends JFrame {
             if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                 boolean ok = sistema.exportarRelatorioExcel(
                         chooser.getSelectedFile().getAbsolutePath(),
-                        ano
+                        ano,
+                        mes
                 );
                 JOptionPane.showMessageDialog(this, ok ? "Excel exportado." : "Erro ao exportar Excel.");
             }

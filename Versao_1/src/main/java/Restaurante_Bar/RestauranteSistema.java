@@ -157,6 +157,7 @@ public class RestauranteSistema {
             }
 
             conn.commit();
+
             String caminhoRecibo = ReciboVenda.gerar(usuario, forma, recebido, troco, carrinho);
 
             if (caminhoRecibo != null) {
@@ -164,6 +165,7 @@ public class RestauranteSistema {
                     new VisualizadorPDF(caminhoRecibo).setVisible(true);
                 });
             }
+
             return true;
 
         } catch (Exception e) {
@@ -210,17 +212,19 @@ public class RestauranteSistema {
         return anos;
     }
 
-    public List<Object[]> listarRelatorioVendas(int ano) {
+    public List<Object[]> listarRelatorioVendas(int ano, int mes) {
         List<Object[]> lista = new ArrayList<Object[]>();
 
         String sql = "SELECT c.produto, c.quantidade, c.preco_unitario, c.total, c.forma_pagamento, DATE(v.data) AS data " +
-                "FROM compra c INNER JOIN venda v ON c.id_venda = v.id_venda " +
-                "WHERE YEAR(v.data) = ? ORDER BY v.data DESC";
+                     "FROM compra c INNER JOIN venda v ON c.id_venda = v.id_venda " +
+                     "WHERE YEAR(v.data) = ? AND MONTH(v.data) = ? " +
+                     "ORDER BY v.data DESC";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, ano);
+            stmt.setInt(2, mes);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -242,17 +246,19 @@ public class RestauranteSistema {
         return lista;
     }
 
-    public List<Object[]> totalPorFormaPagamento(int ano) {
+    public List<Object[]> totalPorFormaPagamento(int ano, int mes) {
         List<Object[]> lista = new ArrayList<Object[]>();
 
         String sql = "SELECT c.forma_pagamento, SUM(c.total) AS total " +
-                "FROM compra c INNER JOIN venda v ON c.id_venda = v.id_venda " +
-                "WHERE YEAR(v.data) = ? GROUP BY c.forma_pagamento ORDER BY total DESC";
+                     "FROM compra c INNER JOIN venda v ON c.id_venda = v.id_venda " +
+                     "WHERE YEAR(v.data) = ? AND MONTH(v.data) = ? " +
+                     "GROUP BY c.forma_pagamento ORDER BY total DESC";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, ano);
+            stmt.setInt(2, mes);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -270,17 +276,19 @@ public class RestauranteSistema {
         return lista;
     }
 
-    public List<Object[]> totalPorProduto(int ano) {
+    public List<Object[]> totalPorProduto(int ano, int mes) {
         List<Object[]> lista = new ArrayList<Object[]>();
 
         String sql = "SELECT c.produto, SUM(c.total) AS total " +
-                "FROM compra c INNER JOIN venda v ON c.id_venda = v.id_venda " +
-                "WHERE YEAR(v.data) = ? GROUP BY c.produto ORDER BY total DESC";
+                     "FROM compra c INNER JOIN venda v ON c.id_venda = v.id_venda " +
+                     "WHERE YEAR(v.data) = ? AND MONTH(v.data) = ? " +
+                     "GROUP BY c.produto ORDER BY total DESC";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, ano);
+            stmt.setInt(2, mes);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -304,8 +312,8 @@ public class RestauranteSistema {
         List<Object[]> lista = new ArrayList<Object[]>();
 
         String sql = "SELECT v.id_venda, DATE(v.data) AS data, c.produto, c.quantidade, c.total, v.forma_pagamento " +
-                "FROM venda v INNER JOIN compra c ON v.id_venda = c.id_venda " +
-                "WHERE DATE(v.data) = ? ORDER BY v.id_venda DESC";
+                     "FROM venda v INNER JOIN compra c ON v.id_venda = c.id_venda " +
+                     "WHERE DATE(v.data) = ? ORDER BY v.id_venda DESC";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -489,11 +497,11 @@ public class RestauranteSistema {
 
     // ==================== EXPORTAÇÃO ====================
 
-    public boolean exportarRelatorioCSV(String caminho, int ano) {
+    public boolean exportarRelatorioCSV(String caminho, int ano, int mes) {
         try (PrintWriter writer = new PrintWriter(caminho, "UTF-8")) {
             writer.println("Produto;Quantidade;Preço Unitário;Total;Forma Pagamento;Data");
 
-            List<Object[]> lista = listarRelatorioVendas(ano);
+            List<Object[]> lista = listarRelatorioVendas(ano, mes);
             for (Object[] row : lista) {
                 writer.println(
                         row[0] + ";" +
@@ -513,7 +521,7 @@ public class RestauranteSistema {
         }
     }
 
-    public boolean exportarRelatorioExcel(String caminho, int ano) {
+    public boolean exportarRelatorioExcel(String caminho, int ano, int mes) {
         try (Workbook wb = new XSSFWorkbook()) {
             Sheet sheet = wb.createSheet("Relatorio");
 
@@ -525,7 +533,7 @@ public class RestauranteSistema {
             header.createCell(4).setCellValue("Forma Pagamento");
             header.createCell(5).setCellValue("Data");
 
-            List<Object[]> lista = listarRelatorioVendas(ano);
+            List<Object[]> lista = listarRelatorioVendas(ano, mes);
             int rowNum = 1;
 
             for (Object[] rowData : lista) {
