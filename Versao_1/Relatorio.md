@@ -87,9 +87,7 @@ Versao_1/
 │   ├── Usuario.java
 │   ├── ReciboVenda.java
 │   ├── VisualizadorPDF.java
-├── docs/images/
 ├── recibos/
-├── faturas/
 └── pom.xml
 ```
 ---
@@ -663,6 +661,132 @@ JScrollPane scroll = new JScrollPane(tabela);
 - Permite rolar conteúdos extensos
 - É essencial para tabelas e visualização de PDFs
 
+---
+
+## 13. Implementação do CRUD
+
+### Tabela de operações por entidade
+
+|Entidade	    |Operações                      |
+|---------------|-------------------------------|
+|Produtos	    |Create, Read, Update, Delete   |
+|Utilizadores	|Create, Read, Update, Delete   |
+|Vendas	        |Create, Read, Delete           |
+
+### Exemplo: criar produto
+
+```Java
+public boolean cadastrarProduto(String nome, double preco) {
+    String sql = "INSERT INTO produtos (nome, preco) VALUES (?, ?)";
+
+    try (Connection conn = Conexao.conectar();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1, nome.trim());
+        stmt.setDouble(2, preco);
+        return stmt.executeUpdate() > 0;
+    }
+}
+```
+
+### Explicação
+
+- Insere um novo produto na base de dados
+- Retorna `true` se a operação for bem-sucedida
+
+### Exemplo: listar produtos
+
+```Java
+public List<Object[]> listarProdutos() {
+    List<Object[]> lista = new ArrayList<>();
+    String sql = "SELECT id, nome, preco FROM produtos";
+
+    try (Connection conn = Conexao.conectar();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            lista.add(new Object[]{
+                rs.getInt("id"),
+                rs.getString("nome"),
+                rs.getDouble("preco")
+            });
+        }
+    }
+
+    return lista;
+}
+```
+
+### Explicação
+
+- Utiliza ArrayList para armazenar os resultados
+- Cada linha é representada por um Object[]
+- Os dados podem ser usados para preencher tabelas, como JTable
+
+---
+
+## 14. Estruturas de Dados Utilizadas
+
+As principais estruturas de dados utilizadas no sistema são:
+- `List<Object[]>` — armazenamento dinâmico de dados
+- `ArrayList` — manipulação de coleções
+- `DefaultTableModel` — gestão de tabelas na interface gráfica
+
+### Exemplo
+
+```Java
+List<Object[]> lista = new ArrayList<>();
+```
+
+### Explicação
+
+Trata-se de uma estrutura dinâmica usada para armazenar dados de tabelas e relatórios.
+
+---
+
+## 15. Contribuição dos Elementos
+
+|Membro	       |Contribuição                            |
+|--------------|----------------------------------------|
+|Desenvolvedor |Implementação completa do sistema, integração com MySQL, interface gráfica e geração de relatórios|
+
+---
+
+## 16. Tecnologias Utilizadas
+
+- Java (JDK 8+)
+- Swing (GUI)
+- MySQL Workbench
+- JDBC
+- Maven
+- OpenPDF
+- Apache POI
+- PDFBox
+
+---
+
+## 17. Resultados Obtidos
+
+- Sistema funcional completo
+- Interface amigável
+- Integração com base de dados
+- Geração automática de recibos
+- Exportação de relatórios
+
+---
+
+## 18. Melhorias Futuras
+
+- Implementar criptografia de senha
+- Desenvolver dashboard com gráficos
+- Adicionar controlo de estoque
+
+---
+
+## 19. Conclusão
+
+O sistema desenvolvido cumpre os objetivos propostos, apresentando uma solução funcional e eficiente para a gestão de restaurante/bar, no caso a  aplicação demonstra domínio de conceitos fundamentais de programação orientada a objetos, integração com bases de dados e desenvolvimento de interfaces gráficas.
 
 
 
