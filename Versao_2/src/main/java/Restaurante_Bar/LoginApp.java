@@ -9,10 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
+import javafx.stage.Stage; // 👈 IMPORTANTE
 
 public class LoginApp extends Application {
 
@@ -59,7 +60,17 @@ public class LoginApp extends Application {
         root.setCenter(painel);
 
         Scene scene = new Scene(root, 400, 250);
+
         stage.setTitle("Login - Restaurante/Bar CENTRAL");
+
+        // ✅ DEFINIR ÍCONE DA JANELA
+        try {
+            Image icon = new Image(getClass().getResourceAsStream("/icon.png"));
+            stage.getIcons().add(icon);
+        } catch (Exception e) {
+            System.out.println("Ícone não encontrado!");
+        }
+
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
@@ -83,6 +94,15 @@ public class LoginApp extends Application {
 
                 RestauranteMainFX main = new RestauranteMainFX(u);
                 Stage novoStage = new Stage();
+
+                // ✅ APLICAR ÍCONE TAMBÉM NA JANELA PRINCIPAL
+                try {
+                    Image icon = new Image(getClass().getResourceAsStream("/icon.png"));
+                    novoStage.getIcons().add(icon);
+                } catch (Exception e) {
+                    System.out.println("Ícone não encontrado!");
+                }
+
                 main.start(novoStage);
 
                 stageAtual.close();
