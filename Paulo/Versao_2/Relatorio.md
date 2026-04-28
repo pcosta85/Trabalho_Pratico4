@@ -1194,5 +1194,17 @@ Trata-se de uma estrutura dinâmica usada para armazenar dados de tabelas e rela
 
 O sistema desenvolvido cumpre os objetivos propostos, apresentando uma solução funcional e eficiente para a gestão de restaurante/bar, no caso a  aplicação demonstra domínio de conceitos fundamentais de programação orientada a objetos, integração com bases de dados e desenvolvimento de interfaces gráficas.
 
+---
 
+## Participantes:
 
+### - Paulo Costa Nº 7517
+### - Kévin Guiomar Nº 7543
+### - Claudia Martins Nº 7751
+
+## Docente:
+
+### - Professor
+### - Valério Semedo
+
+---
