@@ -213,7 +213,10 @@ public class RestauranteMainFX extends Application {
         TableColumn<ItemCarrinho, Double> colTotal = new TableColumn<>("Total");
         colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
 
-        tabela.getColumns().addAll(colProduto, colQtd, colPreco, colTotal);
+        tabela.getColumns().add(colProduto);
+        tabela.getColumns().add(colQtd);
+        tabela.getColumns().add(colPreco);
+        tabela.getColumns().add(colTotal);
 
         List<Object[]> carrinho = new ArrayList<>();
 
@@ -351,7 +354,9 @@ public class RestauranteMainFX extends Application {
         TableColumn<ProdutoLinha, Double> colPreco = new TableColumn<>("Preço");
         colPreco.setCellValueFactory(new PropertyValueFactory<>("preco"));
 
-        tabela.getColumns().addAll(colId, colNome, colPreco);
+        tabela.getColumns().add(colId);
+        tabela.getColumns().add(colNome);
+        tabela.getColumns().add(colPreco);
 
         carregarTabelaProdutos(tabela);
 
@@ -478,7 +483,12 @@ public class RestauranteMainFX extends Application {
         TableColumn<RelatorioLinha, String> c6 = new TableColumn<>("Data");
         c6.setCellValueFactory(new PropertyValueFactory<>("data"));
 
-        tabela.getColumns().addAll(c1, c2, c3, c4, c5, c6);
+        tabela.getColumns().add(c1);
+        tabela.getColumns().add(c2);
+        tabela.getColumns().add(c3);
+        tabela.getColumns().add(c4);
+        tabela.getColumns().add(c5);
+        tabela.getColumns().add(c6);
 
         TextArea resumo = new TextArea();
         resumo.setEditable(false);
@@ -606,7 +616,12 @@ public class RestauranteMainFX extends Application {
         TableColumn<CompraDiaLinha, String> c6 = new TableColumn<>("Forma");
         c6.setCellValueFactory(new PropertyValueFactory<>("forma"));
 
-        tabela.getColumns().addAll(c1, c2, c3, c4, c5, c6);
+        tabela.getColumns().add(c1);
+        tabela.getColumns().add(c2);
+        tabela.getColumns().add(c3);
+        tabela.getColumns().add(c4);
+        tabela.getColumns().add(c5);
+        tabela.getColumns().add(c6);
 
         btnFiltrar.setOnAction(e -> {
             tabela.getItems().clear();
@@ -726,7 +741,10 @@ public class RestauranteMainFX extends Application {
         TableColumn<UsuarioLinha, String> c4 = new TableColumn<>("Nível");
         c4.setCellValueFactory(new PropertyValueFactory<>("nivel"));
 
-        tabela.getColumns().addAll(c1, c2, c3, c4);
+        tabela.getColumns().add(c1);
+        tabela.getColumns().add(c2);
+        tabela.getColumns().add(c3);
+        tabela.getColumns().add(c4);
 
         carregarTabelaUsuarios(tabela);
 
