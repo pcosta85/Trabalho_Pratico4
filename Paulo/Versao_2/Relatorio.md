@@ -722,106 +722,350 @@ Permite criar ficheiros no formato `.xlsx`, utilizando a biblioteca Apache POI.
 - Interface adaptada ao nível de utilizador
 - Sistema responsivo
 
-### Código da janela principal
+A interface gráfica do sistema foi desenvolvida em **JavaFX**, oferecendo uma apresentação mais moderna, organizada e interativa para o utilizador. A classe principal responsável pela interface é `RestauranteMainFX`, que herda de `Application` e utiliza componentes como `BorderPane`, `VBox`, `StackPane`, `TableView`, `ComboBox`, `TextField`, `Button` e `Alert`.
+
+### Código — Estrutura principal da janela
 
 ```Java
-setTitle("Sistema Restaurante/Bar");
-setSize(1000, 700);
-setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-setLocationRelativeTo(null);
+public class RestauranteMainFX extends Application {
+
+    private Usuario usuarioLogado;
+    private final RestauranteSistema sistema = new RestauranteSistema();
+    private final StackPane painelPrincipal = new StackPane();
+
+    @Override
+    public void start(Stage stage) {
+        BorderPane root = new BorderPane();
+
+        VBox menu = new VBox(10);
+        menu.setPadding(new Insets(20));
+        menu.setPrefWidth(220);
+        menu.setStyle("-fx-background-color: #1e1e1e;");
+    }
+}
 ```
 
 ### Explicação
 
-- `setTitle` — define o título da janela
-- `setSize` — define as dimensões da interface
-- `setLocationRelativeTo(null)` — centraliza a janela no ecrã
+- `Application` é a classe base das aplicações JavaFX.
+- `Stage` representa a janela principal.
+- `BorderPane` divide a janela em áreas: esquerda, centro, topo, fundo e direita.
+- `VBox` é usado para criar o menu lateral.
+- `StackPane` funciona como painel central onde as páginas são alternadas.
 
-### Layout com `CardLayout`
+### Código — Menu lateral
 
 ```Java
-CardLayout cardLayout = new CardLayout();
-JPanel painelConteudo = new JPanel(cardLayout);
+Label lblUser = new Label(usuarioLogado.getUsername() + "\n" + usuarioLogado.getNivelAcesso());
+lblUser.setStyle("-fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold;");
+
+Button btnInicio = criarBotaoMenu("Início");
+Button btnLoja = criarBotaoMenu("Loja / Caixa");
+Button btnProdutos = criarBotaoMenu("Produtos");
+Button btnRelatorios = criarBotaoMenu("Relatórios");
+Button btnComprasDia = criarBotaoMenu("Compras do Dia");
+Button btnDefinicoes = criarBotaoMenu("Definições");
+Button btnUsuarios = criarBotaoMenu("Utilizadores");
 ```
 
 ### Explicação
 
-- `CardLayout` permite alternar entre várias telas
-- Cada funcionalidade do sistema é apresentada como um “card”
-- Facilita a navegação sem necessidade de abrir novas janelas
+O menu lateral apresenta o nome do utilizador autenticado e o respetivo nível de acesso. Os botões permitem navegar pelas principais áreas do sistema, como loja, produtos, relatórios, compras e utilizadores.
 
-### Menu lateral
+### Código — Controle por nível de acesso
 
 ```Java
-JPanel menu = new JPanel();
-menu.setLayout(new GridLayout(0, 1));
+if (isAdmin() || isGestor()) {
+    menu.getChildren().add(btnProdutos);
+    menu.getChildren().add(btnRelatorios);
+}
 
-JButton btnProdutos = new JButton("Produtos");
-JButton btnVendas = new JButton("Vendas");
+if (isAdmin()) {
+    menu.getChildren().add(btnUsuarios);
+}
 
-menu.add(btnProdutos);
-menu.add(btnVendas);
+if (!isAdmin()) {
+    menu.getChildren().add(btnDefinicoes);
+}
 ```
 
 ### Explicação
 
-- O menu é organizado verticalmente
-- Cada botão representa uma funcionalidade
-- GridLayout organiza os elementos automaticamente
+- A interface adapta-se automaticamente ao perfil do utilizador:
+  
+|Nível    |Acesso                                       |
+|---------|---------------------------------------------|
+|ADMIN	  |Produtos, relatórios, utilizadores e compras |
+|GESTOR	  |Produtos, relatórios e compras               |
+|ATENDENTE|Loja, compras e definições                   |
 
-### Troca de telas
+### Código — Criação dos botões do menu
 
 ```Java
-btnProdutos.addActionListener(e -> cardLayout.show(painelConteudo, "produtos"));
-btnVendas.addActionListener(e -> cardLayout.show(painelConteudo, "vendas"));
+private Button criarBotaoMenu(String texto) {
+    Button btn = new Button(texto);
+    btn.setMaxWidth(Double.MAX_VALUE);
+    btn.setStyle("-fx-background-color: #323232; -fx-text-fill: white; -fx-font-weight: bold;");
+    return btn;
+}
 ```
 
 ### Explicação
 
-- Cada botão altera o conteúdo exibido
-- `cardLayout.show(...)` muda a tela ativa
-- Permite navegação dinâmica dentro da aplicação
+- Este método padroniza todos os botões do menu lateral, garantindo o mesmo estilo visual, largura total e cores consistentes.
 
-### Formulários
+### Código — Troca de páginas
 
 ```Java
-JTextField txtNome = new JTextField();
-JTextField txtPreco = new JTextField();
-JButton btnSalvar = new JButton("Salvar");
+private void mostrar(javafx.scene.Node pagina) {
+    for (javafx.scene.Node node : painelPrincipal.getChildren()) {
+        node.setVisible(false);
+    }
+    pagina.setVisible(true);
+}
 ```
 
 ### Explicação
 
-- Representam campos de entrada de dados
-- Permitem inserir produtos e utilizadores
-- São associados a ações através de botões
+- O método `mostrar()` oculta todas as páginas e mostra apenas a página selecionada. Isto permite navegar entre diferentes áreas do sistema sem abrir novas janelas.
 
-### Integração com o sistema
-
-### Exemplo de ação
+### Código — Página inicial
 
 ```Java
-btnSalvar.addActionListener(e -> {
-    sistema.cadastrarProduto(txtNome.getText(), Double.parseDouble(txtPreco.getText()));
-});
+private BorderPane criarPaginaInicio() {
+    BorderPane p = new BorderPane();
+    Label lbl = new Label("Bem-vindo " + usuarioLogado.getUsername() + " - Perfil: " + usuarioLogado.getNivelAcesso());
+    lbl.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+    p.setCenter(lbl);
+    BorderPane.setAlignment(lbl, Pos.CENTER);
+    return p;
+}
 ```
 
 ### Explicação
 
-- Liga a interface gráfica à lógica do sistema
-- Chama métodos da classe RestauranteSistema
-- Executa operações sobre a base de dados
+- A página inicial apresenta uma mensagem de boas-vindas com o nome e o perfil do utilizador autenticado.
 
-### Scroll com `JScrollPane`
+### Código — Interface da Loja / Caixa
 
 ```Java
-JScrollPane scroll = new JScrollPane(tabela);
+ComboBox<String> cbProduto = new ComboBox<>();
+TextField txtQtd = new TextField();
+ComboBox<String> cbPagamento = new ComboBox<>();
+TextField txtRecebido = new TextField();
+
+Button btnAdicionar = new Button("Adicionar");
+Button btnFinalizar = new Button("Finalizar");
 ```
 
 ### Explicação
 
-- Permite rolar conteúdos extensos
-- É essencial para tabelas e visualização de PDFs
+- A página da loja permite selecionar produtos, informar quantidade, escolher a forma de pagamento e finalizar a venda.
+
+### Código — Tabela do carrinho
+
+```Java
+TableView<ItemCarrinho> tabela = new TableView<>();
+
+TableColumn<ItemCarrinho, String> colProduto = new TableColumn<>("Produto");
+colProduto.setCellValueFactory(new PropertyValueFactory<>("produto"));
+
+TableColumn<ItemCarrinho, Integer> colQtd = new TableColumn<>("Qtd");
+colQtd.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
+
+TableColumn<ItemCarrinho, Double> colPreco = new TableColumn<>("Preço");
+colPreco.setCellValueFactory(new PropertyValueFactory<>("preco"));
+
+TableColumn<ItemCarrinho, Double> colTotal = new TableColumn<>("Total");
+colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+```
+
+### Explicação
+
+- A TableView apresenta os produtos adicionados ao carrinho, com produto, quantidade, preço unitário e total.
+
+### Código — Adicionar produto ao carrinho
+
+```Java
+Object[] prod = sistema.obterProduto(cbProduto.getValue());
+
+int qtd = Integer.parseInt(txtQtd.getText().trim());
+double preco = (double) prod[2];
+double total = preco * qtd;
+
+carrinho.add(new Object[]{prod[1], qtd, prod[2], total});
+tabela.getItems().add(new ItemCarrinho(prod[1].toString(), qtd, preco, total));
+```
+
+### Explicação
+
+- O sistema obtém o produto selecionado, calcula o total conforme a quantidade e adiciona o item ao carrinho e à tabela visual.
+
+### Código — Página de Produtos
+
+```Java
+TextField txtId = new TextField();
+TextField txtNome = new TextField();
+TextField txtPreco = new TextField();
+
+Button btnCadastrar = new Button("Cadastrar");
+Button btnAtualizar = new Button("Atualizar");
+Button btnEliminar = new Button("Eliminar");
+Button btnRecarregar = new Button("Recarregar");
+```
+
+### Explicação
+
+- Esta área implementa o CRUD de produtos, permitindo cadastrar, atualizar, eliminar e recarregar dados.
+
+### Código — Tabela de Produtos
+
+```Java
+TableView<ProdutoLinha> tabela = new TableView<>();
+
+TableColumn<ProdutoLinha, Integer> colId = new TableColumn<>("ID");
+colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+TableColumn<ProdutoLinha, String> colNome = new TableColumn<>("Produto");
+colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+
+TableColumn<ProdutoLinha, Double> colPreco = new TableColumn<>("Preço");
+colPreco.setCellValueFactory(new PropertyValueFactory<>("preco"));
+```
+
+### Explicação
+
+- A tabela lista os produtos existentes na base de dados e permite selecionar uma linha para editar ou eliminar.
+
+### Código — Relatórios por Ano e Mês
+
+```Java
+ComboBox<Integer> cbAno = new ComboBox<>();
+ComboBox<String> cbMes = new ComboBox<>();
+
+cbMes.getItems().addAll(
+    "Janeiro", "Fevereiro", "Março", "Abril",
+    "Maio", "Junho", "Julho", "Agosto",
+    "Setembro", "Outubro", "Novembro", "Dezembro"
+);
+```
+
+### Explicação
+
+- A página de relatórios permite filtrar vendas por ano e mês, facilitando a análise mensal das vendas.
+
+### Código — Exportação CSV e Excel
+
+```Java
+FileChooser chooser = new FileChooser();
+chooser.setTitle("Guardar Excel");
+chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel", "*.xlsx"));
+File file = chooser.showSaveDialog(null);
+
+if (file != null) {
+    boolean ok = sistema.exportarRelatorioExcel(file.getAbsolutePath(), ano, mes);
+}
+```
+
+### Explicação
+
+- O `FileChooser` permite escolher onde guardar os relatórios exportados, tanto em CSV como em Excel.
+
+### Código — Alertas do sistema
+
+```Java
+private void mostrarInfo(String msg) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Informação");
+    alert.setHeaderText(null);
+    alert.setContentText(msg);
+    alert.showAndWait();
+}
+```
+
+### Explicação
+
+- Os alertas informam o utilizador sobre operações bem-sucedidas, avisos e erros.
+    - Mensagem de Aviso
+    - Mensagem de Erro
+    - Confirmação de Ação
+
+### Código — Mensagem de Informação
+
+```Java
+private void mostrarInfo(String msg) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Informação");
+    alert.setHeaderText(null);
+    alert.setContentText(msg);
+    alert.showAndWait();
+}
+```
+
+### Explicação
+
+- Exibe mensagens informativas ao utilizador
+- Utilizado após operações bem-sucedidas (ex: venda concluída, exportação realizada)
+- `showAndWait()` bloqueia a execução até o utilizador fechar o alerta
+
+### Código — Mensagem de Aviso
+
+```Java
+private void mostrarAviso(String msg) {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle("Aviso");
+    alert.setHeaderText(null);
+    alert.setContentText(msg);
+    alert.showAndWait();
+}
+```
+
+### Explicação
+
+- Apresenta avisos ao utilizador
+- Utilizado quando há dados incompletos ou situações não críticas
+- Exemplo: campos vazios ou valores inválidos
+
+### Código — Mensagem de Erro
+
+```Java
+private void mostrarErro(String msg) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Erro");
+    alert.setHeaderText(null);
+    alert.setContentText(msg);
+    alert.showAndWait();
+}
+```
+
+### Explicação
+
+- Exibe mensagens de erro
+- Utilizado quando ocorre uma falha no sistema
+- Exemplo: erro na base de dados ou dados inválidos
+
+### Código — Confirmação de Ação
+
+```Java
+private boolean confirmar(String mensagem) {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Confirmar");
+    alert.setHeaderText(null);
+    alert.setContentText(mensagem);
+
+    Optional<ButtonType> resultado = alert.showAndWait();
+    return resultado.isPresent() && resultado.get() == ButtonType.OK;
+}
+```
+
+### Explicação
+
+- Solicita confirmação ao utilizador antes de executar ações críticas
+- Retorna true se o utilizador confirmar
+- Utilizado em ações como:
+    - Eliminar dados
+    - Terminar sessão
+    - Sair do sistema
 
 ---
 
