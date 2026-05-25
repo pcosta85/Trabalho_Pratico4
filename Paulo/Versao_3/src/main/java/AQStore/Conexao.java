@@ -8,7 +8,7 @@ public class Conexao {
 
     private static final String HOST = "localhost";
     private static final String PORTA = "3306";
-    private static final String BANCO = "restaurante";
+    private static final String BANCO = "aqstore";
     private static final String USER = "root";
     private static final String PASSWORD = "Pcosta9850053";
 
