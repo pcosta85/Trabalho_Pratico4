@@ -30,6 +30,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.Label;
+import javafx.geometry.Pos;
 
 public class AQStoreMainFX extends Application {
 
@@ -58,15 +61,15 @@ public class AQStoreMainFX extends Application {
         lblUser.setAlignment(Pos.CENTER);
         lblUser.setMaxWidth(Double.MAX_VALUE);
 
-        Button btnInicio = criarBotaoMenu("Início");
-        Button btnLoja = criarBotaoMenu("Loja / Caixa");
-        Button btnProdutos = criarBotaoMenu("Produtos");
-        Button btnRelatorios = criarBotaoMenu("Relatórios");
-        Button btnComprasDia = criarBotaoMenu("Compras do Dia");
-        Button btnDefinicoes = criarBotaoMenu("Definições");
-        Button btnUsuarios = criarBotaoMenu("Utilizadores");
-        Button btnLogout = criarBotaoMenu("Terminar Sessão");
-        Button btnSair = criarBotaoMenu("Sair");
+        Button btnInicio = criarBotaoMenu("🏠", "Início");
+        Button btnLoja = criarBotaoMenu("🛒", "Loja / Caixa");
+        Button btnProdutos = criarBotaoMenu("🛍", "Produtos");
+        Button btnRelatorios = criarBotaoMenu("📊", "Relatórios");
+        Button btnComprasDia = criarBotaoMenu("🛒", "Compras do Dia");
+        Button btnDefinicoes = criarBotaoMenu("⚙️", "Definições");
+        Button btnUsuarios = criarBotaoMenu("👥", "Utilizadores");
+        Button btnLogout = criarBotaoMenu("⏻", "Terminar Sessão");
+        Button btnSair = criarBotaoMenu("🚪", "Sair");
 
         menu.getChildren().add(lblUser);
         menu.getChildren().add(btnInicio);
@@ -135,10 +138,55 @@ public class AQStoreMainFX extends Application {
         stage.show();
     }
 
-    private Button criarBotaoMenu(String texto) {
-        Button btn = new Button(texto);
+    private Button criarBotaoMenu(String icone, String texto) {
+
+        Label iconLabel = new Label(icone);
+        iconLabel.setStyle("""
+            -fx-text-fill: white;
+            -fx-font-size: 18px;
+        """);
+
+        Label textLabel = new Label(texto);
+        textLabel.setStyle("""
+            -fx-text-fill: white;
+            -fx-font-size: 14px;
+            -fx-font-weight: bold;
+        """);
+
+        HBox box = new HBox(12, iconLabel, textLabel);
+        box.setAlignment(Pos.CENTER_LEFT);
+
+        Button btn = new Button();
+        btn.setGraphic(box);
+
         btn.setMaxWidth(Double.MAX_VALUE);
-        btn.setStyle("-fx-background-color: #323232; -fx-text-fill: white; -fx-font-weight: bold;");
+        btn.setPrefHeight(42);
+
+        btn.setStyle("""
+            -fx-background-color: #323232;
+            -fx-background-radius: 8;
+            -fx-cursor: hand;
+            -fx-padding: 8 15 8 15;
+        """);
+
+        btn.setOnMouseEntered(e ->
+                btn.setStyle("""
+                    -fx-background-color: #444444;
+                    -fx-background-radius: 8;
+                    -fx-cursor: hand;
+                    -fx-padding: 8 15 8 15;
+                """)
+        );
+
+        btn.setOnMouseExited(e ->
+                btn.setStyle("""
+                    -fx-background-color: #323232;
+                    -fx-background-radius: 8;
+                    -fx-cursor: hand;
+                    -fx-padding: 8 15 8 15;
+                """)
+        );
+
         return btn;
     }
 
