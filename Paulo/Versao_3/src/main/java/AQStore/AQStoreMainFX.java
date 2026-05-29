@@ -77,17 +77,16 @@ public class AQStoreMainFX extends Application {
 
         if (isAdmin() || isGestor()) {
             menu.getChildren().add(btnProdutos);
+        }
+
+        menu.getChildren().add(btnComprasDia);
+
+        if (isAdmin() || isGestor()) {
             menu.getChildren().add(btnRelatorios);
         }
 
         if (isAdmin()) {
             menu.getChildren().add(btnUsuarios);
-        }
-
-        menu.getChildren().add(btnComprasDia);
-
-        if (!isAdmin()) {
-            menu.getChildren().add(btnDefinicoes);
         }
 
         menu.getChildren().addAll(btnLogout, btnSair);
@@ -641,8 +640,12 @@ public class AQStoreMainFX extends Application {
 
         topo.getChildren().addAll(
                 new Label("Data (AAAA-MM-DD):"), txtData,
-                btnFiltrar, btnEliminar
+                btnFiltrar
         );
+        // Apenas ADMIN e GESTOR podem eliminar
+        if (isAdmin() || isGestor()) {
+            topo.getChildren().add(btnEliminar);
+        }
 
         TableView<CompraDiaLinha> tabela = new TableView<>();
 
@@ -686,6 +689,11 @@ public class AQStoreMainFX extends Application {
         });
 
         btnEliminar.setOnAction(e -> {
+            // Bloquear ATENDENTE
+            if (!isAdmin() && !isGestor()) {
+                mostrarAviso("Não possui permissão para eliminar vendas.");
+                return;
+            }
             CompraDiaLinha linha = tabela.getSelectionModel().getSelectedItem();
             if (linha == null) {
                 mostrarAviso("Selecione uma venda.");
