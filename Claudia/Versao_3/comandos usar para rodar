@@ -1,0 +1,1 @@
+& "C:\Users\Cláudia Martins\.vscode\extensions\oracle.oracle-java-26.0.0\nbcode\java\maven\bin\mvn.cmd" clean javafx:run

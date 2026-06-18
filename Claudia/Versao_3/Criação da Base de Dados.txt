@@ -1,5 +1,5 @@
-CREATE DATABASE restaurante;
-USE restaurante;
+CREATE DATABASE AQStore;
+USE AQStore;
 
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -20,15 +20,11 @@ CREATE TABLE produtos (
 );
 
 INSERT INTO produtos (nome, preco) VALUES
-('Café', 50.00),
-('Coca-cola', 100.00),
-('Sanduíche', 250.00),
-('Hambúrguer', 500.00);
-('Pizza', 700.00);
-('Compal' 250.00);
-('Lazanha tamanho ' 1500.00);
-('Atum no Forno' 800.00);
-('Salada vegana apimentada'1800.00);
+('Arreia', 250.00),
+('Perdra Porosa', 120.00),
+('Tetra Min', 350.00),
+('Rede', 300.00),
+('Cascalho', 200.00);
 
 CREATE TABLE venda (
     id_venda INT AUTO_INCREMENT PRIMARY KEY,
