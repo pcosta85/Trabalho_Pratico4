@@ -13,7 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import javafx.stage.Stage; // IMPORTANTE
+import javafx.stage.Stage; // IMPORTANTE ao usar Stage para abrir nova janela
 
 public class LoginApp extends Application {
 
