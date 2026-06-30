@@ -1,10 +1,37 @@
 package AQStore;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import AQStore.AQStoreMainFX.CompraDiaLinha;
+import AQStore.AQStoreMainFX.ItemCarrinho;
+import AQStore.AQStoreMainFX.ProdutoLinha;
+import AQStore.AQStoreMainFX.RelatorioLinha;
+import AQStore.AQStoreMainFX.UsuarioLinha;
+
+import AQStore.AQStoreMainFX.CompraDiaLinha;
+import AQStore.AQStoreMainFX.ItemCarrinho;
+import AQStore.AQStoreMainFX.ProdutoLinha;
+import AQStore.AQStoreMainFX.RelatorioLinha;
+import AQStore.AQStoreMainFX.UsuarioLinha;
+
+import AQStore.AQStoreMainFX.CompraDiaLinha;
+import AQStore.AQStoreMainFX.ItemCarrinho;
+import AQStore.AQStoreMainFX.RelatorioLinha;
+import AQStore.AQStoreMainFX.UsuarioLinha;
+
+import AQStore.AQStoreMainFX.CompraDiaLinha;
+import AQStore.AQStoreMainFX.ItemCarrinho;
+import AQStore.AQStoreMainFX.ProdutoLinha;
+import AQStore.AQStoreMainFX.RelatorioLinha;
+import AQStore.AQStoreMainFX.UsuarioLinha;
+
+import AQStore.AQStoreMainFX.CompraDiaLinha;
+import AQStore.AQStoreMainFX.ItemCarrinho;
+import AQStore.AQStoreMainFX.ProdutoLinha;
+import AQStore.AQStoreMainFX.RelatorioLinha;
+import AQStore.AQStoreMainFX.UsuarioLinha;
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -41,6 +68,7 @@ public class AQStoreMainFX extends Application {
     private final StackPane painelPrincipal = new StackPane();
 
     public AQStoreMainFX() {
+        systema.outt.println(Ola);
     }
 
     public AQStoreMainFX(Usuario usuarioLogado) {
@@ -206,7 +234,15 @@ public class AQStoreMainFX extends Application {
 
     private BorderPane criarPaginaInicio() {
         BorderPane p = new BorderPane();
-        Label lbl = new Label("Bem-vindo " + usuarioLogado.getUsername() + " - Perfil: " + usuarioLogado.getNivelAcesso());
+        VBox dashboard = new VBox(15);
+
+    Label totalProdutos = new Label("Produtos: " + sistema.listarProdutos().size());  // adicionado dashboard
+
+    Label totalUsuarios = new Label("Utilizadores: " + sistema.listarUsuarios().size());
+
+    dashboard.getChildren().addAll( totalProdutos, totalUsuarios);
+
+    p.setCenter(dashboard);
         lbl.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
         p.setCenter(lbl);
         BorderPane.setAlignment(lbl, Pos.CENTER);
@@ -342,7 +378,10 @@ public class AQStoreMainFX extends Application {
                         troco,
                         carrinho
                 );
-
+                   int stock = sistema.obterStock(cbProduto.getValue());      // stock abaixo
+            if(stock < 5){
+                mostrarAviso("Atenção: stock baixo deste produto." );
+                    }
                 if (ok) {
                     mostrarInfo("Venda feita com sucesso.");
                     carrinho.clear();
@@ -375,18 +414,26 @@ public class AQStoreMainFX extends Application {
         txtId.setPrefWidth(60);
         TextField txtNome = new TextField();
         txtNome.setPrefWidth(160);
+        TextField txtPesquisar = new TextField();  //adicionado
+        txtPesquisar.setPromptText("Pesquisar produto");
         TextField txtPreco = new TextField();
         txtPreco.setPrefWidth(100);
+        TextField txtStock = new TextField(); //Adiciondao na pagina de produtos
+        txtStock.setPrefWidth(80);
 
         Button btnCadastrar = new Button("Cadastrar");
         Button btnAtualizar = new Button("Atualizar");
         Button btnEliminar = new Button("Eliminar");
         Button btnRecarregar = new Button("Recarregar");
+        Button btnPesquisar = new Button("Pesquisar");     // adicionado botao do stock
 
         topo.getChildren().addAll(
+                txtPesquisar,
+                btnPesquisar,
                 new Label("ID:"), txtId,
                 new Label("Nome:"), txtNome,
                 new Label("Preço:"), txtPreco,
+                new Label("Stock:"), txtStock, //Adicionado na pagina de produtos
                 btnCadastrar, btnAtualizar, btnEliminar, btnRecarregar
         );
 
@@ -401,9 +448,13 @@ public class AQStoreMainFX extends Application {
         TableColumn<ProdutoLinha, Double> colPreco = new TableColumn<>("Preço");
         colPreco.setCellValueFactory(new PropertyValueFactory<>("preco"));
 
+        TableColum<ProdutoLinha, integer> coldStock = new TableColum<>("Stock"); // adicionado coluna Stock
+        coldStock.setcellValueFactory(new PropertyValueFactory<>("stock"));
+
         tabela.getColumns().add(colId);
         tabela.getColumns().add(colNome);
         tabela.getColumns().add(colPreco);
+        tabela.getColumns().add(colStock); // adicionado tabela Stock
 
         carregarTabelaProdutos(tabela);
 

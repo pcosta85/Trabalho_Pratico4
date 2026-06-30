@@ -18,14 +18,15 @@ public class AQStoreSistema {
 
     // ==================== PRODUTOS ====================
 
-    public boolean cadastrarProduto(String nome, double preco) {
-        String sql = "INSERT INTO produtos (nome, preco) VALUES (?, ?)";
+    public boolean cadastrarProduto(String nome, double preco, int stock) { // acrescentar stock na tabela
+        String sql = "INSERT INTO produtos (nome, preco, stock) VALUES (?, ?)";
 
         try (Connection conn = Conexao.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nome.trim());
             stmt.setDouble(2, preco);
+            stmt.setint(3, stock);
             return stmt.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -38,7 +39,7 @@ public class AQStoreSistema {
         String sql = "UPDATE produtos SET nome = ?, preco = ? WHERE id = ?";
 
         try (Connection conn = Conexao.conectar();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nome.trim());
             stmt.setDouble(2, preco);
@@ -68,7 +69,7 @@ public class AQStoreSistema {
 
     public List<Object[]> listarProdutos() {
         List<Object[]> lista = new ArrayList<Object[]>();
-        String sql = "SELECT id, nome, preco FROM produtos ORDER BY nome";
+        String sql = "SELECT id, nome, stock, preco FROM produtos ORDER BY nome";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -78,6 +79,7 @@ public class AQStoreSistema {
                 lista.add(new Object[]{
                         rs.getInt("id"),
                         rs.getString("nome"),
+                        rs.getInt("stock"),      // adicionado coluna stock
                         rs.getDouble("preco")
                 });
             }
@@ -102,7 +104,7 @@ public class AQStoreSistema {
                     return new Object[]{
                             rs.getInt("id"),
                             rs.getString("nome"),
-                            rs.getDouble("preco")
+                            rs.getDouble("preco"),
                     };
                 }
             }
@@ -114,6 +116,27 @@ public class AQStoreSistema {
         return null;
     }
 
+    public int obterStock(String nome) { // metodo para verificar stock abaixo
+
+    String sql = "SELECT stock FROM produtos WHERE nome=?";
+
+    try(Connection conn = Conexao.conectar();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1,nome);
+
+        ResultSet rs = stmt.executeQuery();
+
+        if(rs.next()){
+            return rs.getInt("stock");
+        }
+
+    } catch(Exception e){
+        e.printStackTrace();
+    }
+
+    return 0;
+}
     // ==================== VENDAS ====================
 
     public boolean finalizarVenda(String usuario, String forma, Double recebido, Double troco, List<Object[]> carrinho) {
@@ -145,6 +168,17 @@ public class AQStoreSistema {
             }
 
             for (Object[] item : carrinho) {
+                String sqlStock =    // atualizar stock
+                   "UPDATE produtos SET stock = stock - ? WHERE nome = ?";
+
+                    try (PreparedStatement stmtStock =
+                    conn.prepareStatement(sqlStock)) {
+
+                    stmtStock.setInt(1, (Integer)item[1]);
+                    stmtStock.setString(2, item[0].toString());
+
+                    stmtStock.executeUpdate();
+                     }
                 try (PreparedStatement stmtCompra = conn.prepareStatement(sqlCompra)) {
                     stmtCompra.setString(1, (String) item[0]);
                     stmtCompra.setInt(2, (Integer) item[1]);
@@ -445,6 +479,12 @@ public class AQStoreSistema {
 
     public boolean criarUsuario(String username, String password, String nivel) {
         String sql = "INSERT INTO usuarios (username, password, nivel) VALUES (?, ?, ?)";
+         for(Object[] u : listarUsuarios()){   // verificar usuario duplicado
+
+         if(u[1].toString().equalsIgnoreCase(username)){
+         return false;
+    }
+}
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
