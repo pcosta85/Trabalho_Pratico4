@@ -288,6 +288,18 @@ public class AQStoreMainFX extends Application {
                 }
 
                 int qtd = Integer.parseInt(txtQtd.getText().trim());
+                int stockDisponivel = (Integer) prod[3];
+
+                if (qtd <= 0) {
+                    mostrarAviso("A quantidade deve ser maior que zero.");
+                    return;
+                }
+
+                if (qtd > stockDisponivel) {
+                    mostrarAviso("Stock insuficiente. Stock disponível: " + stockDisponivel);
+                    return;
+                }
+
                 double preco = (double) prod[2];
                 double total = preco * qtd;
 
@@ -378,6 +390,9 @@ public class AQStoreMainFX extends Application {
         TextField txtPreco = new TextField();
         txtPreco.setPrefWidth(100);
 
+        TextField txtStock = new TextField();
+        txtStock.setPrefWidth(80);
+
         Button btnCadastrar = new Button("Cadastrar");
         Button btnAtualizar = new Button("Atualizar");
         Button btnEliminar = new Button("Eliminar");
@@ -387,6 +402,7 @@ public class AQStoreMainFX extends Application {
                 new Label("ID:"), txtId,
                 new Label("Nome:"), txtNome,
                 new Label("Preço:"), txtPreco,
+                new Label("Stock:"), txtStock,
                 btnCadastrar, btnAtualizar, btnEliminar, btnRecarregar
         );
 
@@ -401,9 +417,13 @@ public class AQStoreMainFX extends Application {
         TableColumn<ProdutoLinha, Double> colPreco = new TableColumn<>("Preço");
         colPreco.setCellValueFactory(new PropertyValueFactory<>("preco"));
 
+        TableColumn<ProdutoLinha, Integer> colStock = new TableColumn<>("Stock");
+        colStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+
         tabela.getColumns().add(colId);
         tabela.getColumns().add(colNome);
         tabela.getColumns().add(colPreco);
+        tabela.getColumns().add(colStock);
 
         carregarTabelaProdutos(tabela);
 
@@ -413,6 +433,7 @@ public class AQStoreMainFX extends Application {
                 txtId.setText(String.valueOf(linha.getId()));
                 txtNome.setText(linha.getNome());
                 txtPreco.setText(String.valueOf(linha.getPreco()));
+                txtStock.setText(String.valueOf(linha.getStock()));
             }
         });
 
@@ -420,13 +441,15 @@ public class AQStoreMainFX extends Application {
             try {
                 boolean ok = sistema.cadastrarProduto(
                         txtNome.getText().trim(),
-                        Double.parseDouble(txtPreco.getText().trim())
+                        Double.parseDouble(txtPreco.getText().trim()),
+                        Integer.parseInt(txtStock.getText().trim())
                 );
                 if (ok) {
                     carregarTabelaProdutos(tabela);
                     txtId.clear();
                     txtNome.clear();
                     txtPreco.clear();
+                    txtStock.clear();
                 }
             } catch (Exception ex) {
                 mostrarErro("Dados inválidos.");
@@ -438,7 +461,8 @@ public class AQStoreMainFX extends Application {
                 boolean ok = sistema.atualizarProduto(
                         Integer.parseInt(txtId.getText().trim()),
                         txtNome.getText().trim(),
-                        Double.parseDouble(txtPreco.getText().trim())
+                        Double.parseDouble(txtPreco.getText().trim()),
+                        Integer.parseInt(txtStock.getText().trim())
                 );
                 if (ok) {
                     carregarTabelaProdutos(tabela);
@@ -456,6 +480,7 @@ public class AQStoreMainFX extends Application {
                     txtId.clear();
                     txtNome.clear();
                     txtPreco.clear();
+                    txtStock.clear();
                 }
             } catch (Exception ex) {
                 mostrarErro("ID inválido.");
@@ -475,7 +500,8 @@ public class AQStoreMainFX extends Application {
             tabela.getItems().add(new ProdutoLinha(
                     (Integer) p[0],
                     p[1].toString(),
-                    (Double) p[2]
+                    (Double) p[2],
+                    (Integer) p[3]
             ));
         }
     }
@@ -966,16 +992,19 @@ public class AQStoreMainFX extends Application {
         private final SimpleIntegerProperty id;
         private final SimpleStringProperty nome;
         private final SimpleObjectProperty<Double> preco;
+        private final SimpleIntegerProperty stock;
 
-        public ProdutoLinha(int id, String nome, double preco) {
+        public ProdutoLinha(int id, String nome, double preco, int stock) {
             this.id = new SimpleIntegerProperty(id);
             this.nome = new SimpleStringProperty(nome);
             this.preco = new SimpleObjectProperty<>(preco);
+            this.stock = new SimpleIntegerProperty(stock);
         }
 
         public int getId() { return id.get(); }
         public String getNome() { return nome.get(); }
         public Double getPreco() { return preco.get(); }
+        public int getStock() { return stock.get(); }
     }
 
     public static class RelatorioLinha {
