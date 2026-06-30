@@ -7008,7 +7008,6 @@ Além de resolver um problema real de gestão de vendas e produtos, o projeto pr
 
 Por fim, considera-se que o sistema AQStore possui potencial para futuras melhorias, tais como:
 
-- Implementação de controlo de stock automático;
 - Dashboard com gráficos estatísticos;
 - Backup automático da base de dados;
 - Sistema de recuperação de palavra-passe;
@@ -7018,4 +7017,4 @@ Por fim, considera-se que o sistema AQStore possui potencial para futuras melhor
 - Impressão direta de recibos em impressoras térmicas;
 - Disponibilização de uma versão web.
 
-Desta forma, conclui-se que o projeto atingiu os objetivos propostos, constituindo uma solução sólida, organizada e adequada para apoio à gestão comercial da Loja Aquapet Lda, evidenciando a aplicação prática dos conhecimentos adquiridos ao longo da formação académica.
+Desta forma, conclui-se que o projeto atingiu os objetivos propostos, constituindo uma solução sólida, organizada e adequada para apoio à gestão comercial da Loja Aquapet Lda, evidenciando a aplicação prática dos conhecimentos adquiridos.
