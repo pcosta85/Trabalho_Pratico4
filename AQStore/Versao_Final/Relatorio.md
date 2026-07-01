@@ -5,8 +5,6 @@
 ### Unidade Curricular: Conceção e Análise de Algoritmos
 ### Tema: Sistema de Gestão Comercial AQStore
 
----
-
 ## Participantes
 
 - Paulo Costa Nº 7517
@@ -16,8 +14,6 @@
 ## Docente
 
 - Professor Valério Semedo
-
----
 
 # Índice
 
@@ -42,7 +38,8 @@
 19. [Resultados Obtidos](#19-resultados-obtidos)
 20. [Conclusão](#20-conclusao)
 
----
+<br>
+
 
 # 1. Introducao
 
@@ -62,7 +59,6 @@ A aplicação implementa funcionalidades fundamentais para um sistema de gestão
 - Emissão automática de recibos PDF;
 - Pré-visualização dos recibos diretamente na aplicação.
 
----
 
 ## Enquadramento do Projeto
 
@@ -72,7 +68,6 @@ Com o objetivo de minimizar estes problemas, surgiu a necessidade de desenvolver
 
 O AQStore foi desenvolvido precisamente para responder a essa necessidade, disponibilizando funcionalidades que permitem centralizar informações, controlar acessos, emitir recibos e gerar relatórios de forma rápida e organizada.
 
----
 
 ## Justificação do Projeto
 
@@ -92,7 +87,6 @@ O desenvolvimento do sistema permitiu aplicar conhecimentos relacionados com:
 
 Além disso, o projeto proporcionou uma experiência próxima de um ambiente empresarial real, permitindo compreender os desafios associados ao desenvolvimento de aplicações de gestão.
 
----
 
 ## Metodologia Utilizada
 
@@ -111,7 +105,6 @@ Para o desenvolvimento do sistema foram seguidas as seguintes etapas:
 
 Cada etapa contribuiu para a construção gradual do sistema, permitindo obter uma solução organizada, modular e de fácil manutenção.
 
----
 
 ## Estrutura do Relatório
 
@@ -135,7 +128,7 @@ São apresentados:
 
 Esta organização permite uma visão completa do desenvolvimento do sistema AQStore, evidenciando as principais decisões técnicas e os resultados alcançados.
 
----
+<br>
 
 # 2. Objetivos
 
@@ -156,7 +149,7 @@ Os objetivos específicos do projeto foram:
 - Integrar a aplicação com uma base de dados MySQL;
 - Aplicar boas práticas de Programação Orientada a Objetos.
 
----
+<br>
 
 # 3. Arquitetura do Sistema
 
@@ -199,7 +192,6 @@ Funções:
 - Mostrar mensagens e alertas;
 - Apresentar recibos PDF.
 
----
 
 ## Lógica de Negócio
 
@@ -218,7 +210,6 @@ Funções:
 - Gerir utilizadores;
 - Gerar relatórios.
 
----
 
 ## Persistência de Dados
 
@@ -234,7 +225,6 @@ Funções:
 - Executar consultas SQL;
 - Inserir, atualizar e eliminar dados.
 
----
 
 ## Documentação e Relatórios
 
@@ -251,7 +241,6 @@ Funções:
 - Visualizar recibos;
 - Exportar relatórios.
 
----
 
 ## Diagrama Simplificado
 ```text
@@ -285,7 +274,6 @@ Funções:
 +----------------------+
 ```
 
----
 
 # 4. Estrutura do Projeto
 
@@ -398,7 +386,7 @@ A divisão do sistema em várias classes permitiu:
 
 Cada classe possui uma função específica, reduzindo a dependência entre módulos e facilitando futuras evoluções do sistema.
 
----
+<br>
 
 # 5. Autenticacao e Gestao de Utilizadores
 
@@ -406,7 +394,6 @@ A autenticação é uma das funcionalidades mais importantes do sistema AQStore,
 
 O sistema utiliza uma tabela denominada `usuarios`, armazenada na base de dados MySQL, onde são guardadas as credenciais de acesso e o respetivo nível de permissão de cada utilizador. 
 
----
 
 ## Objetivo da Autenticação
 
@@ -418,7 +405,6 @@ O módulo de autenticação tem como principais objetivos:
 - Garantir a segurança dos dados;
 - Impedir acessos não autorizados.
 
----
 
 ## Níveis de Acesso Implementados
 
@@ -432,7 +418,6 @@ O sistema implementa três níveis distintos de acesso:
 
 Após o login, o sistema identifica automaticamente o perfil do utilizador e disponibiliza apenas as funcionalidades permitidas para esse nível de acesso. 
 
----
 
 ## Classe Usuario
 
@@ -475,7 +460,6 @@ Os seus atributos possuem as seguintes funções:
 
 Após o login, os dados do utilizador ficam disponíveis para o restante sistema.
 
----
 
 ## Classe Autenticacao
 
@@ -503,7 +487,6 @@ Os símbolos `?` representam parâmetros dinâmicos que serão preenchidos duran
 
 A utilização de `PreparedStatement` aumenta a segurança da aplicação e reduz o risco de SQL Injection.
 
----
 
 ## Validação das Credenciais
 
@@ -520,7 +503,6 @@ Os dados introduzidos pelo utilizador são enviados para a consulta SQL.
 
 O método `trim()` remove espaços em branco antes e depois do texto, evitando erros de autenticação causados por caracteres desnecessários.
 
----
 
 ## Execução da Consulta
 
@@ -557,7 +539,6 @@ return null;
 
 indicando que o login falhou.
 
----
 
 ## Interface de Login
 
@@ -591,7 +572,6 @@ PasswordField
 
 Oculta automaticamente os caracteres introduzidos pelo utilizador, aumentando a segurança do sistema.
 
----
 
 ## Processamento do Login
 
@@ -619,7 +599,6 @@ Este método:
 4. Verifica o resultado;
 5. Abre a janela principal do sistema.
 
----
 
 ## Validação de Campos Vazios
 
@@ -647,7 +626,6 @@ Caso algum campo esteja vazio:
 - o login é cancelado;
 - é apresentada uma mensagem de aviso ao utilizador.
 
----
 
 ## Login Bem-Sucedido
 
@@ -677,7 +655,6 @@ Quando a autenticação é válida:
 - A janela de login é encerrada;
 - O utilizador passa a utilizar o AQStore.
 
----
 
 ## Login Inválido
 
@@ -699,7 +676,6 @@ Caso as credenciais não existam na base de dados:
 - É apresentada uma mensagem de erro;
 - O utilizador permanece na janela de login.
 
----
 
 ## Segurança Implementada
 
@@ -714,7 +690,6 @@ Durante a implementação da autenticação foram aplicadas diversas medidas de 
 
 Estas medidas contribuem para tornar o sistema mais robusto e seguro.
 
----
 
 # 6. Conexao com a Base de Dados
 
@@ -729,7 +704,6 @@ Esta classe é responsável por:
 
 A utilização de uma classe específica para a conexão permite uma melhor organização do código e facilita futuras alterações na configuração do banco de dados. 
 
----
 
 ## Objetivo da Classe Conexao
 
@@ -745,7 +719,6 @@ Através desta ligação, o sistema consegue:
 
 Sem esta ligação, nenhuma funcionalidade que depende da base de dados poderia funcionar.
 
----
 
 ## Importação das Bibliotecas JDBC
 
@@ -771,7 +744,6 @@ Cada uma possui uma função específica:
 
 Estas bibliotecas permitem que o Java comunique diretamente com o MySQL.
 
----
 
 ## Definição dos Parâmetros de Conexão
 
@@ -805,7 +777,6 @@ localhost
 
 Significa que o MySQL está instalado no mesmo computador da aplicação.
 
----
 
 #### PORTA
 
@@ -815,7 +786,6 @@ private static final String PORTA = "3306";
 
 A porta 3306 é a porta padrão utilizada pelo MySQL.
 
----
 
 #### BANCO
 
@@ -825,7 +795,6 @@ private static final String BANCO = "aqstore";
 
 Indica o nome da base de dados utilizada pelo sistema.
 
----
 
 #### USER
 
@@ -835,7 +804,6 @@ private static final String USER = "root";
 
 Define o utilizador que possui permissões para aceder à base de dados.
 
----
 
 #### PASSWORD
 
@@ -845,7 +813,6 @@ private static final String PASSWORD = "+++++++++";
 
 Define a palavra-passe utilizada para autenticação. Por segurança, este valor não deve ficar escrito diretamente no código; o ideal é usar variáveis de ambiente ou um ficheiro de configuração protegido.
 
----
 
 ## Construção da URL JDBC
 
@@ -867,7 +834,6 @@ O resultado final será semelhante a:
 jdbc:mysql://localhost:3306/aqstore
 ```
 
----
 
 ### Parâmetros Utilizados
 
@@ -881,7 +847,6 @@ Desativa a utilização de SSL.
 
 Como a aplicação funciona numa rede local, não é necessário utilizar certificados de segurança.
 
----
 
 #### serverTimezone=UTC
 
@@ -893,7 +858,6 @@ Define o fuso horário utilizado pelo MySQL.
 
 Evita erros relacionados com datas e horas.
 
----
 
 #### allowPublicKeyRetrieval=true
 
@@ -903,7 +867,6 @@ allowPublicKeyRetrieval=true
 
 Permite a autenticação em versões recentes do MySQL.
 
----
 
 #### characterEncoding=UTF-8
 
@@ -919,7 +882,6 @@ Permite guardar corretamente:
 
 Sem esta configuração poderiam ocorrer erros na apresentação dos dados.
 
----
 
 ## Método de Conexão
 
@@ -935,7 +897,6 @@ Este método é responsável por criar e devolver uma ligação ativa à base de
 
 Sempre que uma classe necessita de aceder ao MySQL, chama este método.
 
----
 
 ## Carregamento do Driver JDBC
 
@@ -961,7 +922,6 @@ MySQL
 
 Sem o driver, o Java não conseguiria comunicar com a base de dados.
 
----
 
 ## Criação da Ligação
 
@@ -991,7 +951,6 @@ Connection
 
 Que será utilizado para executar comandos SQL.
 
----
 
 ## Tratamento de Erros
 
@@ -1013,7 +972,6 @@ Exemplos:
 - Driver JDBC não instalado;
 - Configuração incorreta.
 
----
 
 ### Erro de Ligação
 
@@ -1033,7 +991,6 @@ Este erro pode ocorrer quando:
 - A base de dados não existe;
 - O servidor não está acessível.
 
----
 
 ## Exemplo de Utilização
 
@@ -1065,7 +1022,6 @@ Esta mesma ligação é utilizada por:
 - Compras do Dia;
 - Relatórios.
 
----
 
 ## Vantagens da Classe Conexao
 
@@ -1075,7 +1031,6 @@ A implementação desta classe oferece várias vantagens:
 
 Todos os parâmetros de ligação encontram-se num único local.
 
----
 
 ### Reutilização
 
@@ -1093,13 +1048,11 @@ Caso seja necessário alterar:
 
 A alteração é realizada apenas nesta classe.
 
----
 
 ### Organização
 
 Mantém o código mais organizado e modular.
 
----
 
 ## Fluxo da Conexão
 
@@ -1132,7 +1085,7 @@ Sem esta classe não seria possível implementar funcionalidades como:
 - Relatórios;
 - Compras do Dia.
 
----
+<br>
 
 # 7. Gestao de Produtos (CRUD)
 
@@ -1151,7 +1104,6 @@ CRUD significa:
 
 A implementação deste módulo encontra-se principalmente na classe `AQStoreSistema`, responsável pela comunicação entre a aplicação e a base de dados MySQL.
 
----
 
 ## Objetivos do Módulo
 
@@ -1164,7 +1116,6 @@ O módulo de produtos foi desenvolvido para permitir:
 - Disponibilizar produtos para venda;
 - Manter os dados organizados na base de dados.
 
----
 
 ## Estrutura da Tabela Produtos
 
@@ -1177,7 +1128,6 @@ A tabela responsável por armazenar os produtos possui a seguinte estrutura:
 | preco | DECIMAL |
 | stock | INT     |
 
----
 
 ## CREATE – Inserção de Produtos
 
@@ -1203,7 +1153,7 @@ public boolean cadastrarProduto(String nome, double preco, int stock) {
         }
     }
 ```
----
+
 
 ## Explicação
 Este método recebe três parâmetros:
@@ -1216,14 +1166,13 @@ Este método recebe três parâmetros:
 
 O objetivo do método é inserir estes dados na tabela **produtos** da base de dados MySQL.
 
----
 
 ## Declaração do Método
 
 ```java
 public boolean cadastrarProduto(String nome, double preco, int stock)
 ```
----
+
 
 ## Consulta SQL
 
@@ -1248,7 +1197,6 @@ VALUES ('Ração Premium', 3500, 20);
 
 A utilização de parâmetros torna a consulta mais segura e evita ataques do tipo **SQL Injection**.
 
----
 
 ## Ligação à Base de Dados
 
@@ -1262,7 +1210,6 @@ Esta instrução estabelece uma ligação entre a aplicação Java e a base de d
 
 A ligação será utilizada para executar a instrução SQL.
 
----
 
 ## Criação do PreparedStatement
 
@@ -1282,7 +1229,6 @@ As principais vantagens são:
 - Evita SQL Injection;
 - Permite reutilizar consultas.
 
----
 
 ## Associação dos Parâmetros
 
@@ -1314,7 +1260,6 @@ Depois:
 "Ração Premium"
 ```
 
----
 
 ### Preço
 
@@ -1330,7 +1275,6 @@ Exemplo:
 3500.00
 ```
 
----
 
 ### Stock
 
@@ -1346,7 +1290,6 @@ Exemplo:
 25 unidades
 ```
 
----
 
 ## Execução da Consulta
 
@@ -1387,7 +1330,6 @@ Transforma esse resultado num valor booleano.
 | 1 linha inserida       | `true`          |
 | Nenhuma linha inserida | `false`         |
 
----
 
 ## Tratamento de Exceções
 
@@ -1406,7 +1348,6 @@ Exemplos de erros:
 - Erro na instrução SQL;
 - Dados inválidos.
 
----
 
 ## Impressão do Erro
 
@@ -1416,7 +1357,6 @@ e.printStackTrace();
 
 Esta instrução apresenta no terminal todas as informações sobre o erro ocorrido, facilitando a identificação e correção de problemas durante o desenvolvimento.
 
----
 
 ## Retorno em Caso de Erro
 
@@ -1432,7 +1372,6 @@ false
 
 Permitindo que a interface gráfica informe o utilizador de que o produto não foi registado.
 
----
 
 ## Fluxograma do Método
 
@@ -1471,7 +1410,6 @@ Sim        Não
 true      false
 ```
 
----
 
 ## Exemplo de Funcionamento
 
@@ -1499,7 +1437,6 @@ Resultado na base de dados:
 |----|---------------|--------:|-------------:|
 | 15 | Ração Premium | 3500.00 | 25           |
 
----
 
 ## READ – Consulta de Produtos
 
@@ -1533,7 +1470,6 @@ public List<Object[]> listarProdutos() {
     }
 ```
 
----
 
 ## Explicação
 
@@ -1557,7 +1493,6 @@ while (rs.next())
 
 Permite percorrer todos os registos encontrados.
 
----
 
 ## Estrutura dos Dados
 
@@ -1572,7 +1507,6 @@ new Object[]{
 }
 ```
 
----
 
 ## UPDATE – Atualização de Produtos
 
@@ -1600,7 +1534,6 @@ A operação UPDATE permite alterar os dados de um produto já existente.
     }
 ```
 
----
 
 ## Explicação
 
@@ -1619,7 +1552,6 @@ Esta operação permite:
 - Alterar o stock;
 - Manter o mesmo identificador.
 
----
 
 ## Exemplo
 
@@ -1641,7 +1573,6 @@ Preço: 3500
 Stock: 15
 ```
 
----
 
 ## DELETE – Eliminação de Produtos
 
@@ -1665,7 +1596,6 @@ public boolean eliminarProduto(int id) {
 }
 ```
 
----
 
 ## Explicação
 
@@ -1678,7 +1608,6 @@ WHERE id=?
 
 A operação remove permanentemente o produto selecionado.
 
----
 
 ## Exemplo
 
@@ -1699,7 +1628,6 @@ Produto removido.
 
 O registo deixa de existir na base de dados.
 
----
 
 ## Interface Gráfica da Gestão de Produtos
 
@@ -1712,7 +1640,6 @@ O utilizador pode:
 - Atualizar informações;
 - Eliminar produtos.
 
----
 
 ## Componentes Utilizados
 
@@ -1723,7 +1650,6 @@ O utilizador pode:
 | Button     | Operações CRUD          |
 | Alert      | Mensagens ao utilizador |
 
----
 
 ## Fluxo de Funcionamento
 
@@ -1743,7 +1669,6 @@ Conexao
 MySQL
 ```
 
----
 
 ## Segurança Implementada
 
@@ -1759,7 +1684,6 @@ Esta abordagem:
 - Melhora o desempenho;
 - Facilita a manutenção do código.
 
----
 
 ## Vantagens da Implementação CRUD
 
@@ -1781,7 +1705,6 @@ Novos produtos podem ser adicionados sem limitações.
 
 Os produtos ficam imediatamente disponíveis para o módulo de vendas.
 
----
 
 A implementação do CRUD de produtos permitiu criar um sistema completo de gestão de inventário para a Loja Aquapet.
 
@@ -1789,7 +1712,6 @@ Através da integração entre JavaFX, JDBC e MySQL foi possível disponibilizar
 
 Este módulo constitui a base operacional do sistema AQStore, pois todos os processos de venda dependem diretamente dos produtos registados na base de dados.
 
----
 
 # 8. Gestao de Vendas
 
@@ -1809,7 +1731,6 @@ Este módulo permite:
 
 Todo o processo foi desenvolvido para simular o funcionamento de um sistema de caixa real.
 
----
 
 ## Objetivos do Módulo
 
@@ -1821,7 +1742,6 @@ O módulo de vendas foi desenvolvido com os seguintes objetivos:
 - Emitir comprovativos de venda;
 - Disponibilizar informações para relatórios futuros.
 
----
 
 ## Estrutura de Dados Utilizada
 
@@ -1849,7 +1769,6 @@ new Object[]{
 }
 ```
 
----
 
 ## Estrutura do Carrinho
 
@@ -1860,7 +1779,6 @@ new Object[]{
 | 2       | Preço Unitário |
 | 3       | Total          |
 
----
 
 ## Exemplo
 
@@ -1873,7 +1791,6 @@ new Object[]{
 }
 ```
 
----
 
 ## Adição de Produtos ao Carrinho
 
@@ -1894,7 +1811,6 @@ Cálculo do Total
 Adicionar ao Carrinho
 ```
 
----
 
 ## Cálculo do Total
 
@@ -1913,7 +1829,6 @@ Preço = 1500
 Total = 4500
 ```
 
----
 
 ## Formas de Pagamento
 
@@ -1929,7 +1844,6 @@ O sistema suporta diferentes formas de pagamento.
 
 Estas opções são apresentadas ao operador da caixa durante o processo de venda.
 
----
 
 ## Pagamento em Dinheiro
 
@@ -1953,7 +1867,6 @@ Troco = 2500
 
 O troco é calculado automaticamente pelo sistema.
 
----
 
 ## Finalização da Venda
 
@@ -1966,7 +1879,6 @@ Após a confirmação dos dados, o sistema executa o processo de finalização.
 - Gerar recibo;
 - Atualizar os relatórios.
 
----
 
 ## Método Principal
 
@@ -1989,7 +1901,6 @@ public boolean finalizarVenda(
 | troco     | Troco calculado               |
 | carrinho  | Lista de produtos vendidos    |
 
----
 
 ## Registo da Venda
 
@@ -2006,7 +1917,6 @@ A primeira operação consiste em gravar a venda principal.
 | valor_recebido  |
 | troco           |
 
----
 
 ## Exemplo
 
@@ -2019,7 +1929,6 @@ Recebido: 10000
 Troco: 2500
 ```
 
----
 
 ## Registo dos Produtos Vendidos
 
@@ -2036,7 +1945,6 @@ Após criar a venda principal, o sistema grava cada produto vendido na tabela de
 | forma_pagamento |
 | id_venda        |
 
----
 
 ## Exemplo
 
@@ -2048,7 +1956,6 @@ Total: 7000
 ID Venda: 1001
 ```
 
----
 
 ## Transações na Base de Dados
 
@@ -2069,7 +1976,6 @@ Inserir Produtos
 Commit
 ```
 
----
 
 ## Commit
 
@@ -2081,7 +1987,6 @@ conn.commit();
 
 A venda fica definitivamente registada.
 
----
 
 ## Rollback
 
@@ -2095,7 +2000,6 @@ Todas as operações são canceladas.
 
 Esta abordagem evita inconsistências na base de dados.
 
----
 
 ## Geração Automática do Recibo
 
@@ -2112,7 +2016,6 @@ Após a venda ser registada com sucesso, o sistema gera automaticamente um recib
 - Valor recebido;
 - Troco.
 
----
 
 ## Pré-visualização do Recibo
 
@@ -2124,7 +2027,6 @@ Após gerar o PDF, o sistema abre automaticamente uma janela de pré-visualizaç
 - Evita erros de impressão;
 - Melhora a experiência do utilizador.
 
----
 
 ## Fluxo Completo da Venda
 
@@ -2153,7 +2055,6 @@ Gerar Recibo PDF
 Pré-visualizar Recibo
 ```
 
----
 
 ## Vantagens da Implementação
 
@@ -2179,7 +2080,6 @@ Mantém o histórico de vendas armazenado.
 
 Alimenta automaticamente os relatórios do sistema.
 
----
 
 O módulo de gestão de vendas representa o núcleo operacional do sistema AQStore.
 
@@ -2187,7 +2087,8 @@ Através da integração entre JavaFX, JDBC, MySQL, OpenPDF e PDFBox, foi possí
 
 Este módulo garante rapidez, fiabilidade e organização no processo de faturação da Loja Aquapet.
 
----
+<br>
+
 # 9. Controlo Automatico de Stock
 
 A versão atual do sistema implementa controlo automático de stock.
@@ -2229,7 +2130,7 @@ for (Object[] item : carrinho) {
 
 O sistema verifica o stock antes de confirmar a venda. Caso não exista stock suficiente, a operação é cancelada com rollback.
 
----
+<br>
 
 # 10. Compras do Dia
 
@@ -2245,7 +2146,6 @@ Esta funcionalidade é especialmente útil para:
 
 O módulo encontra-se integrado na interface principal do sistema AQStore e está diretamente ligado à base de dados MySQL.
 
----
 
 ## Objetivos do Módulo
 
@@ -2257,7 +2157,6 @@ A funcionalidade Compras do Dia foi criada com os seguintes objetivos:
 - Facilitar auditorias internas;
 - Permitir a eliminação de vendas quando autorizado.
 
----
 
 ## Interface Gráfica
 
@@ -2270,7 +2169,6 @@ O utilizador pode:
 - Consultar as vendas encontradas;
 - Eliminar uma venda (quando permitido).
 
----
 
 ## Componentes Utilizados
 
@@ -2281,7 +2179,6 @@ O utilizador pode:
 | TableView  | Exibir resultados       |
 | Alert      | Mensagens ao utilizador |
 
----
 
 ## Pesquisa por Data
 
@@ -2295,7 +2192,6 @@ A consulta das vendas é realizada através da data indicada pelo utilizador.
 
 Após informar a data, o sistema consulta automaticamente a base de dados.
 
----
 
 ## Fluxo da Consulta
 
@@ -2321,7 +2217,6 @@ Resultados
 TableView
 ```
 
----
 
 ## Consulta na Base de Dados
 
@@ -2331,7 +2226,6 @@ A pesquisa é realizada utilizando consultas SQL.
 
 Obter todas as vendas registadas numa determinada data.
 
----
 
 ## Informações Apresentadas
 
@@ -2347,7 +2241,6 @@ O sistema apresenta:
 | Forma de Pagamento |
 | Data               |
 
----
 
 ## Exemplo de Resultado
 
@@ -2361,7 +2254,6 @@ Forma: Dinheiro
 Data: 2026-06-18
 ```
 
----
 
 ## Estrutura dos Dados
 
@@ -2385,7 +2277,6 @@ Estes dados encontram-se associados à venda principal através do campo:
 id_venda
 ```
 
----
 
 ## Utilização da TableView
 
@@ -2398,7 +2289,6 @@ Os resultados da consulta são apresentados numa tabela JavaFX.
 - Navegação intuitiva;
 - Seleção rápida de registos.
 
----
 
 ## Eliminação de Vendas
 
@@ -2406,7 +2296,6 @@ O sistema permite remover vendas registadas.
 
 Contudo, esta funcionalidade encontra-se protegida por níveis de acesso.
 
----
 
 ## Permissões
 
@@ -2416,7 +2305,6 @@ Contudo, esta funcionalidade encontra-se protegida por níveis de acesso.
 | GESTOR    | Sim            |
 | ATENDENTE | Não            |
 
----
 
 ## Controlo de Acesso
 
@@ -2438,7 +2326,6 @@ ATENDENTE
       └── Não pode eliminar
 ```
 
----
 
 ## Justificação da Restrição
 
@@ -2453,7 +2340,6 @@ Permitir que todos os utilizadores eliminem registos poderia causar:
 
 Por esse motivo, apenas perfis com maior responsabilidade possuem esta permissão.
 
----
 
 ## Processo de Eliminação
 
@@ -2472,7 +2358,6 @@ Executar DELETE
 Atualizar Tabela
 ```
 
----
 
 ## Atualização Automática
 
@@ -2484,7 +2369,6 @@ Após a eliminação de uma venda:
 
 Isto evita que o utilizador tenha de sair e voltar a entrar no sistema para visualizar as alterações.
 
----
 
 ## Benefícios do Módulo
 
@@ -2494,25 +2378,21 @@ A implementação do módulo Compras do Dia trouxe diversas vantagens.
 
 Permite acompanhar as vendas realizadas ao longo do dia.
 
----
 
 ## Auditoria
 
 Facilita a conferência de operações efetuadas pelos operadores.
 
----
 
 ## Correção de Erros
 
 Permite remover registos incorretos quando autorizado.
 
----
 
 ## Organização
 
 Mantém todas as vendas acessíveis através de uma única interface.
 
----
 
 ## Fluxo Completo
 
@@ -2535,7 +2415,6 @@ Eliminar (Se Permitido)
 Atualizar Tabela
 ```
 
----
 
 ## Integração com Outros Módulos
 
@@ -2548,7 +2427,6 @@ O módulo Compras do Dia está diretamente ligado a:
 
 Qualquer venda efetuada no sistema passa automaticamente a estar disponível para consulta neste módulo.
 
----
 
 O módulo Compras do Dia foi desenvolvido para facilitar a consulta e gestão das vendas diárias da Loja Aquapet.
 
@@ -2556,7 +2434,7 @@ Através da integração com JavaFX e MySQL, foi possível criar uma funcionalid
 
 O controlo de permissões implementado garante maior segurança e protege a integridade dos dados armazenados no sistema, assegurando que apenas utilizadores autorizados possam efetuar alterações críticas.
 
----
+<br>
 
 # 11. Relatorios
 
@@ -2566,7 +2444,6 @@ Através deste módulo, o utilizador consegue acompanhar o desempenho comercial 
 
 Os relatórios são gerados com base nos dados armazenados na base de dados MySQL e podem ser exportados para diferentes formatos.
 
----
 
 ## Objetivos do Módulo
 
@@ -2580,7 +2457,6 @@ O módulo de relatórios foi desenvolvido com os seguintes objetivos:
 - Exportar dados para CSV e Excel;
 - Apoiar a gestão da loja.
 
----
 
 ## Critérios de Pesquisa
 
@@ -2596,7 +2472,6 @@ Permite consultar todas as vendas realizadas durante um determinado ano.
 2026
 ```
 
----
 
 ## Mês
 
@@ -2612,7 +2487,6 @@ Março
 Dezembro
 ```
 
----
 
 ## Consulta por Ano e Mês
 
@@ -2629,7 +2503,6 @@ Neste caso serão apresentadas apenas as vendas efetuadas durante o mês de Junh
 
 Esta abordagem melhora significativamente a precisão dos relatórios.
 
----
 
 ## Fluxo de Funcionamento
 
@@ -2652,7 +2525,6 @@ MySQL
 Apresentação dos Dados
 ```
 
----
 
 ## Informações Apresentadas
 
@@ -2670,7 +2542,6 @@ O relatório apresenta diversas informações relacionadas com as vendas.
 | Data |
 | Operador |
 
----
 
 ## Exemplo de Resultado
 
@@ -2684,7 +2555,6 @@ Data: 2026-06-18
 Operador: paulo
 ```
 
----
 
 ## Estrutura dos Dados
 
@@ -2700,7 +2570,6 @@ Responsável por armazenar:
 - Valor recebido;
 - Troco.
 
----
 
 ## Tabela Compra
 
@@ -2711,7 +2580,6 @@ Responsável por armazenar:
 - Preço unitário;
 - Total.
 
----
 
 ## Apresentação dos Relatórios
 
@@ -2724,7 +2592,6 @@ Os resultados são exibidos através de uma tabela JavaFX (`TableView`).
 - Possibilidade de filtragem;
 - Atualização dinâmica.
 
----
 
 ## Exportação para CSV
 
@@ -2738,7 +2605,6 @@ Permitir:
 - Análise em Excel;
 - Arquivamento de relatórios.
 
----
 
 ## Estrutura do Ficheiro
 
@@ -2746,7 +2612,6 @@ Permitir:
 Produto;Quantidade;Preço Unitário;Total;Forma Pagamento;Data
 ```
 
----
 
 ## Benefícios
 
@@ -2754,13 +2619,11 @@ Produto;Quantidade;Preço Unitário;Total;Forma Pagamento;Data
 - Compatibilidade com LibreOffice Calc;
 - Facilidade de importação para outros sistemas.
 
----
 
 ## Exportação para Excel
 
 Além do formato CSV, o sistema também suporta exportação para Excel (.xlsx).
 
----
 
 ## Biblioteca Utilizada
 
@@ -2768,7 +2631,6 @@ Além do formato CSV, o sistema também suporta exportação para Excel (.xlsx).
 Apache POI
 ```
 
----
 
 ## Funcionalidades
 
@@ -2777,7 +2639,6 @@ Apache POI
 - Compatibilidade com Microsoft Excel;
 - Facilidade de análise posterior.
 
----
 
 ## Cálculo de Totais
 
@@ -2789,7 +2650,6 @@ O sistema calcula automaticamente:
 Soma das quantidades
 ```
 
----
 
 ## Valor Total Faturado
 
@@ -2797,7 +2657,6 @@ Soma das quantidades
 Soma dos totais das vendas
 ```
 
----
 
 ## Distribuição por Forma de Pagamento
 
@@ -2807,7 +2666,6 @@ Permite identificar:
 - Total pago por cartão;
 - Total pago por PIX.
 
----
 
 ## Benefícios para a Gestão
 
@@ -2817,7 +2675,6 @@ A implementação dos relatórios oferece diversas vantagens.
 
 Permite acompanhar a faturação da loja.
 
----
 
 ## Apoio à Decisão
 
@@ -2827,7 +2684,6 @@ Ajuda a identificar:
 - Produtos menos vendidos;
 - Tendências de consumo.
 
----
 
 ## Planeamento
 
@@ -2837,7 +2693,6 @@ Facilita a gestão de:
 - Stock;
 - Promoções.
 
----
 
 ## Integração com Outros Módulos
 
@@ -2858,7 +2713,6 @@ Relatórios
 
 Desta forma, qualquer venda realizada no sistema passa automaticamente a fazer parte dos relatórios.
 
----
 
 ## Exemplo Prático
 
@@ -2878,7 +2732,6 @@ Quantidade Total Vendida: 6
 Valor Total Faturado: 13700
 ```
 
----
 
 ## Vantagens da Implementação
 
@@ -2904,7 +2757,6 @@ Permite diferentes critérios de consulta.
 
 Facilita o armazenamento e partilha dos resultados.
 
----
 
 O módulo de Relatórios constitui uma importante ferramenta de apoio à gestão da Loja Aquapet.
 
@@ -2912,7 +2764,7 @@ Através da integração com a base de dados MySQL e da utilização de JavaFX, 
 
 Os relatórios fornecem informações fundamentais para o controlo financeiro, acompanhamento das operações e apoio à tomada de decisões estratégicas dentro da organização.
 
----
+<br>
 
 # 12. Geracao de Recibos PDF
 
@@ -2928,7 +2780,6 @@ O recibo é gerado em formato PDF, possibilitando:
 
 Esta funcionalidade foi implementada através da classe `ReciboVenda`, utilizando a biblioteca **OpenPDF** para criação dinâmica de documentos PDF.
 
----
 
 ## Objetivos do Módulo
 
@@ -2940,7 +2791,6 @@ O módulo de geração de recibos foi desenvolvido com os seguintes objetivos:
 - Disponibilizar um documento profissional para o cliente;
 - Facilitar futuras auditorias.
 
----
 
 ## Biblioteca Utilizada
 
@@ -2958,7 +2808,6 @@ Esta biblioteca permite:
 - Aplicar estilos;
 - Guardar documentos automaticamente.
 
----
 
 ## Estrutura da Classe ReciboVenda
 
@@ -2970,7 +2819,6 @@ public class ReciboVenda
 
 O seu principal objetivo é receber os dados da venda e criar um ficheiro PDF contendo todas as informações necessárias.
 
----
 
 ## Pasta de Armazenamento
 
@@ -2992,7 +2840,6 @@ recibos/
 
 Caso a pasta não exista, o sistema cria-a automaticamente.
 
----
 
 ## Criação da Pasta
 
@@ -3018,7 +2865,6 @@ pasta.mkdirs();
 
 cria automaticamente a estrutura necessária para armazenar os recibos.
 
----
 
 ## Geração do Nome do Ficheiro
 
@@ -3051,7 +2897,6 @@ Recibo_1776513458912.pdf
 
 Desta forma evita-se a duplicação de ficheiros.
 
----
 
 ## Criação do Documento PDF
 
@@ -3074,7 +2919,6 @@ Nesta etapa:
 - É definida a localização onde será guardado;
 - É estabelecida a ligação entre o documento e o ficheiro.
 
----
 
 ## Abertura do Documento
 
@@ -3095,7 +2939,6 @@ Após esta instrução é possível adicionar:
 - títulos;
 - totais.
 
----
 
 ## Definição de Fontes
 
@@ -3137,7 +2980,6 @@ Utilizada para:
 - Valores;
 - Informações da venda.
 
----
 
 ## Cabeçalho do Recibo
 
@@ -3165,7 +3007,6 @@ O texto é apresentado:
 - Centralizado;
 - Com tamanho superior ao restante conteúdo.
 
----
 
 ## Informações da Venda
 
@@ -3197,7 +3038,6 @@ O recibo apresenta:
 
 Estas informações permitem identificar quem realizou a venda e como foi efetuado o pagamento.
 
----
 
 ## Criação da Tabela de Produtos
 
@@ -3219,7 +3059,6 @@ PdfPTable tabela =
 | Preço      |
 | Total      |
 
----
 
 ## Cabeçalhos da Tabela
 
@@ -3245,7 +3084,6 @@ tabela.addCell(
 
 Define os títulos das colunas que irão organizar os produtos vendidos.
 
----
 
 ## Inserção dos Produtos
 
@@ -3281,7 +3119,6 @@ Para cada item são obtidos:
 
 Estas informações são inseridas na tabela do PDF.
 
----
 
 ## Cálculo do Total Geral
 
@@ -3297,7 +3134,6 @@ totalGeral += total;
 
 O sistema soma todos os subtotais dos produtos para obter o valor final da venda.
 
----
 
 ## Exemplo
 
@@ -3311,7 +3147,6 @@ Brinquedo = 800
 Total Geral = 9000
 ```
 
----
 
 ## Valor Recebido e Troco
 
@@ -3339,7 +3174,6 @@ document.add(
 
 Estas informações permitem ao cliente confirmar o valor entregue e o troco recebido.
 
----
 
 ## Mensagem Final
 
@@ -3358,7 +3192,6 @@ document.add(
 
 Mensagem de agradecimento apresentada ao cliente no final do recibo.
 
----
 
 ## Fecho do Documento
 
@@ -3374,7 +3207,6 @@ Finaliza o documento e grava todas as informações no ficheiro PDF.
 
 Após esta operação o recibo fica pronto para ser visualizado ou impresso.
 
----
 
 ## Exemplo de Recibo
 
@@ -3397,7 +3229,6 @@ Troco: 1800
 Obrigado pela preferência!
 ```
 
----
 
 ## Benefícios da Implementação
 
@@ -3423,7 +3254,6 @@ Fornece um comprovativo formal ao cliente.
 
 Funciona automaticamente após cada venda.
 
----
 
 ## Fluxo Completo
 
@@ -3449,13 +3279,12 @@ Guardar Ficheiro
 Abrir Pré-visualização
 ```
 
----
 
 O módulo de geração de recibos PDF permite transformar automaticamente cada venda realizada num documento digital profissional.
 
 A utilização da biblioteca OpenPDF possibilitou criar recibos organizados, contendo todas as informações relevantes da transação, contribuindo para um melhor controlo das vendas e para uma maior qualidade do serviço prestado ao cliente.
 
----
+<br>
 
 # 13. Pre-visualizacao de Recibos
 
@@ -3465,7 +3294,6 @@ Esta funcionalidade foi implementada para permitir que o operador visualize o re
 
 A pré-visualização foi desenvolvida através da classe `VisualizadorPDFFX`, utilizando a biblioteca **Apache PDFBox** em conjunto com **JavaFX**.
 
----
 
 ## Objetivos do Módulo
 
@@ -3477,7 +3305,6 @@ A funcionalidade de pré-visualização foi criada com os seguintes objetivos:
 - Melhorar a experiência do utilizador;
 - Integrar todo o processo de faturação numa única aplicação.
 
----
 
 ## Biblioteca Utilizada
 
@@ -3494,7 +3321,6 @@ Esta biblioteca permite:
 - Converter páginas PDF em imagens;
 - Integrar documentos PDF em aplicações Java.
 
----
 
 ## Classe Responsável
 
@@ -3511,7 +3337,6 @@ Esta classe é responsável por:
 - Apresentar a imagem numa janela JavaFX;
 - Disponibilizar scroll para navegação.
 
----
 
 ## Abertura do Documento PDF
 
@@ -3544,7 +3369,6 @@ Loader.loadPDF()
 
 Abre o ficheiro localizado no caminho indicado.
 
----
 
 ## Exemplo
 
@@ -3554,7 +3378,6 @@ recibos/Recibo_1776513458912.pdf
 
 Após a abertura, o documento fica disponível para processamento.
 
----
 
 ## Criação do Renderizador
 
@@ -3581,7 +3404,6 @@ Esta conversão é necessária porque o JavaFX não possui suporte nativo para e
 
 Assim, o sistema converte a página em imagem antes da apresentação.
 
----
 
 ## Conversão da Página em Imagem
 
@@ -3619,7 +3441,6 @@ Indica a primeira página do documento.
 
 Define a resolução da imagem em DPI (Dots Per Inch).
 
----
 
 ## Resultado
 
@@ -3632,7 +3453,6 @@ BufferedImage
 
 A imagem gerada apresenta uma qualidade suficiente para leitura e impressão.
 
----
 
 ## Conversão para JavaFX
 
@@ -3669,7 +3489,6 @@ JavaFX Image
 
 Esta etapa permite que a imagem seja apresentada nos componentes gráficos do JavaFX.
 
----
 
 ## Criação do ImageView
 
@@ -3694,7 +3513,6 @@ ImageView
 
 Neste caso será utilizado para mostrar o recibo.
 
----
 
 ## Ajuste Automático da Imagem
 
@@ -3715,7 +3533,6 @@ setPreserveRatio(true)
 
 Mantém as proporções originais do documento.
 
----
 
 ### Fit Width
 
@@ -3727,7 +3544,6 @@ Define a largura máxima da imagem.
 
 Isto garante que o recibo seja apresentado de forma adequada dentro da janela.
 
----
 
 ## Utilização de ScrollPane
 
@@ -3752,7 +3568,6 @@ ScrollPane
 
 Permite deslocar o conteúdo verticalmente e horizontalmente.
 
----
 
 ## Benefícios
 
@@ -3760,7 +3575,6 @@ Permite deslocar o conteúdo verticalmente e horizontalmente.
 - Visualização completa do documento;
 - Suporte para recibos longos.
 
----
 
 ## Criação da Janela
 
@@ -3788,7 +3602,6 @@ A cena define:
 
 Estes valores garantem uma área confortável para leitura do recibo.
 
----
 
 ## Configuração do Stage
 
@@ -3820,7 +3633,6 @@ A janela recebe:
 - Conteúdo;
 - Dimensões.
 
----
 
 ## Exibição da Janela
 
@@ -3836,7 +3648,6 @@ Este método torna a janela visível ao utilizador.
 
 A partir deste momento o recibo pode ser visualizado.
 
----
 
 ## Fluxo Completo da Pré-visualização
 
@@ -3865,7 +3676,6 @@ Inserir em ScrollPane
 Mostrar Janela
 ```
 
----
 
 ## Benefícios da Implementação
 
@@ -3875,31 +3685,26 @@ A funcionalidade de pré-visualização oferece várias vantagens.
 
 Todo o processo ocorre dentro da aplicação.
 
----
 
 ## Rapidez
 
 O recibo é apresentado imediatamente após a venda.
 
----
 
 ## Facilidade de Utilização
 
 Não é necessário abrir programas externos.
 
----
 
 ## Melhor Experiência do Utilizador
 
 O operador consegue confirmar os dados antes de imprimir.
 
----
 
 ## Organização
 
 Permite verificar rapidamente o documento gerado.
 
----
 
 ## Exemplo de Funcionamento
 
@@ -3924,7 +3729,6 @@ O operador visualiza imediatamente:
 - Forma de pagamento;
 - Troco.
 
----
 
 A funcionalidade de pré-visualização de recibos representa uma importante melhoria na usabilidade do sistema AQStore.
 
@@ -3932,7 +3736,7 @@ Através da utilização da biblioteca Apache PDFBox e dos componentes JavaFX fo
 
 Esta funcionalidade permite visualizar os recibos gerados sem recorrer a aplicações externas, aumentando a produtividade e a qualidade do atendimento ao cliente.
 
----
+<br>
 
 # 14. Interface Grafica
 
@@ -3942,7 +3746,6 @@ A escolha do JavaFX deveu-se à sua capacidade de fornecer componentes visuais a
 
 A interface foi projetada para facilitar o trabalho dos operadores da loja, permitindo acesso rápido às funcionalidades principais do sistema.
 
----
 
 ## Objetivos da Interface
 
@@ -3954,7 +3757,6 @@ A interface gráfica foi desenvolvida com os seguintes objetivos:
 - Reduzir erros operacionais;
 - Apresentar informações de forma clara e organizada.
 
----
 
 ## Estrutura Geral da Interface
 
@@ -3964,13 +3766,11 @@ A aplicação está dividida em duas áreas principais:
 
 Responsável pela navegação entre os módulos.
 
----
 
 ## Área de Conteúdo
 
 Responsável pela apresentação das funcionalidades selecionadas.
 
----
 
 ## Estrutura Visual
 
@@ -3985,7 +3785,6 @@ Responsável pela apresentação das funcionalidades selecionadas.
 +-----------+---------------------------+
 ```
 
----
 
 ## Janela de Login
 
@@ -4022,7 +3821,6 @@ PasswordField
 
 Oculta automaticamente os caracteres digitados pelo utilizador.
 
----
 
 ## Botão de Login
 
@@ -4044,7 +3842,6 @@ Quando o utilizador pressiona o botão **Entrar**, o sistema:
 4. Verifica as credenciais;
 5. Abre a janela principal.
 
----
 
 ## Janela Principal
 
@@ -4072,7 +3869,6 @@ Representa uma janela JavaFX.
 
 Cada janela da aplicação é criada através deste componente.
 
----
 
 ## Menu Lateral
 
@@ -4114,25 +3910,21 @@ Cada botão abre uma funcionalidade específica.
 
 Permite efetuar vendas.
 
----
 
 ### Produtos
 
 Permite gerir produtos.
 
----
 
 ### Compras do Dia
 
 Permite consultar vendas diárias.
 
----
 
 ### Relatórios
 
 Permite gerar relatórios.
 
----
 
 ## Controlo de Permissões na Interface
 
@@ -4162,7 +3954,6 @@ Utilizadores
 
 Esta abordagem aumenta a segurança do sistema.
 
----
 
 ## Utilização do BorderPane
 
@@ -4192,7 +3983,6 @@ No AQStore:
 | CENTER   | Conteúdo   |
 | TOP      | Cabeçalho  |
 
----
 
 ## Utilização de VBox
 
@@ -4218,7 +4008,6 @@ Relatórios
 Utilizadores
 ```
 
----
 
 ## Utilização de HBox
 
@@ -4238,7 +4027,6 @@ Exemplo:
 [Pesquisar] [Filtrar] [Eliminar]
 ```
 
----
 
 ## Utilização de TableView
 
@@ -4260,7 +4048,6 @@ O componente TableView permite:
 - Organizar informações;
 - Atualizar conteúdos.
 
----
 
 ## Exemplo de Utilização
 
@@ -4275,7 +4062,6 @@ Na gestão de produtos:
 +----+----------------+---------+
 ```
 
----
 
 ## Utilização de Alert
 
@@ -4299,7 +4085,6 @@ Os Alert são utilizados para:
 - Erros;
 - Confirmações.
 
----
 
 ## Exemplo
 
@@ -4320,7 +4105,6 @@ Resultado:
 +----------------------+
 ```
 
----
 
 ## Interface do Carrinho
 
@@ -4337,7 +4121,6 @@ Total
 
 Os dados são atualizados automaticamente sempre que um novo produto é adicionado.
 
----
 
 ## Interface dos Relatórios
 
@@ -4351,7 +4134,6 @@ O módulo de relatórios apresenta:
 
 Tudo organizado numa tabela dinâmica.
 
----
 
 ## Interface da Pré-visualização PDF
 
@@ -4373,7 +4155,6 @@ O PDF é convertido em imagem e apresentado ao utilizador.
 
 O ScrollPane permite navegar pelo documento.
 
----
 
 ## Benefícios da Interface Implementada
 
@@ -4383,31 +4164,26 @@ A interface desenvolvida apresenta diversas vantagens.
 
 Menus simples e intuitivos.
 
----
 
 ## Organização
 
 Funcionalidades separadas por módulos.
 
----
 
 ## Rapidez
 
 Acesso rápido às operações principais.
 
----
 
 ## Segurança
 
 Funcionalidades controladas por nível de acesso.
 
----
 
 ## Integração
 
 Todos os módulos encontram-se integrados numa única aplicação.
 
----
 
 ## Fluxo de Navegação
 
@@ -4428,7 +4204,6 @@ Menu Principal
    └── Utilizadores
 ```
 
----
 
 A interface gráfica desenvolvida em JavaFX permitiu criar uma aplicação moderna, organizada e intuitiva para a gestão da Loja Aquapet.
 
@@ -4436,7 +4211,7 @@ A utilização de componentes como BorderPane, VBox, HBox, TableView, Alert e Sc
 
 A integração da interface com os restantes módulos do sistema garantiu uma solução completa para gestão de vendas, produtos, utilizadores e relatórios.
 
----
+<br>
 
 # 15. Implementacao do CRUD
 
@@ -4465,7 +4240,6 @@ A implementação foi realizada utilizando:
 - MySQL;
 - JavaFX.
 
----
 
 ## Objetivos da Implementação CRUD
 
@@ -4477,7 +4251,6 @@ O CRUD foi desenvolvido para:
 - Permitir operações rápidas e seguras;
 - Integrar a aplicação com a base de dados.
 
----
 
 ## CREATE – Inserção de Dados
 
@@ -4490,7 +4263,6 @@ No sistema AQStore esta operação é utilizada principalmente para:
 - Registar vendas;
 - Registar compras.
 
----
 
 ## Exemplo: Inserção de Produtos
 
@@ -4517,7 +4289,6 @@ public boolean cadastrarProduto(
 }
 ```
 
----
 
 ## Explicação
 
@@ -4546,7 +4317,6 @@ return true;
 
 significa que o produto foi registado com sucesso.
 
----
 
 ## Exemplo Prático
 
@@ -4562,7 +4332,6 @@ Resultado:
 Produto inserido na base de dados.
 ```
 
----
 
 ## READ – Consulta de Dados
 
@@ -4575,7 +4344,6 @@ A operação READ permite consultar informações armazenadas na base de dados.
 - Compras do Dia;
 - Relatórios.
 
----
 
 ## Exemplo: Consulta de Produtos
 
@@ -4591,7 +4359,6 @@ public List<Object[]> listarProdutos() {
         "SELECT * FROM produtos ORDER BY nome";
 ```
 
----
 
 ## Explicação
 
@@ -4611,9 +4378,8 @@ Os dados são armazenados numa lista:
 List<Object[]>
 ```
 
-para posterior apresentação na interface gráfica.
+Para posterior apresentação na interface gráfica.
 
----
 
 ## Processamento dos Resultados
 
@@ -4630,7 +4396,6 @@ while (rs.next()) {
 }
 ```
 
----
 
 ## Explicação
 
@@ -4644,7 +4409,6 @@ Object[]
 
 e armazenado na lista.
 
----
 
 ## Resultado
 
@@ -4669,7 +4433,6 @@ A operação UPDATE permite alterar informações já existentes.
 - Alterar preços;
 - Alterar níveis de acesso.
 
----
 
 ## Exemplo: Atualizar Produto
 
@@ -4688,7 +4451,6 @@ public boolean atualizarProduto(
         "WHERE id=?";
 ```
 
----
 
 ## Explicação
 
@@ -4702,7 +4464,6 @@ WHERE id=?
 
 Esta operação procura um produto através do seu ID e altera os respetivos dados.
 
----
 
 ## Exemplo
 
@@ -4724,7 +4485,6 @@ Preço: 3500
 Stock: 25
 ```
 
----
 
 ## DELETE – Eliminação de Dados
 
@@ -4736,7 +4496,6 @@ No AQStore é utilizada em:
 - Utilizadores;
 - Compras do Dia.
 
----
 
 ## Exemplo: Eliminar Produto
 
@@ -4749,7 +4508,6 @@ public boolean eliminarProduto(int id) {
         "DELETE FROM produtos WHERE id=?";
 ```
 
----
 
 ## Explicação
 
@@ -4762,7 +4520,6 @@ WHERE id=?
 
 Esta operação elimina permanentemente o registo selecionado.
 
----
 
 ## Exemplo
 
@@ -4782,7 +4539,6 @@ Produto removido.
 
 O registo deixa de existir na base de dados.
 
----
 
 ## Utilização do PreparedStatement
 
@@ -4809,25 +4565,21 @@ PreparedStatement stmt =
 
 Evita SQL Injection.
 
----
 
 ### Desempenho
 
 Melhora a execução das consultas.
 
----
 
 ### Organização
 
 Facilita a manutenção do código.
 
----
 
 ## Integração com a Interface JavaFX
 
 As operações CRUD estão integradas diretamente na interface gráfica.
 
----
 
 ## Inserir
 
@@ -4835,7 +4587,6 @@ As operações CRUD estão integradas diretamente na interface gráfica.
 Botão Adicionar
 ```
 
----
 
 ## Consultar
 
@@ -4843,7 +4594,6 @@ Botão Adicionar
 TableView
 ```
 
----
 
 ## Atualizar
 
@@ -4851,7 +4601,6 @@ TableView
 Botão Atualizar
 ```
 
----
 
 ## Eliminar
 
@@ -4859,7 +4608,6 @@ Botão Atualizar
 Botão Eliminar
 ```
 
----
 
 ## Fluxo de Funcionamento
 
@@ -4879,7 +4627,6 @@ Conexao
 MySQL
 ```
 
----
 
 ## Benefícios da Implementação CRUD
 
@@ -4889,31 +4636,26 @@ A implementação do CRUD trouxe várias vantagens ao sistema.
 
 Todos os dados ficam estruturados.
 
----
 
 ## Facilidade de Manutenção
 
 Permite alterar informações rapidamente.
 
----
 
 ## Escalabilidade
 
 Novos registos podem ser adicionados sem limitações.
 
----
 
 ## Integração
 
 Todas as funcionalidades utilizam a mesma lógica.
 
----
 
 ## Segurança
 
 Utilização de PreparedStatement em todas as operações.
 
----
 
 ## Aplicação do CRUD nos Módulos
 
@@ -4925,7 +4667,6 @@ Utilização de PreparedStatement em todas as operações.
 | Relatórios     | X      | V    | X      | X      |
 | Vendas         | V      | V    | X      | X      |
 
----
 
 ## Exemplo Completo
 
@@ -4958,7 +4699,6 @@ Preço: 4000
 Produto removido.
 ```
 
----
 
 A implementação do CRUD permitiu criar uma gestão completa e eficiente dos dados do sistema AQStore.
 
@@ -4966,7 +4706,7 @@ Através da integração entre Java, JDBC, JavaFX e MySQL foi possível disponib
 
 O CRUD constitui a base funcional do sistema, sendo utilizado em praticamente todos os módulos da aplicação e garantindo a correta manipulação das informações armazenadas na base de dados.
 
----
+<br>
 
 # 16. Estruturas de Dados Utilizadas
 
@@ -4984,7 +4724,6 @@ Estas estruturas permitiram armazenar temporariamente informações como:
 
 A correta utilização destas estruturas contribuiu para melhorar a organização do código, a eficiência das operações e a integração com a interface gráfica JavaFX.
 
----
 
 ## Conceito de Estrutura de Dados
 
@@ -4998,7 +4737,6 @@ Uma estrutura de dados é uma forma organizada de armazenar informações em mem
 
 A escolha da estrutura adequada influencia diretamente o desempenho e a facilidade de manutenção do sistema.
 
----
 
 ## Estrutura Principal Utilizada
 
@@ -5010,7 +4748,6 @@ ArrayList
 
 A classe `ArrayList` faz parte da biblioteca Java Collections Framework e representa uma lista dinâmica.
 
----
 
 ## Implementação da Lista Dinâmica
 
@@ -5033,7 +4770,6 @@ responsável por armazenar os produtos selecionados durante uma venda.
 
 A lista pode crescer ou diminuir dinamicamente conforme a necessidade do sistema.
 
----
 
 ## Funcionamento da Lista
 
@@ -5050,7 +4786,6 @@ new Object[]{
 }
 ```
 
----
 
 ## Organização dos Dados
 
@@ -5061,7 +4796,6 @@ new Object[]{
 | 2       | Preço Unitário |
 | 3       | Total          |
 
----
 
 ## Exemplo
 
@@ -5081,7 +4815,6 @@ Neste exemplo:
 - Preço = 3500
 - Total = 7000
 
----
 
 ## Inserção de Elementos
 
@@ -5110,7 +4843,6 @@ add()
 
 Adiciona um novo elemento ao final da lista.
 
----
 
 ## Resultado
 
@@ -5133,7 +4865,6 @@ Após nova inserção:
 [Produto 2]
 ```
 
----
 
 ## Percurso da Lista
 
@@ -5153,7 +4884,6 @@ O ciclo percorre todos os elementos presentes na lista.
 
 Cada elemento corresponde a um produto do carrinho.
 
----
 
 ## Exemplo
 
@@ -5165,7 +4895,6 @@ Produto 3
 
 O ciclo visitará cada um destes produtos.
 
----
 
 ## Acesso aos Dados
 
@@ -5198,7 +4927,6 @@ O sistema utiliza estes valores para:
 - Apresentar relatórios;
 - Guardar vendas.
 
----
 
 ## Estruturas Utilizadas nos Relatórios
 
@@ -5215,7 +4943,6 @@ List<Object[]> relatorio =
 
 Cada linha do relatório é armazenada temporariamente numa lista antes de ser apresentada na interface.
 
----
 
 ## Estruturas Utilizadas na Consulta de Produtos
 
@@ -5232,7 +4959,6 @@ List<Object[]> produtos =
 
 A lista recebe os dados provenientes da consulta SQL e disponibiliza-os para a interface gráfica.
 
----
 
 ## Integração com JavaFX
 
@@ -5248,7 +4974,6 @@ tableView.getItems().addAll(lista);
 
 Os dados armazenados na lista são enviados diretamente para a tabela apresentada ao utilizador.
 
----
 
 ## Porque Não Foi Utilizada uma Pilha?
 
@@ -5266,7 +4991,6 @@ Ou seja:
 Primeiro a sair
 ```
 
----
 
 ## Exemplo de Pilha
 
@@ -5284,7 +5008,6 @@ No AQStore não existe a necessidade de remover sempre o último produto inserid
 
 Por este motivo a pilha não foi considerada adequada.
 
----
 
 ## Porque Não Foi Utilizada uma Fila?
 
@@ -5302,7 +5025,6 @@ Primeiro a entrar
 Primeiro a sair
 ```
 
----
 
 ## Exemplo de Fila
 
@@ -5320,7 +5042,6 @@ No AQStore os produtos podem ser removidos livremente do carrinho, sem respeitar
 
 Por essa razão a fila também não foi adotada.
 
----
 
 ## Comparação das Estruturas
 
@@ -5330,7 +5051,6 @@ Por essa razão a fila também não foi adotada.
 | Fila       | Primeiro entra, primeiro sai |
 | ArrayList  | Acesso livre aos elementos   |
 
----
 
 ## Justificação da Escolha
 
@@ -5340,31 +5060,26 @@ A utilização de `ArrayList` apresentou várias vantagens:
 
 Permite adicionar e remover elementos em qualquer posição.
 
----
 
 ## Simplicidade
 
 Implementação simples e intuitiva.
 
----
 
 ## Integração
 
 Compatibilidade direta com JavaFX.
 
----
 
 ## Desempenho
 
 Boa performance para listas de dimensão moderada.
 
----
 
 ## Organização
 
 Facilita a manipulação dos dados.
 
----
 
 ## Fluxo de Utilização
 
@@ -5387,7 +5102,6 @@ Recibo
 Relatório
 ```
 
----
 
 ## Vantagens da Estrutura Escolhida
 
@@ -5397,31 +5111,26 @@ A implementação através de listas dinâmicas trouxe diversos benefícios:
 
 Código mais simples e organizado.
 
----
 
 ### Escalabilidade
 
 Permite trabalhar com qualquer quantidade de produtos.
 
----
 
 ### Manutenção
 
 Facilita futuras alterações ao sistema.
 
----
 
 ### Integração com Base de Dados
 
 Permite armazenar resultados de consultas SQL.
 
----
 
 ### Integração com Interface Gráfica
 
 Facilita a apresentação dos dados em tabelas JavaFX.
 
----
 
 ## Exemplo Prático
 
@@ -5456,7 +5165,6 @@ Todos os elementos ficam disponíveis para:
 - remoção;
 - exportação.
 
----
 
 O AQStore utiliza principalmente a estrutura de dados **Lista Dinâmica (ArrayList)** para armazenar e manipular informações durante a execução do sistema.
 
@@ -5470,7 +5178,7 @@ A escolha desta estrutura permitiu implementar de forma eficiente funcionalidade
 
 Embora conceitos como Pilha e Fila sejam importantes no estudo de Estruturas de Dados, as necessidades específicas do sistema tornaram a utilização de listas dinâmicas a solução mais adequada, oferecendo maior flexibilidade, simplicidade e integração com os restantes módulos da aplicação.
 
----
+<br>
 
 # 17. Controlo de Permissoes
 
@@ -5486,7 +5194,6 @@ A implementação do controlo de permissões contribui para:
 - Melhorar a segurança da aplicação;
 - Garantir a integridade das informações.
 
----
 
 ## Objetivos do Controlo de Permissões
 
@@ -5498,7 +5205,6 @@ O sistema foi desenvolvido para:
 - Proteger os dados da base de dados;
 - Garantir maior segurança operacional.
 
----
 
 ## Níveis de Acesso Implementados
 
@@ -5512,7 +5218,6 @@ O AQStore possui três níveis de acesso distintos:
 
 Cada perfil possui permissões específicas.
 
----
 
 ## Perfil ADMIN
 
@@ -5530,7 +5235,6 @@ O perfil ADMIN possui acesso total ao sistema.
 - Eliminação de Vendas;
 - Gestão completa da aplicação.
 
----
 
 ## Responsabilidades
 
@@ -5541,7 +5245,6 @@ O administrador é responsável por:
 - Corrigir informações;
 - Supervisionar o funcionamento do sistema.
 
----
 
 ## Perfil GESTOR
 
@@ -5556,7 +5259,6 @@ O perfil GESTOR possui permissões intermédias.
 - Alteração de Senha;
 - Eliminação de Vendas.
 
----
 
 ## Restrições
 
@@ -5568,7 +5270,6 @@ Gestão de Utilizadores
 
 Apenas administradores podem criar, atualizar ou remover utilizadores.
 
----
 
 ## Perfil ATENDENTE
 
@@ -5581,7 +5282,6 @@ O perfil ATENDENTE possui acesso limitado.
 - Consulta de Compras;
 - Alteração da própria senha.
 
----
 
 ## Restrições
 
@@ -5593,7 +5293,6 @@ O atendente não pode:
 - Aceder aos relatórios administrativos;
 - Eliminar vendas.
 
----
 
 ## Armazenamento das Permissões
 
@@ -5603,7 +5302,6 @@ O nível de acesso encontra-se armazenado na tabela:
 usuarios
 ```
 
----
 
 ## Estrutura
 
@@ -5614,7 +5312,6 @@ usuarios
 | password |
 | nivel    |
 
----
 
 ## Exemplo
 
@@ -5636,7 +5333,6 @@ Username: caixa
 Nivel: ATENDENTE
 ```
 
----
 
 ## Identificação do Perfil
 
@@ -5665,7 +5361,6 @@ nivel
 
 É utilizado posteriormente para controlar o acesso às funcionalidades.
 
----
 
 ## Verificação de Permissões
 
@@ -5702,7 +5397,6 @@ Caso contrário:
 false
 ```
 
----
 
 ## Verificação do Perfil Gestor
 
@@ -5721,13 +5415,11 @@ private boolean isGestor() {
 
 Este método identifica se o utilizador pertence ao grupo dos gestores.
 
----
 
 ## Utilização das Permissões
 
 As permissões são verificadas sempre que uma funcionalidade é carregada.
 
----
 
 ## Exemplo: Gestão de Utilizadores
 
@@ -5752,7 +5444,6 @@ Utilizadores
 
 Os restantes perfis não possuem acesso a esta funcionalidade.
 
----
 
 ## Exemplo: Compras do Dia
 
@@ -5785,7 +5476,6 @@ ADMIN OU GESTOR
 
 Apenas estes perfis conseguem visualizar o botão de eliminação.
 
----
 
 ## Proteção Adicional
 
@@ -5810,7 +5500,6 @@ Mesmo que um utilizador tente executar a funcionalidade por outro meio, o sistem
 
 Esta abordagem aumenta significativamente a segurança da aplicação.
 
----
 
 ## Fluxo de Verificação
 
@@ -5832,7 +5521,6 @@ Acesso  Verificar Gestor
 Total
 ```
 
----
 
 ## Exemplo de Funcionamento
 
@@ -5852,7 +5540,6 @@ V Utilizadores
 V Eliminar Vendas
 ```
 
----
 
 ## Utilizador GESTOR
 
@@ -5871,7 +5558,6 @@ V Eliminar Vendas
 X Utilizadores
 ```
 
----
 
 ## Utilizador ATENDENTE
 
@@ -5890,7 +5576,6 @@ X Utilizadores
 X Eliminar Vendas
 ```
 
----
 
 ## Benefícios do Controlo de Permissões
 
@@ -5900,31 +5585,26 @@ A implementação deste mecanismo trouxe diversas vantagens.
 
 Protege informações sensíveis.
 
----
 
 ## Organização
 
 Cada utilizador visualiza apenas o necessário.
 
----
 
 ## Integridade
 
 Reduz alterações indevidas.
 
----
 
 ## Facilidade de Gestão
 
 Permite controlar responsabilidades.
 
----
 
 ## Auditoria
 
 Facilita a identificação de operações realizadas.
 
----
 
 ## Integração com Outros Módulos
 
@@ -5947,7 +5627,6 @@ Controlo de Permissões
 
 Desta forma, todas as funcionalidades respeitam as permissões definidas para cada perfil.
 
----
 
 O módulo de controlo de permissões é um componente essencial do sistema AQStore, garantindo que cada utilizador tenha acesso apenas às funcionalidades compatíveis com o seu perfil.
 
@@ -5955,7 +5634,7 @@ Através da implementação de verificações por nível de acesso foi possível
 
 A utilização dos perfis ADMIN, GESTOR e ATENDENTE permitiu distribuir responsabilidades e proteger operações críticas, contribuindo para a integridade e confiabilidade do sistema.
 
----
+<br>
 
 # 18. Tecnologias Utilizadas
 
