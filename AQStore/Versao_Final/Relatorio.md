@@ -5649,7 +5649,6 @@ A escolha destas tecnologias teve como principal objetivo garantir:
 - Integração entre módulos;
 - Facilidade de manutenção.
 
----
 
 ## Linguagem de Programação
 
@@ -5677,7 +5676,6 @@ O Java foi utilizado para implementar:
 - Relatórios;
 - Geração de recibos.
 
----
 
 ## Exemplo de Código
 
@@ -5696,7 +5694,6 @@ public class Usuario {
 
 A Programação Orientada a Objetos permitiu representar entidades reais através de classes e objetos, tornando o sistema mais organizado e reutilizável.
 
----
 
 ## Interface Gráfica
 
@@ -5706,7 +5703,6 @@ A interface gráfica foi desenvolvida utilizando JavaFX.
 
 JavaFX é uma framework moderna utilizada para criação de aplicações desktop.
 
----
 
 ## Funcionalidades Utilizadas
 
@@ -5719,7 +5715,6 @@ JavaFX é uma framework moderna utilizada para criação de aplicações desktop
 - Imagens;
 - ScrollPane.
 
----
 
 ## Exemplo
 
@@ -5728,7 +5723,6 @@ Button btnEntrar =
         new Button("Entrar");
 ```
 
----
 
 ## Exemplo
 
@@ -5737,7 +5731,6 @@ TableView<Object[]> tabela =
         new TableView<>();
 ```
 
----
 
 ## Benefícios
 
@@ -5745,19 +5738,16 @@ TableView<Object[]> tabela =
 
 Permite criar aplicações visualmente atrativas.
 
----
 
 ### Integração
 
 Integra-se facilmente com Java.
 
----
 
 ### Produtividade
 
 Facilita o desenvolvimento de interfaces complexas.
 
----
 
 ## Base de Dados
 
@@ -5765,7 +5755,6 @@ Facilita o desenvolvimento de interfaces complexas.
 
 O sistema utiliza MySQL para armazenamento permanente dos dados.
 
----
 
 ## Dados Armazenados
 
@@ -5775,7 +5764,6 @@ O sistema utiliza MySQL para armazenamento permanente dos dados.
 - Compras;
 - Relatórios.
 
----
 
 ## Estrutura da Base de Dados
 
@@ -5786,7 +5774,6 @@ venda
 compra
 ```
 
----
 
 ## Exemplo de Consulta
 
@@ -5795,7 +5782,6 @@ SELECT *
 FROM produtos;
 ```
 
----
 
 ## Benefícios
 
@@ -5803,19 +5789,16 @@ FROM produtos;
 
 Armazenamento confiável.
 
----
 
 ### Organização
 
 Dados estruturados em tabelas.
 
----
 
 ### Escalabilidade
 
 Permite trabalhar com grandes volumes de informação.
 
----
 
 ## JDBC
 
@@ -5823,7 +5806,6 @@ Permite trabalhar com grandes volumes de informação.
 
 A comunicação entre Java e MySQL foi realizada através do JDBC.
 
----
 
 ## Objetivo
 
@@ -5834,7 +5816,6 @@ Permitir que a aplicação execute:
 - UPDATE;
 - DELETE.
 
----
 
 ## Exemplo
 
@@ -5847,13 +5828,11 @@ Connection conn =
     );
 ```
 
----
 
 ## Explicação
 
 O JDBC cria uma ligação entre a aplicação Java e o servidor MySQL.
 
----
 
 ## OpenPDF
 
@@ -5865,7 +5844,6 @@ Para a emissão dos recibos foi utilizada a biblioteca:
 OpenPDF
 ```
 
----
 
 ## Funcionalidades
 
@@ -5874,7 +5852,6 @@ OpenPDF
 - Criar tabelas;
 - Exportar documentos.
 
----
 
 ## Exemplo
 
@@ -5890,7 +5867,6 @@ PdfWriter.getInstance(
 );
 ```
 
----
 
 ## Aplicação
 
@@ -5900,7 +5876,6 @@ Utilizada na classe:
 ReciboVenda.java
 ```
 
----
 
 ## Apache PDFBox
 
@@ -5908,7 +5883,6 @@ ReciboVenda.java
 
 A biblioteca PDFBox foi utilizada para abrir e visualizar os recibos gerados.
 
----
 
 ## Funcionalidades
 
@@ -5917,7 +5891,6 @@ A biblioteca PDFBox foi utilizada para abrir e visualizar os recibos gerados.
 - Converter páginas em imagens;
 - Integrar PDFs com JavaFX.
 
----
 
 ## Exemplo
 
@@ -5928,7 +5901,6 @@ PDDocument document =
     );
 ```
 
----
 
 ## Aplicação
 
@@ -5938,7 +5910,6 @@ Utilizada na classe:
 VisualizadorPDFFX.java
 ```
 
----
 
 ## Apache POI
 
@@ -5946,7 +5917,6 @@ VisualizadorPDFFX.java
 
 A exportação de relatórios para Excel foi implementada através da biblioteca Apache POI.
 
----
 
 ## Funcionalidades
 
@@ -5955,7 +5925,6 @@ A exportação de relatórios para Excel foi implementada através da biblioteca
 - Inserir dados em células;
 - Exportar relatórios.
 
----
 
 ## Exemplo
 
@@ -5969,7 +5938,6 @@ Sheet sheet =
         );
 ```
 
----
 
 ## Aplicação
 
@@ -5979,7 +5947,6 @@ Utilizada no módulo:
 Relatórios
 ```
 
----
 
 ## CSV
 
@@ -5987,7 +5954,6 @@ Relatórios
 
 O sistema também permite exportar relatórios para o formato CSV.
 
----
 
 ## Exemplo
 
@@ -5998,7 +5964,6 @@ writer.println(
 );
 ```
 
----
 
 ## Benefícios
 
@@ -6006,7 +5971,6 @@ writer.println(
 - Compatibilidade com LibreOffice;
 - Facilidade de partilha.
 
----
 
 ## Maven
 
@@ -6014,7 +5978,6 @@ writer.println(
 
 O projeto utiliza Maven para gerir bibliotecas e dependências.
 
----
 
 ## Benefícios
 
@@ -6022,7 +5985,6 @@ O projeto utiliza Maven para gerir bibliotecas e dependências.
 
 Instala automaticamente as bibliotecas necessárias.
 
----
 
 ### Organização
 
@@ -6032,7 +5994,6 @@ Centraliza todas as dependências no ficheiro:
 pom.xml
 ```
 
----
 
 ## Exemplo
 
@@ -6046,7 +6007,6 @@ pom.xml
 </dependency>
 ```
 
----
 
 ## IDE Utilizada
 
@@ -6058,7 +6018,6 @@ O desenvolvimento foi realizado utilizando:
 Visual Studio Code
 ```
 
----
 
 ## Recursos Utilizados
 
@@ -6068,7 +6027,6 @@ Visual Studio Code
 - GitHub;
 - JavaFX Support.
 
----
 
 ## Git e GitHub
 
@@ -6076,7 +6034,6 @@ Visual Studio Code
 
 O projeto utiliza Git para controlo de versões.
 
----
 
 ## Benefícios
 
@@ -6095,7 +6052,6 @@ git commit -m "Atualização"
 git push
 ```
 
----
 
 ## Sistema Operativo
 
@@ -6105,7 +6061,6 @@ Durante o desenvolvimento foram utilizados:
 
 Ambiente principal de desenvolvimento.
 
----
 
 ## Tecnologias Integradas
 
@@ -6133,7 +6088,6 @@ PDFBox
 Apache POI
 ```
 
----
 
 ## Tabela Resumo
 
@@ -6152,7 +6106,6 @@ Apache POI
 | GitHub     | Repositório remoto          |
 | VS Code    | Ambiente de desenvolvimento |
 
----
 
 ## Benefícios da Arquitetura Tecnológica
 
@@ -6162,31 +6115,26 @@ A combinação destas tecnologias proporcionou:
 
 Separação clara dos componentes.
 
----
 
 ### Escalabilidade
 
 Facilidade de expansão do sistema.
 
----
 
 ### Manutenção
 
 Código mais organizado e reutilizável.
 
----
 
 ### Segurança
 
 Controlo de acessos e utilização de PreparedStatement.
 
----
 
 ### Produtividade
 
 Automatização de diversas tarefas.
 
----
 
 O desenvolvimento do AQStore envolveu a integração de várias tecnologias modernas, permitindo criar uma aplicação robusta, segura e eficiente para gestão comercial.
 
@@ -6194,7 +6142,7 @@ A utilização de Java, JavaFX, MySQL, JDBC, OpenPDF, PDFBox e Apache POI possib
 
 A combinação destas ferramentas contribuiu significativamente para a qualidade, desempenho e escalabilidade da solução desenvolvida.
 
----
+<br>
 
 # 19. Resultados Obtidos
 
