@@ -18,14 +18,15 @@ public class AQStoreSistema {
 
     // ==================== PRODUTOS ====================
 
-    public boolean cadastrarProduto(String nome, double preco) {
-        String sql = "INSERT INTO produtos (nome, preco) VALUES (?, ?)";
+    public boolean cadastrarProduto(String nome, double preco, int stock) {
+        String sql = "INSERT INTO produtos (nome, preco, stock) VALUES (?, ?, ?)";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nome.trim());
             stmt.setDouble(2, preco);
+            stmt.setInt(3, stock);
             return stmt.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -34,15 +35,16 @@ public class AQStoreSistema {
         }
     }
 
-    public boolean atualizarProduto(int id, String nome, double preco) {
-        String sql = "UPDATE produtos SET nome = ?, preco = ? WHERE id = ?";
+    public boolean atualizarProduto(int id, String nome, double preco, int stock) {
+        String sql = "UPDATE produtos SET nome = ?, preco = ?, stock = ? WHERE id = ?";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, nome.trim());
             stmt.setDouble(2, preco);
-            stmt.setInt(3, id);
+            stmt.setInt(3, stock);
+            stmt.setInt(4, id);
             return stmt.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -68,7 +70,7 @@ public class AQStoreSistema {
 
     public List<Object[]> listarProdutos() {
         List<Object[]> lista = new ArrayList<Object[]>();
-        String sql = "SELECT id, nome, preco FROM produtos ORDER BY nome";
+        String sql = "SELECT id, nome, preco, stock FROM produtos ORDER BY nome";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -78,7 +80,8 @@ public class AQStoreSistema {
                 lista.add(new Object[]{
                         rs.getInt("id"),
                         rs.getString("nome"),
-                        rs.getDouble("preco")
+                        rs.getDouble("preco"),
+                        rs.getInt("stock")
                 });
             }
 
@@ -90,7 +93,7 @@ public class AQStoreSistema {
     }
 
     public Object[] obterProduto(String nome) {
-        String sql = "SELECT id, nome, preco FROM produtos WHERE nome = ? LIMIT 1";
+        String sql = "SELECT id, nome, preco, stock FROM produtos WHERE nome = ? LIMIT 1";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -102,7 +105,8 @@ public class AQStoreSistema {
                     return new Object[]{
                             rs.getInt("id"),
                             rs.getString("nome"),
-                            rs.getDouble("preco")
+                            rs.getDouble("preco"),
+                            rs.getInt("stock")
                     };
                 }
             }
@@ -119,12 +123,37 @@ public class AQStoreSistema {
     public boolean finalizarVenda(String usuario, String forma, Double recebido, Double troco, List<Object[]> carrinho) {
         String sqlVenda = "INSERT INTO venda (data, usuario, forma_pagamento, valor_recebido, troco) VALUES (NOW(), ?, ?, ?, ?)";
         String sqlCompra = "INSERT INTO compra (produto, quantidade, preco_unitario, total, forma_pagamento, id_venda) VALUES (?, ?, ?, ?, ?, ?)";
+        String sqlVerificarStock = "SELECT stock FROM produtos WHERE nome = ? FOR UPDATE";
+        String sqlAtualizarStock = "UPDATE produtos SET stock = stock - ? WHERE nome = ?";
 
         Connection conn = null;
 
         try {
             conn = Conexao.conectar();
             conn.setAutoCommit(false);
+
+            // Verifica se existe stock suficiente antes de registar a venda
+            for (Object[] item : carrinho) {
+                String produto = (String) item[0];
+                int quantidade = (Integer) item[1];
+
+                try (PreparedStatement stmtStock = conn.prepareStatement(sqlVerificarStock)) {
+                    stmtStock.setString(1, produto);
+
+                    try (ResultSet rs = stmtStock.executeQuery()) {
+                        if (!rs.next()) {
+                            conn.rollback();
+                            return false;
+                        }
+
+                        int stockAtual = rs.getInt("stock");
+                        if (quantidade > stockAtual) {
+                            conn.rollback();
+                            return false;
+                        }
+                    }
+                }
+            }
 
             int idVenda;
 
@@ -145,14 +174,23 @@ public class AQStoreSistema {
             }
 
             for (Object[] item : carrinho) {
+                String produto = (String) item[0];
+                int quantidade = (Integer) item[1];
+
                 try (PreparedStatement stmtCompra = conn.prepareStatement(sqlCompra)) {
-                    stmtCompra.setString(1, (String) item[0]);
-                    stmtCompra.setInt(2, (Integer) item[1]);
+                    stmtCompra.setString(1, produto);
+                    stmtCompra.setInt(2, quantidade);
                     stmtCompra.setDouble(3, (Double) item[2]);
                     stmtCompra.setDouble(4, (Double) item[3]);
                     stmtCompra.setString(5, forma);
                     stmtCompra.setInt(6, idVenda);
                     stmtCompra.executeUpdate();
+                }
+
+                try (PreparedStatement stmtAtualizarStock = conn.prepareStatement(sqlAtualizarStock)) {
+                    stmtAtualizarStock.setInt(1, quantidade);
+                    stmtAtualizarStock.setString(2, produto);
+                    stmtAtualizarStock.executeUpdate();
                 }
             }
 
@@ -346,6 +384,16 @@ public class AQStoreSistema {
         try {
             conn = Conexao.conectar();
             conn.setAutoCommit(false);
+
+            // Ao eliminar uma venda, o stock dos produtos vendidos é reposto
+            try (PreparedStatement stmtStock = conn.prepareStatement(
+                    "UPDATE produtos p " +
+                    "INNER JOIN compra c ON p.nome = c.produto " +
+                    "SET p.stock = p.stock + c.quantidade " +
+                    "WHERE c.id_venda = ?")) {
+                stmtStock.setInt(1, idVenda);
+                stmtStock.executeUpdate();
+            }
 
             try (PreparedStatement stmt1 = conn.prepareStatement("DELETE FROM compra WHERE id_venda = ?")) {
                 stmt1.setInt(1, idVenda);
