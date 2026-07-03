@@ -30,9 +30,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.scene.layout.HBox;
-import javafx.scene.control.Label;
-import javafx.geometry.Pos;
 
 public class AQStoreMainFX extends Application {
 
