@@ -1,19 +1,48 @@
-# Relatório do Sistema AQStore
+\begin{center}
 
-### Curso: Engenharia Informática
-### Instituição: Universidade de Santiago
-### Unidade Curricular: Conceção e Análise de Algoritmos
-### Tema: Sistema de Gestão Comercial AQStore
+{\Large \textbf{Relatório do Sistema AQStore}}
 
-## Participantes
+\vspace{1cm}
 
-- Paulo Costa Nº 7517
-- Kévin Guiomar Nº 7543
-- Claudia Martins Nº 7751
+{\large \textbf{Curso:} Engenharia Informática}
 
-## Docente
+\vspace{0.5cm}
 
-- Professor Valério Semedo
+{\large \textbf{Instituição:} Universidade de Santiago}
+
+{\large \textbf{Unidade Curricular:} Conceção e Análise de Algoritmos}
+
+{\large \textbf{Tema:} Sistema de Gestão Comercial AQStore}
+
+\vspace{2cm}
+
+{\large \textbf{Participantes}}
+
+\vspace{0.5cm}
+
+Paulo Costa Nº 7517
+
+Kévin Guiomar Nº 7543
+
+Claudia Martins Nº 7751
+
+\vspace{2cm}
+
+{\large \textbf{Docente}}
+
+\vspace{0.5cm}
+
+Professor Valério Semedo
+
+\vfill
+
+Praia, 2026
+
+\end{center}
+
+
+\newpage
+
 
 # Índice
 
@@ -38,12 +67,14 @@
 19. [Resultados Obtidos](#19-resultados-obtidos)
 20. [Conclusão](#20-conclusao)
 
-<br>
 
+\newpage
 
 # 1. Introducao
 
-O sistema **AQStore – Loja Aquapet Lda** foi desenvolvido com o objetivo de apoiar a gestão comercial de uma loja de produtos para animais. A aplicação permite gerir produtos, utilizadores, vendas, relatórios, recibos em PDF e controlo de stock.
+O sistema **AQStore – Loja Aquapet Lda** foi desenvolvido com o objetivo de apoiar a gestão comercial de uma loja especializada na venda de animais domesticos e bem como de produtos e equipamentos necessarios. 
+
+A aplicação permite gerir produtos, utilizadores, vendas, relatórios, recibos em PDF e controlo de stock.
 
 O projeto foi desenvolvido em **Java**, utilizando **JavaFX** para a interface gráfica, **MySQL** para armazenamento dos dados, **JDBC** para ligação à base de dados, **OpenPDF** para geração de recibos e **PDFBox** para pré-visualização dos documentos.
 
@@ -128,7 +159,7 @@ São apresentados:
 
 Esta organização permite uma visão completa do desenvolvimento do sistema AQStore, evidenciando as principais decisões técnicas e os resultados alcançados.
 
-<br>
+\newpage
 
 # 2. Objetivos
 
@@ -6560,7 +6591,8 @@ A aplicação apresentou um desempenho satisfatório durante os testes realizado
 
 O projeto cumpriu os objetivos propostos, disponibilizando uma plataforma moderna, organizada e preparada para futuras evoluções.
 
-<br>
+
+\newpage
 
 # 20. Conclusao
 
