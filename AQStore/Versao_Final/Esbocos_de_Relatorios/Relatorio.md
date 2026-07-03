@@ -1,27 +1,47 @@
-# Relatório do Sistema AQStore 
+\begin{center}
 
-### Curso: Engenharia Informática 
-### Instituição: Universidade de Santiago 
-### Unidade Curricular: Conceção e Análise de Algoritmos 
-### Tema: Sistema de Gestão Comercial AQStore 
+{\Large \textbf{Relatório do Sistema AQStore}}
 
-<br> <br> 
+\vspace{1cm}
 
-## Participantes 
+{\large \textbf{Curso:} Engenharia Informática}
 
-- Paulo Costa Nº 7517 
--  Kévin Guiomar Nº 7543 
--  Claudia Martins Nº 7751 
+\vspace{0.5cm}
 
- ## Docente 
- 
- - Professor Valério Semedo 
+{\large \textbf{Instituição:} Universidade de Santiago}
 
-<br><br>
+{\large \textbf{Unidade Curricular:} Conceção e Análise de Algoritmos}
 
-### Praia, 2026
+{\large \textbf{Tema:} Sistema de Gestão Comercial AQStore}
 
-<br><br>
+\vspace{2cm}
+
+{\large \textbf{Participantes}}
+
+\vspace{0.5cm}
+
+Paulo Costa Nº 7517
+
+Kévin Guiomar Nº 7543
+
+Claudia Martins Nº 7751
+
+\vspace{2cm}
+
+{\large \textbf{Docente}}
+
+\vspace{0.5cm}
+
+Professor Valério Semedo
+
+\vfill
+
+Praia, 2026
+
+\end{center}
+
+
+\newpage
 
 
 # Índice
