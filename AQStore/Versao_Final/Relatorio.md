@@ -10,8 +10,8 @@
 ## Participantes 
 
 - Paulo Costa Nº 7517 
--  Kévin Guiomar Nº 7543 
--  Claudia Martins Nº 7751 
+- Kévin Guiomar Nº 7543 
+- Claudia Martins Nº 7751 
 
  ## Docente 
  
