@@ -6158,7 +6158,6 @@ Os resultados obtidos demonstram a aplicação prática dos conhecimentos adquir
 - Estruturas de Dados;
 - Desenvolvimento de Aplicações Desktop.
 
----
 
 ## Funcionalidades Implementadas
 
@@ -6179,7 +6178,6 @@ Foi implementado um sistema de autenticação capaz de:
 V Funcionalidade concluída
 ```
 
----
 
 ## Gestão de Produtos
 
@@ -6198,7 +6196,6 @@ Foi implementado o CRUD completo de produtos.
 V CRUD totalmente funcional
 ```
 
----
 
 ## Gestão de Vendas
 
@@ -6216,7 +6213,6 @@ Foi implementado um sistema de faturação que permite:
 V Processo de venda automatizado
 ```
 
----
 
 ## Compras do Dia
 
@@ -6234,7 +6230,6 @@ Foi criada uma funcionalidade para consulta das vendas diárias.
 V Consulta rápida das operações diárias
 ```
 
----
 
 ## Relatórios
 
@@ -6256,7 +6251,6 @@ Foi implementado um módulo de relatórios com filtros por:
 V Relatórios dinâmicos e exportáveis
 ```
 
----
 
 ## Recibos PDF
 
@@ -6274,7 +6268,6 @@ Foi implementada a geração automática de recibos.
 V Emissão automática de comprovativos
 ```
 
----
 
 ## Pré-visualização de Recibos
 
@@ -6292,7 +6285,6 @@ Foi implementada uma funcionalidade para visualizar o recibo dentro da própria 
 V Visualização integrada no sistema
 ```
 
----
 
 ## Integração dos Módulos
 
@@ -6321,7 +6313,6 @@ Relatórios
 
 Todos os módulos comunicam entre si utilizando a mesma base de dados.
 
----
 
 ## Resultados na Base de Dados
 
@@ -6342,7 +6333,6 @@ Durante os testes realizados foi possível verificar o correto funcionamento das
 CRUD totalmente operacional
 ```
 
----
 
 ## Resultados da Interface Gráfica
 
@@ -6362,7 +6352,6 @@ A interface desenvolvida em JavaFX apresentou resultados satisfatórios.
 V Interface funcional e intuitiva
 ```
 
----
 
 ## Resultados do Controlo de Permissões
 
@@ -6388,7 +6377,6 @@ V Compras do Dia
 X Gestão de Utilizadores
 ```
 
----
 
 ### ATENDENTE
 
@@ -6407,7 +6395,6 @@ X Relatórios administrativos
 V Permissões aplicadas corretamente
 ```
 
----
 
 ## Resultados da Exportação
 
@@ -6419,7 +6406,6 @@ Foram realizados testes de exportação dos relatórios.
 V Exportação concluída
 ```
 
----
 
 ## Excel
 
@@ -6427,7 +6413,6 @@ V Exportação concluída
 V Exportação concluída
 ```
 
----
 
 ## Compatibilidade
 
@@ -6435,7 +6420,6 @@ Os ficheiros gerados foram abertos com sucesso em:
 
 - Microsoft Excel;
 
----
 
 ## Resultados dos Recibos PDF
 
@@ -6457,7 +6441,6 @@ Foram gerados diversos recibos durante os testes.
 V PDFs gerados corretamente
 ```
 
----
 
 ## Resultados da Pré-visualização
 
@@ -6476,7 +6459,6 @@ Foram realizados testes com diferentes recibos.
 V Visualização sem aplicações externas
 ```
 
----
 
 ## Desempenho do Sistema
 
@@ -6492,7 +6474,6 @@ Durante os testes realizados, o sistema apresentou um comportamento estável.
 | Usabilidade        |    Boa      |
 | Integração         |    Boa      |
 
----
 
 ## Benefícios Obtidos
 
@@ -6502,31 +6483,26 @@ A implementação do AQStore trouxe diversos benefícios.
 
 Redução de tarefas manuais.
 
----
 
 ## Organização
 
 Melhor gestão das informações.
 
----
 
 ## Segurança
 
 Controlo de acessos por perfil.
 
----
 
 ## Rapidez
 
 Processamento automático das vendas.
 
----
 
 ## Fiabilidade
 
 Registo permanente das operações.
 
----
 
 ## Aplicação dos Conhecimentos Académicos
 
@@ -6537,7 +6513,6 @@ O projeto permitiu aplicar conhecimentos adquiridos em várias unidades curricul
 - Java;
 - Estruturas de Dados.
 
----
 
 ## Bases de Dados
 
@@ -6545,7 +6520,6 @@ O projeto permitiu aplicar conhecimentos adquiridos em várias unidades curricul
 - JDBC;
 - SQL.
 
----
 
 ## Conceção e Análise de Algoritmos
 
@@ -6553,7 +6527,6 @@ O projeto permitiu aplicar conhecimentos adquiridos em várias unidades curricul
 - Organização de código;
 - Boas práticas.
 
----
 
 ## Interfaces Gráficas
 
@@ -6561,7 +6534,6 @@ O projeto permitiu aplicar conhecimentos adquiridos em várias unidades curricul
 - Eventos;
 - Componentes visuais.
 
----
 
 ## Avaliação Geral dos Resultados
 
@@ -6581,7 +6553,6 @@ V Permissões
 V Exportação
 ```
 
----
 
 Os resultados obtidos demonstram que o sistema AQStore é uma solução funcional para gestão comercial, permitindo controlar produtos, vendas, utilizadores e relatórios de forma integrada.
 
@@ -6589,7 +6560,7 @@ A aplicação apresentou um desempenho satisfatório durante os testes realizado
 
 O projeto cumpriu os objetivos propostos, disponibilizando uma plataforma moderna, organizada e preparada para futuras evoluções.
 
----
+<br>
 
 # 20. Conclusao
 
