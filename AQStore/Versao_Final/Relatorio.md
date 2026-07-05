@@ -26,29 +26,29 @@
 
 # Índice
 
-1. [Introducao](#1-introducao)
+1. [Introdução](#1-introdução)
 2. [Objetivos](#2-objetivos)
 3. [Arquitetura do Sistema](#3-arquitetura-do-sistema)
 4. [Estrutura do Projeto](#4-estrutura-do-projeto)
-5. [Autenticacao e Gestao de Utilizadores](#5-autenticacao-e-gestao-de-utilizadores)
-6. [Conexao com a Base de Dados](#6-conexao-com-a-base-de-dados)
-7. [Gestao de Produtos (CRUD)](#7-gestao-de-produtos-crud)
-8. [Gestao de Vendas](#8-gestao-de-vendas)
-9. [Controlo Automatico de Stock](#9-controlo-automatico-de-stock)
+5. [Autenticação e Gestão de Utilizadores](#5-autenticação-e-gestão-de-utilizadores)
+6. [Conexão com a Base de Dados](#6-conexão-com-a-base-de-dados)
+7. [Gestão de Produtos (CRUD)](#7-gestão-de-produtos-crud)
+8. [Gestão de Vendas](#8-gestão-de-vendas)
+9. [Controlo Automático de Stock](#9-controlo-automático-de-stock)
 10. [Compras do Dia](#10-compras-do-dia)
-11. [Relatorios](#11-relatorios)
-12. [Geracao de Recibos PDF](#12-geracao-de-recibos-pdf)
-13. [Pre-visualizacao de Recibos](#13-pre-visualizacao-de-recibos)
-14. [Interface Grafica](#14-interface-grafica)
-15. [Implementação do CRUD](#15-implementacao-do-crud)
+11. [Relatórios](#11-relatórios)
+12. [Geração de Recibos PDF](#12-geração-de-recibos-pdf)
+13. [Pré-visualização de Recibos](#13-pré-visualização-de-recibos)
+14. [Interface Gráfica](#14-interface-gráfica)
+15. [Implementação do CRUD](#15-implementação-do-crud)
 16. [Estruturas de Dados Utilizadas](#16-estruturas-de-dados-utilizadas)
-17. [Controlo de Permissões](#17-controlo-de-permissoes)
+17. [Controlo de Permissões](#17-controlo-de-permissões)
 18. [Tecnologias Utilizadas](#18-tecnologias-utilizadas)
 19. [Resultados Obtidos](#19-resultados-obtidos)
-20. [Conclusão](#20-conclusao)
+20. [Dificuldades Encontradas e Contribuicoes dos Elementos](#20-dificuldades-encontradas-e-contribuicoes-dos-elementos)
+21. [Conclusao](#21-conclusao)
 
 
-\newpage
 
 # 1. Introducao
 
@@ -139,7 +139,7 @@ São apresentados:
 
 Esta organização permite uma visão completa do desenvolvimento do sistema AQStore, evidenciando as principais decisões técnicas e os resultados alcançados.
 
-\newpage
+<br>
 
 # 2. Objetivos
 
@@ -6571,10 +6571,38 @@ A aplicação apresentou um desempenho satisfatório durante os testes realizado
 
 O projeto cumpriu os objetivos propostos, disponibilizando uma plataforma moderna, organizada e preparada para futuras evoluções.
 
+<br><br>
 
-\newpage
+# 20. Dificuldades Encontradas E Contribuicoes dos Elementos
 
-# 20. Conclusao
+## Contribuições
+
+| Elementos      | Contribuições                                     |
+|----------------|---------------------------------------------------|
+|Paulo Costa     | Criação das Base de dados no MYSQL                |
+|Kévin Guiomar   | Atualização da Base de Dados MYSQL                |
+|Kévin Guiomar   | Atualização do AQStoreMainFX e AQStoreSistema     |
+|Paulo Costa     | Criação das Classes AQStoreMainFX e AQStoreSistema|
+|Claudia Martins | Criação Class ReciboVenda                         |
+|Paulo Costa     | Criação Class Conexao                             |
+|Paulo Costa     | Criação da Class VisualizadorPDFFX                |
+|Kévin Guiomar   | Criação Class LoginApp                            |
+|Claudia Martins | Atualização Class LoginApp                        |
+|Claudia Martins | Criação Class Autenticacao                        |
+|Kévin Guiomar   | Atualização Class Autenticacao                    |
+|Paulo Costa     | Apoio Sempre que necessario aos elementos do grupo|
+
+## Dificultades Encontradas
+
+- Fazer com que todos os pc's usados podessem falar a mesma lingua
+- PC's avariados;
+- Devido a problemas na internet criou-se uma inconveniencia ao tentar submeter as alterções no github;
+- Algumas situações tecnicas ao pc tambem que por sua vez criar um certo desconforto na execução de alguns comandos desejados;
+- Um ponto encontrado no finalizar a venda, em que gere de forma segura e valida o stock, registando por sua vez a operação, atualizando os dados e na utilização do commit() e rollback() de forma a garantir a integridade da base de dados.
+
+<br><br>
+
+# 21. Conclusao
 
 O desenvolvimento do sistema **AQStore – Loja Aquapet Lda** permitiu consolidar e aplicar conhecimentos adquiridos ao longo do curso de Engenharia Informática, integrando conceitos da Conceção e Análise de Algoritmos, Bases de Dados, Interfaces Gráficas, Estruturas de Dados e Engenharia de Software num único projeto funcional.
 
@@ -6600,17 +6628,17 @@ Durante os testes realizados verificou-se o correto funcionamento dos módulos i
 
 | Funcionalidade         | Estado          |
 |------------------------|-----------------|
-| Login                  | V Implementado |
-| Gestão de Produtos     | V Implementado |
-| Gestão de Utilizadores | V Implementado |
-| Vendas                 | V Implementado |
-| Compras do Dia         | V Implementado |
-| Relatórios             | V Implementado |
-| Exportação CSV         | V Implementado |
-| Exportação Excel       | V Implementado |
-| Recibos PDF            | V Implementado |
-| Pré-visualização PDF   | V Implementado |
-| Controlo de Permissões | V Implementado |
+| Login                  | V Implementado  |
+| Gestão de Produtos     | V Implementado  |
+| Gestão de Utilizadores | V Implementado  |
+| Vendas                 | V Implementado  |
+| Compras do Dia         | V Implementado  |
+| Relatórios             | V Implementado  |
+| Exportação CSV         | V Implementado  |
+| Exportação Excel       | V Implementado  |
+| Recibos PDF            | V Implementado  |
+| Pré-visualização PDF   | V Implementado  |
+| Controlo de Permissões | V Implementado  |
 
 Os resultados obtidos demonstram que os objetivos inicialmente definidos foram alcançados com sucesso, permitindo disponibilizar uma solução funcional para gestão comercial, com uma interface intuitiva e uma estrutura organizada.
 
